@@ -47,7 +47,7 @@
         .footer-metrics b { color: var(--text-main); display: block; font-size: 12px; }
 
         /* --- CONTENEDOR PRINCIPAL (CENTRO + DERECHA) --- */
-        .wrapper { margin-left: 260px; width: calc(100% - 260px); display: flex; }
+        .wrapper { margin-left: 260px; width: calc(100% - 260px); display: flex; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .main-content { flex: 1; padding: 24px; min-width: 0; }
         
         /* HEADER PRINCIPAL */
@@ -104,19 +104,24 @@
 
         /* SECCIÓN INFERIOR DE GRÁFICOS */
         .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-        .chart-panel { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; }
+        .chart-panel { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; min-width: 0; }
         .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .chart-header h4 { font-size: 14px; font-weight: 600; color: var(--text-muted); }
         .chart-summary { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
         .chart-summary h2 { font-size: 24px; font-weight: 700; }
         .chart-summary span { font-size: 12px; color: var(--green); }
 
-        /* --- SIDEBAR PANEL DERECHO --- */
-        .right-panel { width: 340px; background: var(--sidebar-bg); border-left: 1px solid var(--card-border); padding: 24px; display: flex; flex-direction: column; gap: 24px; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+        /* --- SIDEBAR PANEL DERECHO CON SOPORTE COLAPSABLE --- */
+        .right-panel { width: 340px; min-width: 340px; background: var(--sidebar-bg); border-left: 1px solid var(--card-border); padding: 24px; display: flex; flex-direction: column; gap: 24px; height: 100vh; position: sticky; top: 0; overflow-y: auto; overflow-x: hidden; opacity: 1; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        
+        /* Clase añadida dinámicamente con JS para cerrarlo */
+        .right-panel.hidden { width: 0px; min-width: 0px; padding: 24px 0px; border-left: none; opacity: 0; pointer-events: none; }
+        
         .user-profile { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .profile-info { display: flex; align-items: center; gap: 12px; }
         .avatar { width: 36px; height: 36px; background: #22344d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
-        .top-actions { display: flex; align-items: center; gap: 16px; font-size: 20px; color: var(--text-muted); cursor: pointer; }
+        .top-actions { display: flex; align-items: center; gap: 16px; font-size: 20px; color: var(--text-muted); cursor: pointer; transition: color 0.2s; }
+        .top-actions:hover { color: var(--text-main); }
         
         .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .section-title h4 { font-size: 14px; font-weight: 600; letter-spacing: 0.3px; }
@@ -251,7 +256,8 @@
                         <span style="font-size: 11px; color: var(--text-muted)">Administrador</span>
                     </div>
                 </div>
-                <div class="top-actions">
+                <!-- ID AÑADIDO PARA DETECTAR EL CLIC Y ALTERNAR VISIBILIDAD -->
+                <div class="top-actions" id="btnToggleDerecho" title="Ocultar/Mostrar Panel">
                     <i class="ph ph-bell-ringing" style="position: relative;"><span class="badge" style="position: absolute; top:-5px; right:-5px; scale: 0.8;">3</span></i>
                 </div>
             </div>
@@ -307,7 +313,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Estructura Inicial Local en caso de desconexión o fallback
+        // Instancias globales para poder redimensionar al colapsar el menú
+        let globalChartConsumo, globalChartDona;
+
+        // Estructura Inicial Local con los datos de tu captura de pantalla
         let SILOS = [
             { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "10:30:30" },
             { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", fecha: "10:30:28" },
@@ -357,7 +366,7 @@
                             </div>
                         </div>
                         <div class="silo-footer">
-                            <div><b>${s.consumo || '--'} kg/h</b>Consumo</div>
+                            <div><b>${s.estado === 'Desconectado' ? '--' : s.consumo + ' kg/h'}</b>Consumo</div>
                             <div><b>${s.fecha}</b>Actualizado</div>
                             <div><b>${s.rssi ? s.rssi + ' dBm' : '--'}</b>RSSI</div>
                         </div>
@@ -398,6 +407,62 @@
             `;
         }
 
+        /* ========================================================
+           LÓGICA PEDIDA: SIMULACIÓN DE PORCENTAJES PARA EL CLIENTE
+           ======================================================== */
+        function simularDescargaComplejoIndustrial() {
+            let horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            SILOS.forEach(s => {
+                if (s.estado === "Desconectado" || s.estado === "Sin Flujo") return;
+
+                // Simular vaciado variando entre 15 y 60 kg en cada ciclo de la demo
+                let descarga = Math.floor(Math.random() * 45) + 15;
+                s.peso = Math.max(0, s.peso - descarga);
+                s.fecha = horaActual;
+
+                // Ajustar umbrales industriales de forma automática según la pérdida simulada
+                let pct = Math.round((s.peso / s.capacidad) * 100);
+                if (pct <= 15) s.estado = "Critica";
+                else if (pct <= 30) s.estado = "Baja";
+                else s.estado = "Normal";
+            });
+
+            // Re-renderizar tarjetas con los porcentajes simulados corriendo en vivo
+            renderSilos();
+
+            // Refrescar dona de distribución de consumo en base a los pesos simulados actuales
+            if(globalChartDona) {
+                globalChartDona.data.datasets[0].data = SILOS.map(s => s.peso);
+                globalChartDona.update();
+            }
+        }
+        // Iniciar bucle de simulación automática cada 3.5 segundos para la propuesta
+        setInterval(simularDescargaComplejoIndustrial, 3500);
+
+
+        /* ========================================================
+           LÓGICA PEDIDA: OCULTAR/MOSTRAR LA BARRA LATERAL DERECHA
+           ======================================================== */
+        const btnToggle = document.getElementById("btnToggleDerecho");
+        const panelDerecho = document.querySelector(".right-panel");
+
+        if (btnToggle && panelDerecho) {
+            btnToggle.addEventListener("click", () => {
+                panelDerecho.classList.toggle("hidden");
+                
+                // Mientras corre la transición CSS (400ms), avisamos a Chart.js para redibujarse perfectamente
+                let intervalResize = setInterval(() => {
+                    if (globalChartConsumo) globalChartConsumo.resize();
+                    if (globalChartDona) globalChartDona.resize();
+                }, 16);
+
+                // Apagar el ajuste repetitivo una vez concluido el movimiento
+                setTimeout(() => { clearInterval(intervalResize); }, 410);
+            });
+        }
+
+
         // ESCHUCHADOR EN TIEMPO REAL DESDE FIREBASE REALTIME DATABASE
         const silosRef = ref(db, 'silos');
         onValue(silosRef, (snapshot) => {
@@ -413,7 +478,7 @@
         renderDerecha();
 
         // Gráfico de líneas (Consumo)
-        new Chart(document.getElementById("chartConsumo"), {
+        globalChartConsumo = new Chart(document.getElementById("chartConsumo"), {
             type: 'line',
             data: {
                 labels: ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00", "02:00", "04:00", "06:00"],
@@ -431,12 +496,12 @@
         });
 
         // Gráfico de Dona (Distribución)
-        new Chart(document.getElementById("chartDona"), {
+        globalChartDona = new Chart(document.getElementById("chartDona"), {
             type: 'doughnut',
             data: {
                 labels: ["Silo 1", "Silo 2", "Silo 3", "Silo 4", "Silo 5", "Silo 6", "Silo 7"],
                 datasets: [{
-                    data: [24.5, 18.2, 12.8, 4.2, 26.3, 13.1, 0.9],
+                    data: SILOS.map(s => s.peso),
                     backgroundColor: ["#2cff88", "#3b82f6", "#ffb400", "#ff3b30", "#a25ddc", "#00cbc6", "#4b5563"],
                     borderWidth: 0
                 }]
