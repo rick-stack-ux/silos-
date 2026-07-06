@@ -63,5 +63,264 @@ pesoTotal.innerText=total.toLocaleString()+" kg";
 alarmas.innerText=alar;
 }
 pintar();
+  /*==========================
+      VARIABLES GLOBALES
+===========================*/
+
+let gatewayOnline=true;
+let firebaseOnline=true;
+let registradorOnline=true;
+
+let consumoHora=0;
+let consumoDia=0;
+let consumoMes=0;
+
+let pesoAnteriorTotal=0;
+
+let historial=[];
+
+let eventos=[];
+
+let alarmas=[];
+
+/*==========================
+      CALCULAR CONSUMO
+===========================*/
+
+function calcularConsumo(){
+
+let pesoActual=0;
+
+SILOS.forEach(s=>{
+
+pesoActual+=s.peso;
+
+});
+
+consumoHora=Math.max(0,pesoAnteriorTotal-pesoActual);
+
+consumoDia+=consumoHora;
+
+consumoMes+=consumoHora;
+
+pesoAnteriorTotal=pesoActual;
+
+document.getElementById("consumoHora").innerHTML=consumoHora.toLocaleString()+" kg/h";
+
+}
+
+/*==========================
+      EVENTOS
+===========================*/
+
+function agregarEvento(texto){
+
+eventos.unshift({
+
+hora:new Date().toLocaleTimeString(),
+
+texto:texto
+
+});
+
+if(eventos.length>25){
+
+eventos.pop();
+
+}
+
+}
+
+/*==========================
+      ALARMAS
+===========================*/
+
+function revisarAlarmas(){
+
+alarmas=[];
+
+SILOS.forEach(s=>{
+
+let porcentaje=Math.round((s.peso/s.capacidad)*100);
+
+if(porcentaje<=15){
+
+alarmas.push({
+
+tipo:"CRITICA",
+
+silo:s.nombre
+
+});
+
+}
+
+else if(porcentaje<=30){
+
+alarmas.push({
+
+tipo:"BAJA",
+
+silo:s.nombre
+
+});
+
+}
+
+});
+
+document.getElementById("alarmas").innerHTML=alarmas.length;
+
+mostrarAlarmas();
+
+}
+
+/*==========================
+      PANEL ALARMAS
+===========================*/
+
+function mostrarAlarmas(){
+
+let html="";
+
+alarmas.forEach(a=>{
+
+let color="#2cff88";
+
+if(a.tipo=="BAJA") color="#ffb400";
+
+if(a.tipo=="CRITICA") color="#ff3030";
+
+html+=`
+
+<div style="background:${color};color:#000;padding:10px;border-radius:8px;margin-bottom:8px;font-weight:bold;">
+
+${a.silo}
+
+<br>
+
+${a.tipo}
+
+</div>
+
+`;
+
+});
+
+if(html==""){
+
+html="<div style='color:#2cff88'>Sin alarmas</div>";
+
+}
+
+document.getElementById("listaAlarmas").innerHTML=html;
+
+}
+
+/*==========================
+      HISTORIAL
+===========================*/
+
+function guardarHistorial(){
+
+let registro={
+
+fecha:new Date().toLocaleString(),
+
+silos:JSON.parse(JSON.stringify(SILOS))
+
+};
+
+historial.unshift(registro);
+
+if(historial.length>300){
+
+historial.pop();
+
+}
+
+}
+
+/*==========================
+      SIMULADOR
+===========================*/
+
+setInterval(()=>{
+
+SILOS.forEach(s=>{
+
+let consumo=Math.random()*12;
+
+s.peso=Math.max(0,s.peso-consumo);
+
+});
+
+pintar();
+
+calcularConsumo();
+
+guardarHistorial();
+
+revisarAlarmas();
+
+agregarEvento("Pesos actualizados");
+
+},5000);
+
+/*==========================
+      GRAFICO CONSUMO
+===========================*/
+
+const chartHora=new Chart(
+
+document.getElementById("chartHora"),
+
+{
+
+type:"line",
+
+data:{
+
+labels:["0","1","2","3","4","5"],
+
+datasets:[{
+
+label:"kg/h",
+
+data:[0,0,0,0,0,0],
+
+borderColor:"#2cff88",
+
+backgroundColor:"rgba(44,255,136,.15)",
+
+fill:true,
+
+tension:.35
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{display:false}
+
+}
+
+}
+
+}
+
+);
+
+revisarAlarmas();
+
+calcularConsumo();
+
+guardarHistorial();
 </script>
 </body></html>
