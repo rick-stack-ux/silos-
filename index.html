@@ -1,314 +1,67 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>AURUM.SYS | Smart Silo Monitor</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="css/style.css">
-
-</head>
-
-<body>
-
-<!-- SIDEBAR -->
-
-<div class="sidebar">
-
-<div class="logo">
-
-<h1>AURUM.SYS</h1>
-
-<p>SMART SILO MONITOR</p>
-
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AURUM.SYS Smart Silo Monitor</title><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script><style>
+:root{--bg:#0b1220;--card:#151f2e;--green:#2cff88;--yellow:#ffd84d;--red:#ff4d5a;--blue:#44b3ff;--text:#fff;--muted:#8ea0b8;--radius:18px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial}
+body{background:var(--bg);color:#fff}
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:#101827;padding:25px}
+.logo{font-size:30px;font-weight:700;color:var(--green)}
+.sub{color:#9fb3c8;font-size:13px;margin-bottom:30px}
+.menu div{padding:14px;border-radius:12px;margin-bottom:10px;background:#162132;cursor:pointer;transition:.3s}
+.menu div:hover{background:#203148}
+.main{margin-left:280px;padding:25px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.status{padding:8px 18px;background:#143923;color:#2cff88;border-radius:30px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:25px}
+.card{background:var(--card);padding:22px;border-radius:var(--radius);box-shadow:0 10px 20px rgba(0,0,0,.35)}
+.card h2{font-size:34px;color:var(--green)}
+.card p{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.silo{background:var(--card);border-radius:var(--radius);padding:20px}
+.tank{width:90px;height:220px;border:4px solid #33465f;border-radius:18px;margin:auto;overflow:hidden;background:#09111d;display:flex;align-items:flex-end}
+.level{width:100%;background:linear-gradient(#2cff88,#16b65f);transition:1s}
+.bottom{display:grid;grid-template-columns:2fr 2fr 1fr;gap:18px;margin-top:25px}
+.panel{background:var(--card);padding:20px;border-radius:var(--radius)}
+</style></head><body>
+<div class="sidebar"><div class="logo">AURUM.SYS</div><div class="sub">SMART SILO MONITOR</div><div class="menu"><div>🏠 Dashboard</div><div>🌾 Silos</div><div>📈 Consumo</div><div>📜 Historial</div><div>🚨 Alarmas</div><div>📄 Reportes</div><div>⚙ Configuración</div><div>👤 Usuarios</div></div></div>
+<div class="main">
+<div class="header"><div><h1>Dashboard Industrial</h1><small>Monitoreo tiempo real de 7 silos</small></div><div class="status">● ONLINE</div></div>
+<div class="cards">
+<div class="card"><h2 id="totalSilos">7</h2><p>Silos</p></div>
+<div class="card"><h2 id="pesoTotal">0 kg</h2><p>Peso Total</p></div>
+<div class="card"><h2 id="consumoHora">0 kg/h</h2><p>Consumo Hora</p></div>
+<div class="card"><h2 id="alarmas">0</h2><p>Alarmas</p></div>
 </div>
-
-<ul>
-
-<li class="active">🏠 Dashboard</li>
-
-<li>🌾 Silos</li>
-
-<li>📈 Consumo</li>
-
-<li>📜 Historial</li>
-
-<li>🚨 Alarmas</li>
-
-<li>📄 Reportes</li>
-
-<li>⚙ Configuración</li>
-
-<li>👤 Usuarios</li>
-
-<li>🔧 Mantenimiento</li>
-
-<li>📞 Soporte</li>
-
-</ul>
-
-</div>
-
-<!-- CONTENIDO -->
-
-<div class="content">
-
-<header>
-
-<div>
-
-<h2>Dashboard General</h2>
-
-<span>Monitoreo Industrial en Tiempo Real</span>
-
-</div>
-
-<div class="headerRight">
-
-<div class="online">
-
-🟢 Sistema Online
-
-</div>
-
-<div>
-
-Administrador
-
-</div>
-
-</div>
-
-</header>
-
-<!-- TARJETAS -->
-
-<section class="cards">
-
-<div class="card">
-
-<h3>7</h3>
-
-<p>Silos Activos</p>
-
-</div>
-
-<div class="card">
-
-<h3>126.580 Kg</h3>
-
-<p>Peso Total</p>
-
-</div>
-
-<div class="card">
-
-<h3>352 Kg/h</h3>
-
-<p>Consumo</p>
-
-</div>
-
-<div class="card danger">
-
-<h3>2</h3>
-
-<p>Alarmas</p>
-
-</div>
-
-</section>
-
-<!-- SILOS -->
-
-<section class="grid">
-
-<div class="silo">
-
-<h2>SILO 1</h2>
-
-<div class="tank">
-
-<div class="level level90"></div>
-
-</div>
-
-<p>90%</p>
-
-<p>4520 Kg</p>
-
-<p>Normal</p>
-
-</div>
-
-<div class="silo">
-
-<h2>SILO 2</h2>
-
-<div class="tank">
-
-<div class="level level74"></div>
-
-</div>
-
-<p>74%</p>
-
-<p>3750 Kg</p>
-
-<p>Normal</p>
-
-</div>
-
-<div class="silo">
-
-<h2>SILO 3</h2>
-
-<div class="tank">
-
-<div class="level warning"></div>
-
-</div>
-
-<p>38%</p>
-
-<p>1890 Kg</p>
-
-<p>Bajo</p>
-
-</div>
-
-<div class="silo">
-
-<h2>SILO 4</h2>
-
-<div class="tank">
-
-<div class="level level82"></div>
-
-</div>
-
-<p>82%</p>
-
-<p>4200 Kg</p>
-
-<p>Normal</p>
-
-</div>
-
-<div class="silo">
-
-<h2>SILO 5</h2>
-
-<div class="tank">
-
-<div class="level critical"></div>
-
-</div>
-
-<p>12%</p>
-
-<p>580 Kg</p>
-
-<p>Crítico</p>
-
-</div>
-
-<div class="silo">
-
-<h2>SILO 6</h2>
-
-<div class="tank">
-
-<div class="level level63"></div>
-
-</div>
-
-<p>63%</p>
-
-<p>3100 Kg</p>
-
-<p>Normal</p>
-
-</div>
-
-<div class="silo">
-
-<h2>SILO 7</h2>
-
-<div class="tank">
-
-<div class="level level55"></div>
-
-</div>
-
-<p>55%</p>
-
-<p>2780 Kg</p>
-
-<p>Normal</p>
-
-</div>
-
-</section>
-
-<!-- PARTE INFERIOR -->
-
+<div class="grid" id="grid"></div>
 <div class="bottom">
-
-<div class="chart">
-
-<h3>Consumo por Hora</h3>
-
-<canvas id="horaChart"></canvas>
-
+<div class="panel"><canvas id="chartHora"></canvas></div>
+<div class="panel"><canvas id="chartDia"></canvas></div>
+<div class="panel"><h3>Alarmas</h3><div id="listaAlarmas"></div></div>
 </div>
-
-<div class="chart">
-
-<h3>Consumo Diario</h3>
-
-<canvas id="diaChart"></canvas>
-
 </div>
-
-<div class="alarmBox">
-
-<h3>Alarmas</h3>
-
-<ul>
-
-<li>🔴 Silo 5 Nivel Crítico</li>
-
-<li>🟠 Silo 3 Nivel Bajo</li>
-
-<li>🟢 Gateway LoRa Conectado</li>
-
-<li>🟢 Firebase Sincronizado</li>
-
-</ul>
-
-</div>
-
-</div>
-
-<footer>
-
-AURUM.SYS Smart Silo Monitor ©2026
-
-</footer>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script src="js/dashboard.js"></script>
-
-</body>
-
-</html>
+<script>
+const SILOS=[
+{id:1,nombre:"Silo 1",capacidad:5000,peso:4200},
+{id:2,nombre:"Silo 2",capacidad:5000,peso:3600},
+{id:3,nombre:"Silo 3",capacidad:5000,peso:1800},
+{id:4,nombre:"Silo 4",capacidad:5000,peso:4700},
+{id:5,nombre:"Silo 5",capacidad:5000,peso:700},
+{id:6,nombre:"Silo 6",capacidad:5000,peso:2900},
+{id:7,nombre:"Silo 7",capacidad:5000,peso:3400}
+];
+const grid=document.getElementById("grid");
+function pintar(){
+grid.innerHTML="";
+let total=0,alar=0;
+SILOS.forEach(s=>{
+let p=Math.round((s.peso/s.capacidad)*100);
+total+=s.peso;
+let c="#2cff88";
+if(p<40)c="#ffd84d";
+if(p<20){c="#ff4d5a";alar++;}
+grid.innerHTML+=`<div class='silo'><h2>${s.nombre}</h2><div class='tank'><div class='level' style='height:${p}%;background:${c}'></div></div><h3>${s.peso} kg</h3><p>${p}%</p><small>RSSI -62 dBm</small></div>`;
+});
+pesoTotal.innerText=total.toLocaleString()+" kg";
+alarmas.innerText=alar;
+}
+pintar();
+</script>
+</body></html>
