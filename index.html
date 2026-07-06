@@ -406,5 +406,98 @@ revisarAlarmas();
 calcularConsumo();
 
 guardarHistorial();
-</script>
+</script>/*======================================
+      PANEL ACTIVIDAD
+=======================================*/
+
+function actualizarActividad(){
+
+let html="";
+
+eventos.forEach(e=>{
+
+html+=`
+
+<div style="padding:10px;
+border-bottom:1px solid #243447;
+font-size:13px;">
+
+<b>${e.hora}</b>
+
+<br>
+
+${e.texto}
+
+</div>
+
+`;
+
+});
+
+document.getElementById("actividad").innerHTML=html;
+
+}
+
+/*======================================
+      ESTADOS
+=======================================*/
+
+function actualizarEstados(){
+
+document.getElementById("stGateway").innerHTML=
+gatewayOnline?"🟢 ONLINE":"🔴 OFFLINE";
+
+document.getElementById("stFirebase").innerHTML=
+firebaseOnline?"🟢 ONLINE":"🔴 OFFLINE";
+
+document.getElementById("st501").innerHTML=
+registradorOnline?"🟢 ONLINE":"🔴 OFFLINE";
+
+document.getElementById("stESP").innerHTML="🟢 ONLINE";
+
+document.getElementById("stLoRa").innerHTML="🟢 ONLINE";
+
+document.getElementById("rssi").innerHTML=
+(-60-Math.floor(Math.random()*8))+" dBm";
+
+document.getElementById("snr").innerHTML=
+(9+Math.random()*2).toFixed(1);
+
+document.getElementById("ultimaLectura").innerHTML=
+new Date().toLocaleTimeString();
+
+}
+
+/*======================================
+      TARJETAS SUPERIORES
+=======================================*/
+
+function actualizarResumen(){
+
+let peso=0;
+
+SILOS.forEach(s=>{
+
+peso+=s.peso;
+
+});
+
+document.getElementById("pesoTotal").innerHTML=
+peso.toLocaleString()+" kg";
+
+}
+
+/*======================================
+      FECHA
+=======================================*/
+
+setInterval(()=>{
+
+actualizarEstados();
+
+actualizarActividad();
+
+actualizarResumen();
+
+},1000);
 </body></html>
