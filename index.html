@@ -8,149 +8,146 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #070c14;
-            --sidebar-bg: #0c1322;
-            --card-bg: #0f192b;
-            --card-border: #1a293f;
-            --green: #2cff88;
-            --yellow: #ffb400;
-            --red: #ff3b30;
-            --purple: #a25ddc;
-            --blue: #007bff;
+            --bg: #03070c;
+            --sidebar-bg: #060b11;
+            --card-bg: #09111a;
+            --card-border: #142235;
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --purple: #8b5cf6;
+            --blue: #3b82f6;
             --text-main: #ffffff;
-            --text-muted: #6c7d93;
+            --text-muted: #64748b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); display: flex; overflow-x: hidden; height: 100vh; }
+        body { background-color: var(--bg); color: var(--text-main); display: flex; overflow: hidden; height: 100vh; }
 
         /* --- LOGIN OVERLAY --- */
         #loginScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; }
         .login-card i { font-size: 48px; color: var(--green); margin-bottom: 16px; }
-        .login-field { width: 100%; padding: 12px; background: #070c14; border: 1px solid var(--card-border); border-radius: 8px; color: white; margin-top: 14px; font-size: 14px; }
-        .btn-login { width: 100%; padding: 12px; background: var(--green); color: #070c14; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.2s; }
-        .btn-login:hover { opacity: 0.9; }
+        .login-field { width: 100%; padding: 12px; background: #03070c; border: 1px solid var(--card-border); border-radius: 8px; color: white; margin-top: 14px; font-size: 14px; }
+        .btn-login { width: 100%; padding: 12px; background: var(--green); color: white; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.2s; }
 
-        /* --- SIDEBAR IZQUIERDO --- */
-        .sidebar { width: 260px; height: 100vh; background: var(--sidebar-bg); padding: 24px; position: fixed; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--card-border); z-index: 100; }
-        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
-        .brand i { color: var(--green); font-size: 28px; }
-        .brand h2 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
-        .brand span { display: block; font-size: 11px; color: var(--text-muted); font-weight: 400; }
-        .menu-list { display: flex; flex-direction: column; gap: 8px; }
-        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 10px; color: var(--text-muted); cursor: pointer; transition: 0.2s; font-size: 14px; text-decoration: none; }
-        .menu-item div { display: flex; align-items: center; gap: 12px; }
-        .menu-item i { font-size: 18px; }
-        .menu-item.active { background: rgba(44, 255, 136, 0.1); color: var(--green); font-weight: 600; }
-        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.03); color: var(--text-main); }
-        .badge { background: var(--red); color: white; font-size: 11px; padding: 2px 6px; border-radius: 20px; font-weight: 700; }
-        
-        .sidebar-footer { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); padding: 16px; border-radius: 12px; font-size: 12px; }
-        .status-box { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .status-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 8px var(--green); }
-        .footer-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; color: var(--text-muted); font-size: 11px; }
-        .footer-metrics b { color: var(--text-main); display: block; font-size: 12px; }
+        /* --- SIDEBAR --- */
+        .sidebar { width: 240px; height: 100vh; background: var(--sidebar-bg); padding: 20px; position: fixed; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--card-border); }
+        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; color: var(--green); }
+        .brand i { font-size: 26px; }
+        .brand h2 { font-size: 16px; font-weight: 700; color: white; }
+        .brand span { display: block; font-size: 10px; color: var(--text-muted); }
+        .menu-list { display: flex; flex-direction: column; gap: 4px; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 8px; color: var(--text-muted); cursor: pointer; font-size: 13px; text-decoration: none; transition: 0.2s; }
+        .menu-item div { display: flex; align-items: center; gap: 10px; }
+        .menu-item i { font-size: 16px; }
+        .menu-item.active { background: rgba(16, 185, 129, 0.08); color: var(--green); font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.02); color: white; }
+        .badge { background: var(--red); color: white; font-size: 10px; padding: 1px 5px; border-radius: 10px; font-weight: 700; }
+        .sidebar-footer { background: rgba(255,255,255,0.01); border: 1px solid var(--card-border); padding: 14px; border-radius: 10px; font-size: 11px; }
 
-        /* --- CONTENEDOR PRINCIPAL (CENTRO + DERECHA) --- */
-        .wrapper { margin-left: 260px; width: calc(100% - 260px); display: flex; transition: all 0.4s ease; height: 100vh; overflow: hidden; }
-        .main-content { flex: 1; padding: 24px; overflow-y: auto; height: 100%; min-width: 0; }
-        
-        /* VIEWS (PANTALLAS SPA) */
+        /* --- WRAPPER Y NAV SUPERIOR --- */
+        .wrapper { margin-left: 240px; width: calc(100% - 240px); display: flex; flex-direction: column; height: 100vh; }
+        .top-navbar { height: 60px; border-bottom: 1px solid var(--card-border); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 24px; background: var(--sidebar-bg); }
+        .nav-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+        .nav-status span { color: var(--green); font-weight: 600; }
+        .nav-icon-btn { position: relative; font-size: 20px; color: var(--text-muted); cursor: pointer; }
+        .nav-badge { position: absolute; top: -4px; right: -4px; background: var(--red); width: 14px; height: 14px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; color: white; }
+        .user-widget { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+        .user-widget img { width: 32px; height: 32px; border-radius: 50%; background: #22344d; }
+
+        /* CONTENIDO PRINCIPAL */
+        .layout-container { display: flex; flex: 1; overflow: hidden; }
+        .main-content { flex: 1; padding: 24px; overflow-y: auto; }
         .app-view { display: none; }
         .app-view.active-view { display: block; }
+        .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .main-header h1 { font-size: 20px; font-weight: 600; }
+        .main-header p { color: var(--text-muted); font-size: 12px; }
 
-        /* TABLAS E INTERFACES COMUNES */
-        .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .main-header h1 { font-size: 24px; font-weight: 600; }
-        .main-header p { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
-        
-        .custom-table { width: 100%; border-collapse: collapse; margin-top: 16px; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); }
-        .custom-table th, .custom-table td { padding: 14px 16px; text-align: left; font-size: 13px; }
-        .custom-table th { background: rgba(255,255,255,0.02); color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--card-border); }
-        .custom-table td { border-bottom: 1px solid rgba(255,255,255,0.02); color: var(--text-main); }
-        .custom-table tr:hover { background: rgba(255,255,255,0.01); }
+        /* --- VISTA GENERAL SILOS (REPLICADO EXACTO) --- */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .kpi-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 14px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .kpi-info p { color: var(--text-muted); font-size: 11px; }
+        .kpi-info h3 { font-size: 18px; font-weight: 700; margin-top: 2px; }
+        .kpi-info h3 span { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+        .kpi-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-muted); }
 
-        /* KPIS GRID */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        .kpi-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 16px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; }
-        .kpi-info p { color: var(--text-muted); font-size: 12px; margin-bottom: 4px; }
-        .kpi-info h3 { font-size: 22px; font-weight: 700; }
-        .kpi-info h3 span { font-size: 14px; color: var(--text-muted); font-weight: 400; }
-        .kpi-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .kpi-card:nth-child(1) .kpi-icon { background: rgba(44, 255, 136, 0.1); color: var(--green); }
-        .kpi-card:nth-child(2) .kpi-icon { background: rgba(0, 123, 255, 0.1); color: #3b82f6; }
-        .kpi-card:nth-child(3) .kpi-icon { background: rgba(255, 180, 0, 0.1); color: var(--yellow); }
-        .kpi-card:nth-child(4) .kpi-icon { background: rgba(255, 77, 90, 0.1); color: var(--red); }
-
-        /* GRILLA DE SILOS */
-        .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        .silo-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px; position: relative; }
-        .silo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .silo-title { font-size: 15px; font-weight: 600; }
-        .silo-status { font-size: 11px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .silo-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; position: relative; }
+        .silo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .silo-title { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
+        .silo-status { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .silo-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-        
         .status-normal { color: var(--green); }.status-normal::before { background: var(--green); }
         .status-baja { color: var(--yellow); }.status-baja::before { background: var(--yellow); }
         .status-critica { color: var(--red); }.status-critica::before { background: var(--red); }
         .status-sinflujo { color: var(--purple); }.status-sinflujo::before { background: var(--purple); }
         .status-desc { color: var(--text-muted); }.status-desc::before { background: var(--text-muted); }
 
-        .silo-body { display: flex; align-items: center; justify-content: space-around; padding: 10px 0; }
-        .tank-container { width: 85px; height: 170px; position: relative; background: #070c14; border: 3px solid #22344d; border-radius: 12px 12px 24px 24px; overflow: hidden; display: flex; align-items: flex-end; }
-        .tank-fluid { width: 100%; transition: height 1s ease; position: relative; }
+        /* DISEÑO DE SILO METALÚRGICO REALISTA */
+        .silo-body { display: flex; align-items: center; justify-content: space-between; position: relative; height: 160px; margin-bottom: 14px; }
+        .silo-scale { display: flex; flex-direction: column; justify-content: space-between; height: 100%; font-size: 9px; color: #475569; width: 30px; text-align: left; border-right: 1px dashed #1e293b; }
         
-        .silo-readout { text-align: right; }
-        .silo-percentage { font-size: 32px; font-weight: 700; line-height: 1; }
-        .silo-weight { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
-        
-        .silo-footer { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 12px; padding-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 11px; color: var(--text-muted); }
-        .silo-footer b { display: block; color: var(--text-main); font-size: 12px; margin-bottom: 2px; }
+        .silo-graphic-container { flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; }
+        .silo-structure { width: 75px; height: 140px; border: 2px solid #334155; border-radius: 6px 6px 20px 20px; overflow: hidden; position: relative; background: #0f172a; display: flex; align-items: flex-end; }
+        /* Domo superior e inferior cónico simulado */
+        .silo-structure::before { content:''; position: absolute; top:0; left:0; width:100%; height:8px; background: #1e293b; border-bottom: 1px solid #334155; }
+        .silo-fluid { width: 100%; transition: height 0.5s ease; background-size: 100% 100%; }
 
-        .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-        .chart-panel { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; min-width: 0; }
+        .silo-values { width: 70px; text-align: right; display: flex; flex-direction: column; justify-content: center; }
+        .silo-percentage { font-size: 26px; font-weight: 700; color: white; line-height: 1; }
+        .silo-weight { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
-        /* --- PANEL DERECHO --- */
-        .right-panel { width: 340px; min-width: 340px; background: var(--sidebar-bg); border-left: 1px solid var(--card-border); padding: 24px; display: flex; flex-direction: column; gap: 24px; height: 100vh; overflow-y: auto; transition: all 0.4s ease; }
-        .right-panel.hidden { width: 0px; min-width: 0px; padding: 24px 0px; border-left: none; opacity: 0; pointer-events: none; }
-        
-        .user-profile { display: flex; align-items: center; justify-content: space-between; }
-        .profile-info { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 36px; height: 36px; background: #22344d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
-        .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        
-        .log-list { display: flex; flex-direction: column; gap: 10px; }
-        .log-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03); }
-        .log-details { display: flex; align-items: center; gap: 10px; font-size: 13px; }
-        .log-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .silo-footer { border-top: 1px solid #142235; padding-top: 10px; display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+        .silo-footer span { color: white; font-weight: 500; }
 
-        .control-btn { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.02); color: var(--text-main); font-weight: 500; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; margin-bottom: 8px; font-size: 13px; }
-        .control-btn.primary { background: rgba(44, 255, 136, 0.12); border-color: rgba(44, 255, 136, 0.3); color: var(--green); }
+        /* GRÁFICOS */
+        .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+        .chart-panel { background: var(--card-bg); border: 1px solid var(--card-border); padding: 16px; border-radius: 12px; }
+
+        /* --- PANEL DERECHO (ALARMAS Y CONTROLES) --- */
+        .right-panel { width: 320px; background: var(--sidebar-bg); border-left: 1px solid var(--card-border); padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+        .section-header-row { display: flex; justify-content: space-between; align-items: center; }
+        .section-header-row h4 { font-size: 13px; font-weight: 600; color: white; }
+        .view-all-link { font-size: 11px; color: var(--blue); text-decoration: none; }
         
-        /* CARD DE SOPORTE EXCLUSIVO */
-        .support-card { background: linear-gradient(135deg, #111c31 0%, #0c1322 100%); border: 1px solid var(--card-border); padding: 24px; border-radius: 16px; text-align: center; max-width: 500px; margin: 40px auto 0 auto; }
-        .support-card i { font-size: 48px; color: var(--green); margin-bottom: 14px; }
-        .support-link { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0; color: white; text-decoration: none; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); transition: 0.2s; }
-        .support-link:hover { border-color: var(--green); background: rgba(44, 255, 136, 0.02); }
+        .event-list { display: flex; flex-direction: column; gap: 8px; }
+        .event-item { background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px; border-radius: 8px; display: flex; align-items: flex-start; gap: 10px; font-size: 12px; }
+        .event-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 2px; }
+        .event-info { flex: 1; }
+        .event-info p { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+        .event-time { font-size: 10px; color: var(--text-muted); }
+
+        .control-btn { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--card-bg); color: white; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 8px; transition: 0.2s; }
+        .control-btn:hover { background: rgba(255,255,255,0.02); }
+        .control-btn.btn-green-light { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); color: var(--green); }
+
+        /* TABLAS COMUNES PARA SUBPANTALLAS */
+        .custom-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); }
+        .custom-table th, .custom-table td { padding: 12px 14px; text-align: left; font-size: 12px; }
+        .custom-table th { background: rgba(255,255,255,0.01); color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--card-border); }
+        .custom-table td { border-bottom: 1px solid rgba(255,255,255,0.01); color: white; }
+
+        .support-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 12px; text-align: center; max-width: 450px; margin: 40px auto; }
+        .support-link { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px 0; color: white; text-decoration: none; background: rgba(255,255,255,0.01); padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN DE CONTROL DE ACCESO (USUARIOS) -->
+    <!-- CONTROL DE ACCESO -->
     <div id="loginScreen">
         <div class="login-card">
-            <i class="ph-fill ph-lock-key"></i>
-            <h2 style="font-size:20px; margin-bottom:4px;">AURUM.SYS</h2>
-            <p style="color:var(--text-muted); font-size:13px;">Ingrese credenciales de operador</p>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario de Fábrica">
+            <i class="ph-fill ph-shield"></i>
+            <h2>AURUM.SYS LOGIN</h2>
+            <input type="text" id="userInput" class="login-field" placeholder="Nombre de Usuario">
             <input type="password" id="passInput" class="login-field" placeholder="Contraseña">
-            <div id="loginError" style="color:var(--red); font-size:12px; margin-top:10px; display:none;">Datos incorrectos</div>
-            <button class="btn-login" id="btnLoginAction">Iniciar Sesión</button>
+            <div id="loginError" style="color:var(--red); font-size:12px; margin-top:10px; display:none;">Credenciales incorrectas</div>
+            <button class="btn-login" id="btnLoginAction">Autenticar Sistema</button>
         </div>
     </div>
 
-    <!-- SIDEBAR IZQUIERDO -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <div>
             <div class="brand">
@@ -158,7 +155,7 @@
                 <div><h2>AURUM.SYS</h2><span>Smart Silo Monitor</span></div>
             </div>
             <div class="menu-list">
-                <div class="menu-item active" data-target="viewDashboard"><div><i class="ph ph-squares-four"></i>Dashboard</div></div>
+                <div class="menu-item active" data-target="viewDashboard"><div><i class="ph-fill ph-squares-four"></i>Dashboard</div></div>
                 <div class="menu-item" data-target="viewHistorial"><div><i class="ph ph-clock-counter-clockwise"></i>Historial</div></div>
                 <div class="menu-item" data-target="viewConsumo"><div><i class="ph ph-chart-line"></i>Consumo</div></div>
                 <div class="menu-item" data-target="viewAlarmas"><div><i class="ph ph-bell"></i>Alarmas</div><span class="badge" id="badgeAlarmas">0</span></div>
@@ -167,315 +164,317 @@
                 <div class="menu-item" data-target="viewSoporte"><div><i class="ph ph-question"></i>Soporte</div></div>
             </div>
         </div>
-
         <div class="sidebar-footer">
-            <div class="status-box"><div class="status-dot"></div><div><strong>Sistema Central</strong><div style="color: var(--green); font-size: 11px;">Operativo</div></div></div>
-            <div class="footer-metrics"><div>Gateways<b style="color: var(--green)">1/1 Online</b></div><div>Nodos<b style="color: var(--green)">7/7 Online</b></div></div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <div style="width:6px; height:6px; background:var(--green); border-radius:50%"></div>
+                <span>Sistemas Operativos</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; color:var(--text-muted)">
+                <div>Gway: <span style="color:white">1/1</span></div>
+                <div>Nodos: <span style="color:white">7/7</span></div>
+            </div>
         </div>
     </div>
 
-    <!-- WRAPPER DE PANTALLAS -->
+    <!-- WRAPPER -->
     <div class="wrapper">
-        <div class="main-content">
-            
-            <!-- PANTALLA 1: DASHBOARD -->
-            <div id="viewDashboard" class="app-view active-view">
-                <div class="main-header">
-                    <div><h1>Dashboard General</h1><p>Monitoreo en tiempo real de 7 silos</p></div>
+        <!-- TOP NAVBAR -->
+        <div class="top-navbar">
+            <div class="nav-status"><div style="width:6px; height:6px; background:var(--green); border-radius:50%"></div>Sistema Operativo: <span>Online</span></div>
+            <div class="nav-icon-btn"><i class="ph ph-bell"></i><div class="nav-badge" id="navBadgeCount">0</div></div>
+            <div class="user-widget">
+                <div style="text-align:right">
+                    <h4 id="profileUser" style="font-weight:600; color:white">Erick Gomez</h4>
+                    <span style="color:var(--text-muted); font-size:10px">Administrador</span>
                 </div>
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-info"><p>Silos Activos</p><h3>7</h3></div>
-                        <div class="kpi-icon"><i class="ph ph-database"></i></div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-info"><p>Peso Total Combinado</p><h3 id="pesoTotal">0 <span>kg</span></h3></div>
-                        <div class="kpi-icon"><i class="ph ph-scales"></i></div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-info"><p>Demanda de Planta</p><h3 id="consumoHora">0 <span>kg/h</span></h3></div>
-                        <div class="kpi-icon"><i class="ph ph-lightning"></i></div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-info"><p>Incidentes Críticos</p><h3 id="alarmasContador">0</h3></div>
-                        <div class="kpi-icon"><i class="ph ph-warning"></i></div>
-                    </div>
-                </div>
-                <div class="silos-grid" id="silosGrid"></div>
-                <div class="charts-row">
-                    <div class="chart-panel"><div class="chart-header"><h4>Curva de Despacho Combinado (Últimas 24 Horas)</h4></div><div style="height: 200px;"><canvas id="chartConsumo"></canvas></div></div>
-                    <div class="chart-panel"><div class="chart-header"><h4>Distribución de Inventario Interno</h4></div><div style="height: 200px;"><canvas id="chartDona"></canvas></div></div>
-                </div>
+                <div style="width:32px; height:32px; background:#1e293b; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:11px;" id="avatarName">EG</div>
             </div>
-
-            <!-- PANTALLA 2: HISTORIAL (DIARIO Y SEMANAL) -->
-            <div id="viewHistorial" class="app-view">
-                <div class="main-header">
-                    <div><h1>Historial Logístico</h1><p>Análisis de fluctuación diario y semanal por silo</p></div>
-                </div>
-                <table class="custom-table">
-                    <thead>
-                        <tr><th>Identificador</th><th>Promedio Diario</th><th>Mínimo Alcanzado</th><th>Máximo Acumulado Semanal</th><th>Frecuencia de Lectura</th></tr>
-                    </thead>
-                    <tbody id="tablaHistorial"></tbody>
-                </table>
-            </div>
-
-            <!-- PANTALLA 3: CONSUMO (POR HORA Y DÍA) -->
-            <div id="viewConsumo" class="app-view">
-                <div class="main-header">
-                    <div><h1>Métricas de Consumo</h1><p>Tasas de desalojo de material por hora y día métrico</p></div>
-                </div>
-                <table class="custom-table">
-                    <thead>
-                        <tr><th>Ubicación</th><th>Consumo por Hora Activa</th><th>Consumo Diario Total</th><th>Estado de Flujo</th></tr>
-                    </thead>
-                    <tbody id="tablaConsumo"></tbody>
-                </table>
-            </div>
-
-            <!-- PANTALLA 4: ALARMAS (PESOS CRÍTICOS Y ATASCAMIENTOS) -->
-            <div id="viewAlarmas" class="app-view">
-                <div class="main-header">
-                    <div><h1>Configuración & Estado de Alertas</h1><p>Pesos críticos establecidos y detección de nula variación de alimento (Puente/Bóveda)</p></div>
-                </div>
-                <table class="custom-table">
-                    <thead>
-                        <tr><th>Silo</th><th>Peso Actual</th><th>Límite Crítico Fijo</th><th>Variación de Peso (Últimos 10 min)</th><th>Estatus Alarma</th></tr>
-                    </thead>
-                    <tbody id="tablaAlarmasDetalle"></tbody>
-                </table>
-            </div>
-
-            <!-- PANTALLA 5: REPORTES (CARGAS SEMANALES) -->
-            <div id="viewReportes" class="app-view">
-                <div class="main-header">
-                    <div><h1>Reportes Operacionales</h1><p>Frecuencia de cargas de alimento registradas durante la semana actual</p></div>
-                </div>
-                <table class="custom-table">
-                    <thead>
-                        <tr><th>Unidad de Almacenamiento</th><th>Capacidad Estructural</th><th>Frecuencia Cargas (Esta Semana)</th><th>Última Carga Detectada</th></tr>
-                    </thead>
-                    <tbody id="tablaReportes"></tbody>
-                </table>
-            </div>
-
-            <!-- PANTALLA 6: CONFIGURACIÓN (LUEGO SE COMPLETA) -->
-            <div id="viewConfig" class="app-view">
-                <div class="main-header"><div><h1>Configuración del Sistema</h1><p>Módulo de ajuste de hardware (Próximamente)</p></div></div>
-                <div style="background:var(--card-bg); border:1px dashed var(--card-border); padding:40px; border-radius:12px; text-align:center; color:var(--text-muted)">Sección en desarrollo conjunto con AURUM.SYS.</div>
-            </div>
-
-            <!-- PANTALLA 7: SOPORTE TÉCNICO DIRECTO -->
-            <div id="viewSoporte" class="app-view">
-                <div class="support-card">
-                    <i class="ph ph-headset"></i>
-                    <h2>Soporte Técnico Especializado</h2>
-                    <p style="color: var(--text-muted); font-size:13px; margin-top:4px;">Comuníquese directamente con la mesa de ingeniería de AURUM.SYS para resolver dudas de nodos o calibración de celdas de carga.</p>
-                    <a href="mailto:aurumsysm@gmail.com" class="support-link"><i class="ph ph-envelope-simple" style="font-size:20px; color:var(--green)"></i> aurumsysm@gmail.com</a>
-                    <a href="tel:+56949287059" class="support-link"><i class="ph ph-phone" style="font-size:20px; color:var(--green)"></i> +56 9 4928 7059</a>
-                </div>
-            </div>
-
         </div>
 
-        <!-- PANEL DERECHO -->
-        <div class="right-panel">
-            <div class="user-profile">
-                <div class="profile-info"><div class="avatar" id="avatarName">OP</div><div><h4 id="profileUser">Operador Base</h4><span style="font-size: 11px; color: var(--text-muted)">AURUM Core</span></div></div>
-                <div class="top-actions" id="btnToggleDerecho"><i class="ph ph-bell-ringing"></i></div>
+        <div class="layout-container">
+            <!-- AREA DE CONTENIDO SPA -->
+            <div class="main-content">
+                
+                <!-- PANTALLA DASHBOARD -->
+                <div id="viewDashboard" class="app-view active-view">
+                    <div class="main-header">
+                        <div><h1>Dashboard General</h1><p>Monitoreo en tiempo real de 7 silos</p></div>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-info"><p>Silos Monitoreados</p><h3 style="color:var(--green)">7</h3></div>
+                            <div class="kpi-icon"><i class="ph ph-database"></i></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-info"><p>Peso Total</p><h3 id="pesoTotal">0 <span>kg</span></h3></div>
+                            <div class="kpi-icon"><i class="ph ph-scales"></i></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-info"><p>Consumo Actual</p><h3 id="consumoHora">0 <span>kg/h</span></h3></div>
+                            <div class="kpi-icon"><i class="ph ph-lightning"></i></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-info"><p>Alarmas Activas</p><h3 id="alarmasContador" style="color:var(--red)">0</h3></div>
+                            <div class="kpi-icon"><i class="ph ph-warning"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="silos-grid" id="silosGrid"></div>
+
+                    <div class="charts-row">
+                        <div class="chart-panel">
+                            <h4 style="font-size:12px; margin-bottom:10px;">Consumo Total (Últimas 24 Horas)</h4>
+                            <div style="height:160px;"><canvas id="chartConsumo"></canvas></div>
+                        </div>
+                        <div class="chart-panel">
+                            <h4 style="font-size:12px; margin-bottom:10px;">Distribución de Consumo</h4>
+                            <div style="height:160px;"><canvas id="chartDona"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBPANTALLA HISTORIAL -->
+                <div id="viewHistorial" class="app-view">
+                    <div class="main-header"><div><h1>Historial Logístico</h1><p>Análisis diario y semanal por estructura</p></div></div>
+                    <table class="custom-table">
+                        <thead><tr><th>Silo</th><th>Consumo Diario Promedio</th><th>Nivel Mínimo</th><th>Acumulado Semanal</th><th>Tasa Transmisión</th></tr></thead>
+                        <tbody id="tablaHistorial"></tbody>
+                    </table>
+                </div>
+
+                <!-- SUBPANTALLA CONSUMO -->
+                <div id="viewConsumo" class="app-view">
+                    <div class="main-header"><div><h1>Métricas de Consumo</h1><p>Cálculo de desalojo por hora y por jornadas de pesaje</p></div></div>
+                    <table class="custom-table">
+                        <thead><tr><th>Identificador</th><th>Consumo por Hora</th><th>Consumo por Día</th><th>Fluidez de Salida</th></tr></thead>
+                        <tbody id="tablaConsumo"></tbody>
+                    </table>
+                </div>
+
+                <!-- SUBPANTALLA ALARMAS -->
+                <div id="viewAlarmas" class="app-view">
+                    <div class="main-header"><div><h1>Límites Críticos & Atascamientos</h1><p>Monitoreo preventivo ante fallas estructurales o de flujo</p></div></div>
+                    <table class="custom-table">
+                        <thead><tr><th>Silo</th><th>Masa Actual</th><th>Peso Crítico Configurado</th><th>Variación Directa (10 Min)</th><th>Diagnóstico</th></tr></thead>
+                        <tbody id="tablaAlarmasDetalle"></tbody>
+                    </table>
+                </div>
+
+                <!-- SUBPANTALLA REPORTES -->
+                <div id="viewReportes" class="app-view">
+                    <div class="main-header"><div><h1>Reportes de Cargas</h1><p>Veces que se cargó el silo durante el ciclo semanal</p></div></div>
+                    <table class="custom-table">
+                        <thead><tr><th>Estructura</th><th>Capacidad Volumétrica</th><th>Cargas Registradas (Semana)</th><th>Último Evento</th></tr></thead>
+                        <tbody id="tablaReportes"></tbody>
+                    </table>
+                </div>
+
+                <!-- SUBPANTALLA CONFIGURACIÓN -->
+                <div id="viewConfig" class="app-view">
+                    <div class="main-header"><div><h1>Configuración del Sistema</h1><p>Ajustes de hardware de fábrica</p></div></div>
+                    <div style="border:1px dashed var(--card-border); padding:30px; border-radius:8px; text-align:center; color:var(--text-muted); font-size:13px;">Módulo Aurum Core - Lo vemos luego.</div>
+                </div>
+
+                <!-- SUBPANTALLA SOPORTE -->
+                <div id="viewSoporte" class="app-view">
+                    <div class="support-card">
+                        <i class="ph ph-headset" style="font-size:40px; color:var(--green)"></i>
+                        <h2 style="margin: 10px 0 4px 0; font-size:18px;">Mesa de Soporte Técnico</h2>
+                        <p style="color:var(--text-muted); font-size:12px; margin-bottom:20px;">Contacto directo con los desarrolladores del ecosistema AURUM.SYS</p>
+                        <a href="mailto:aurumsysm@gmail.com" class="support-link"><i class="ph ph-envelope-simple" style="color:var(--green)"></i> aurumsysm@gmail.com</a>
+                        <a href="tel:+56949287059" class="support-link"><i class="ph ph-phone" style="color:var(--green)"></i> +56 9 4928 7059</a>
+                    </div>
+                </div>
+
             </div>
-            <div>
-                <div class="section-title"><h4>Consola de Eventos Rápida</h4></div>
-                <div class="log-list" id="panelAlarmasRapidas"></div>
+
+            <!-- PANEL LATERAL DERECHO (ALARMAS ACTIVAS Y CONTROLES) -->
+            <div class="right-panel">
+                <div>
+                    <div class="section-header-row" style="margin-bottom:12px;">
+                        <h4>Alarmas Activas</h4><a href="#" class="view-all-link">Ver todas</a>
+                    </div>
+                    <div class="event-list" id="panelAlarmasRapidas"></div>
+                </div>
+
+                <div>
+                    <div class="section-header-row" style="margin-bottom:12px;">
+                        <h4>Control Rápido</h4>
+                    </div>
+                    <button class="control-btn btn-green-light"><i class="ph-fill ph-waves"></i> Activar Vibradores</button>
+                    <button class="control-btn"><i class="ph ph-stop-circle"></i> Detener Vibradores</button>
+                    <button class="control-btn"><i class="ph ph-sliders"></i> Configurar Alarmas</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "TU_API_KEY", authDomain: "tu-proyecto.firebaseapp.com",
-            databaseURL: "https://tu-proyecto.firebaseio.com", projectId: "tu-proyecto"
-        };
-        const app = initializeApp(firebaseConfig); const db = getDatabase(app);
-
+    <script>
         let globalChartConsumo, globalChartDona;
 
-        // Base de datos extendida local con simuladores de control de flujos y cargas solicitados
+        // Base de Datos de Silos Idéntica al Dashboard de la Imagen
         let SILOS = [
-            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "19:00", limiteCritico: 2000, variacion10min: 120, cargasSemana: 2, ultCarga: "Ayer" },
-            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", limiteCritico: 2000, variacion10min: 95, cargasSemana: 1, ultCarga: "Hace 4 días" },
-            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 4200, consumo: 350, rssi: -72, estado: "Baja", limiteCritico: 2500, variacion10min: 40, cargasSemana: 3, ultCarga: "Hoy 08:00" },
-            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 1800, consumo: 120, rssi: -75, estado: "Critica", limiteCritico: 2000, variacion10min: 15, cargasSemana: 2, ultCarga: "Hace 6 días" },
-            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 12750, consumo: 980, rssi: -60, estado: "Normal", limiteCritico: 3000, variacion10min: 180, cargasSemana: 4, ultCarga: "Hoy 14:20" },
-            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo", limiteCritico: 2000, variacion10min: 0, cargasSemana: 1, ultCarga: "Hace 5 días" },
-            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado", limiteCritico: 2000, variacion10min: 0, cargasSemana: 0, ultCarga: "N/A" }
+            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "10:30:30", limiteCritico: 2250, variacion10min: 140, cargasSemana: 2, ultCarga: "Ayer" },
+            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", fecha: "10:30:28", limiteCritico: 2250, variacion10min: 110, cargasSemana: 1, ultCarga: "Hace 3 días" },
+            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 4200, consumo: 350, rssi: -72, estado: "Baja", fecha: "10:30:25", limiteCritico: 2250, variacion10min: 45, cargasSemana: 3, ultCarga: "Hoy 06:15" },
+            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 1800, consumo: 120, rssi: -75, estado: "Critica", fecha: "10:30:20", limiteCritico: 2250, variacion10min: 12, cargasSemana: 4, ultCarga: "Hace 5 días" },
+            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 12750, consumo: 980, rssi: -60, estado: "Normal", fecha: "10:30:35", limiteCritico: 2250, variacion10min: 165, cargasSemana: 2, ultCarga: "Hoy 09:30" },
+            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo", fecha: "10:30:15", limiteCritico: 2250, variacion10min: 0, cargasSemana: 1, ultCarga: "Hace 4 días" },
+            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado", fecha: "--:--:--", limiteCritico: 2250, variacion10min: 0, cargasSemana: 0, ultCarga: "N/A" }
         ];
 
-        // --- SISTEMA LOGIN DE SEGURIDAD ---
+        // --- MANEJO DE LOGIN ---
         document.getElementById("btnLoginAction").addEventListener("click", () => {
-            const user = document.getElementById("userInput").value;
-            const pass = document.getElementById("passInput").value;
-            if(user === "admin" && pass === "aurum2026") {
+            const u = document.getElementById("userInput").value;
+            const p = document.getElementById("passInput").value;
+            if(u === "admin" && p === "aurum2026") {
                 document.getElementById("loginScreen").style.display = "none";
-                document.getElementById("profileUser").innerText = user.toUpperCase();
-                document.getElementById("avatarName").innerText = user.substring(0,2).toUpperCase();
+                document.getElementById("profileUser").innerText = u.toUpperCase();
+                document.getElementById("avatarName").innerText = u.substring(0,2).toUpperCase();
             } else {
-                const err = document.getElementById("loginError"); err.style.display = "block";
+                document.getElementById("loginError").style.display = "block";
             }
         });
 
-        // --- SISTEMA NAVEGACIÓN ENTRE VISTAS (SPA) ---
+        // --- SYSTEMA NAVIGATION (SPA) ---
         const menuItems = document.querySelectorAll(".menu-item");
         menuItems.forEach(item => {
             item.addEventListener("click", () => {
                 menuItems.forEach(i => i.classList.remove("active"));
                 item.classList.add("active");
-                const targetView = item.getAttribute("data-target");
+                const target = item.getAttribute("data-target");
                 document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active-view"));
-                document.getElementById(targetView).classList.add("active-view");
-                
-                // Forzar redimensionamiento de gráficos si regresa al Dashboard
-                if(targetView === "viewDashboard" && globalChartConsumo) {
-                    setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 50);
+                document.getElementById(target).classList.add("active-view");
+                if(target === "viewDashboard" && globalChartConsumo) {
+                    setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 40);
                 }
             });
         });
 
-        // --- CORE DE RENDERIZACIÓN ---
-        function renderCore() {
-            let pesoAcumulado = 0; let totalConsumo = 0; let totalAlarmas = 0;
+        // --- RENDERIZADO COMPLETO DE ELEMENTOS ---
+        function runRender() {
+            let totalMasa = 0; let totalConsumo = 0; let totalAlarmas = 0;
+            
             const grid = document.getElementById("silosGrid");
             const tHistorial = document.getElementById("tablaHistorial");
             const tConsumo = document.getElementById("tablaConsumo");
             const tAlarmas = document.getElementById("tablaAlarmasDetalle");
             const tReportes = document.getElementById("tablaReportes");
-            const rPanel = document.getElementById("panelAlarmasRapidas");
+            const sideAlarmasPanel = document.getElementById("panelAlarmasRapidas");
 
-            grid.innerHTML = ""; tHistorial.innerHTML = ""; tConsumo.innerHTML = ""; tAlarmas.innerHTML = ""; tReportes.innerHTML = ""; rPanel.innerHTML = "";
+            grid.innerHTML = ""; tHistorial.innerHTML = ""; tConsumo.innerHTML = ""; tAlarmas.innerHTML = ""; tReportes.innerHTML = ""; sideAlarmasPanel.innerHTML = "";
 
             SILOS.forEach(s => {
                 let pct = s.capacidad > 0 ? Math.round((s.peso / s.capacidad) * 100) : 0;
-                pesoAcumulado += s.peso; totalConsumo += s.consumo;
+                totalMasa += s.peso; totalConsumo += s.consumo;
 
-                let estadoClass = "status-desc";
-                if(s.estado === "Normal") estadoClass = "status-normal";
-                if(s.estado === "Baja") estadoClass = "status-baja";
-                if(s.estado === "Critica" || s.peso <= s.limiteCritico) { s.estado = "Critica"; estadoClass = "status-critica"; totalAlarmas++; }
-                if(s.estado === "Sin Flujo" || (s.variacion10min === 0 && s.estado !== "Desconectado" && s.peso > 0)) { s.estado = "Sin Flujo"; estadoClass = "status-sinflujo"; totalAlarmas++; }
+                let stClass = "status-desc";
+                let fluidGradient = "linear-gradient(to top, #475569, #64748b)"; // Desconectado
 
-                let colorFluido = "var(--green)";
-                if(s.estado === "Baja") colorFluido = "var(--yellow)";
-                if(s.estado === "Critica") colorFluido = "var(--red)";
-                if(s.estado === "Sin Flujo") colorFluido = "var(--purple)";
+                if(s.estado === "Normal") { stClass = "status-normal"; fluidGradient = "linear-gradient(to top, #047857, #10b981)"; }
+                if(s.estado === "Baja") { stClass = "status-baja"; fluidGradient = "linear-gradient(to top, #b45309, #f59e0b)"; }
+                if(s.estado === "Critica" || s.peso <= s.limiteCritico) { s.estado = "Critica"; stClass = "status-critica"; fluidGradient = "linear-gradient(to top, #b91c1c, #ef4444)"; totalAlarmas++; }
+                if(s.estado === "Sin Flujo" || (s.variacion10min === 0 && s.estado !== "Desconectado" && s.peso > 0)) { s.estado = "Sin Flujo"; stClass = "status-sinflujo"; fluidGradient = "linear-gradient(to top, #6d28d9, #8b5cf6)"; totalAlarmas++; }
 
-                // Inyección Dashboard Principal
+                // Inyección Grilla de Silos - Forma e Interfaz calada de la imagen
                 grid.innerHTML += `
                     <div class="silo-card">
-                        <div class="silo-header"><span class="silo-title">${s.nombre}</span><span class="silo-status ${estadoClass}">${s.estado}</span></div>
+                        <div class="silo-header"><span class="silo-title">${s.nombre}</span><span class="silo-status ${stClass}">${s.estado}</span></div>
                         <div class="silo-body">
-                            <div class="tank-container"><div class="tank-fluid" style="height: ${s.estado === 'Desconectado' ? 0 : pct}%; background: linear-gradient(90deg, ${colorFluido} 0%, rgba(255,255,255,0.1) 100%)"></div></div>
-                            <div class="silo-readout"><div class="silo-percentage">${s.estado === 'Desconectado' ? '--' : pct}%</div><div class="silo-weight">${s.estado === 'Desconectado' ? '--' : s.peso.toLocaleString()} kg</div></div>
+                            <div class="silo-scale"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
+                            <div class="silo-graphic-container">
+                                <div class="silo-structure">
+                                    <div class="silo-fluid" style="height: ${s.estado === 'Desconectado' ? 0 : pct}%; background: ${fluidGradient};"></div>
+                                </div>
+                            </div>
+                            <div class="silo-values">
+                                <div class="silo-percentage">${s.estado === 'Desconectado' ? '--' : pct}%</div>
+                                <div class="silo-weight">${s.estado === 'Desconectado' ? '--' : s.peso.toLocaleString() + ' kg'}</div>
+                            </div>
                         </div>
-                        <div class="silo-footer"><div><b>${s.estado === 'Desconectado' ? '--' : s.consumo + ' kg/h'}</b>Consumo</div><div><b>${s.fecha}</b>Hora</div><div><b>${s.rssi ? s.rssi + ' dBm' : '--'}</b>RSSI</div></div>
+                        <div class="silo-footer">
+                            <div>Consumo: <span>${s.estado === 'Desconectado' ? '--' : s.consumo + ' kg/h'}</span></div>
+                            <div>RSSI: <span>${s.rssi ? s.rssi + ' dBm' : '--'}</span></div>
+                        </div>
                     </div>
                 `;
 
-                // Inyección Tabla Historial (Diario y Semanal)
-                tHistorial.innerHTML += `
-                    <tr><td><b>${s.nombre}</b></td><td>${(s.peso * 0.95).toFixed(0)} kg/Día (Prom)</td><td>${(s.peso * 0.6).toFixed(0)} kg</td><td>${(s.capacidad * 2.1).toFixed(0)} kg/Semana</td><td>98.6% Telemetría</td></tr>
-                `;
+                // Inyección Tablas de Subpantallas
+                tHistorial.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${(s.peso * 0.9).toFixed(0)} kg</td><td>${(s.peso * 0.4).toFixed(0)} kg</td><td>${(s.capacidad * 1.8).toFixed(0)} kg</td><td>Excelente</td></tr>`;
+                tConsumo.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.consumo} kg/h</td><td>${s.consumo * 24} kg/Día</td><td><span>${s.estado === 'Sin Flujo' ? 'Bloqueo Detectado' : 'Estable'}</span></td></tr>`;
+                
+                let diagnostic = "Operación Limpia";
+                if(s.peso <= s.limiteCritico && s.peso > 0) diagnostic = "Alerta: Bajo Nivel Crítico";
+                if(s.variacion10min === 0 && s.peso > 0 && s.estado !== "Desconectado") diagnostic = "Alerta: Flujo Detenido";
+                tAlarmas.innerHTML += `<tr style="color: ${diagnostic !== 'Operación Limpia' ? 'var(--red)' : 'white'}"><td><b>${s.nombre}</b></td><td>${s.peso} kg</td><td>${s.limiteCritico} kg</td><td>${s.variacion10min} kg</td><td><b>${diagnostic}</b></td></tr>`;
+                
+                tReportes.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.capacidad} kg</td><td><span style="color:var(--green)">${s.cargasSemana} Veces</span></td><td>${s.ultCarga}</td></tr>`;
 
-                // Inyección Tabla Consumos
-                tConsumo.innerHTML += `
-                    <tr><td><b>${s.nombre}</b></td><td>${s.consumo} kg/h</td><td>${s.consumo * 24} kg/Día</td><td><span class="silo-status ${estadoClass}">${s.estado === 'Sin Flujo' ? 'Atascado / Bloqueado' : 'Fluido Dinámico'}</span></td></tr>
-                `;
-
-                // Inyección Alarmas Especiales (Pesos Críticos y Variación Atascada)
-                let msgAlarma = "Estable"; let rowColor = "inherit";
-                if(s.peso <= s.limiteCritico && s.peso > 0) { msgAlarma = "ALERTA: Peso Bajo Límite Crítico"; rowColor = "var(--red)"; }
-                else if(s.variacion10min === 0 && s.peso > 0 && s.estado !== "Desconectado") { msgAlarma = "CRÍTICO: Sin variación de alimento (Atascado)"; rowColor = "var(--purple)"; }
-
-                tAlarmas.innerHTML += `
-                    <tr style="color: ${rowColor}"><td><b>${s.nombre}</b></td><td>${s.peso} kg</td><td>${s.limiteCritico} kg</td><td>${s.variacion10min} kg</td><td><b>${msgAlarma}</b></td></tr>
-                `;
-
-                // Inyección Sidebar rápido si hay incidentes
-                if(msgAlarma !== "Estable") {
-                    rPanel.innerHTML += `
-                        <div class="log-item" style="border-left:4px solid ${rowColor}">
-                            <div class="log-details"><div class="log-icon" style="color:${rowColor}"><i class="ph-fill ph-warning"></i></div><div><b>${s.nombre}</b><p style="font-size:11px;">${msgAlarma}</p></div></div>
+                // Inyección Panel Lateral Derecho de Alertas Activas
+                if(diagnostic !== "Operación Limpia" && s.estado !== "Desconectado") {
+                    let iconColor = s.estado === 'Sin Flujo' ? 'var(--purple)' : 'var(--red)';
+                    sideAlarmasPanel.innerHTML += `
+                        <div class="event-item">
+                            <div class="event-icon" style="background:rgba(255,255,255,0.02); color:${iconColor}"><i class="ph-fill ph-warning"></i></div>
+                            <div class="event-info">
+                                <div style="display:flex; justify-content:between; width:100%">
+                                    <strong style="font-size:12px;">${s.nombre} - ${s.estado}</strong>
+                                </div>
+                                <p>${diagnostic === 'Alerta: Flujo Detenido' ? 'No hay variación de peso detectada' : 'Nivel por debajo del límite crítico'}</p>
+                            </div>
+                            <span class="event-time">${s.fecha}</span>
                         </div>
                     `;
                 }
-
-                // Inyección Reportes (Cargas en la semana)
-                tReportes.innerHTML += `
-                    <tr><td><b>${s.nombre}</b></td><td>${s.capacidad.toLocaleString()} kg</td><td><span style="background:rgba(44,255,136,0.1); padding:4px 10px; border-radius:12px; color:var(--green)">${s.cargasSemana} Cargas</span></td><td>${s.ultCarga}</td></tr>
-                `;
             });
 
-            document.getElementById("pesoTotal").innerHTML = `${pesoAcumulado.toLocaleString()} <span>kg</span>`;
+            // Asignación de Contadores Globales
+            document.getElementById("pesoTotal").innerHTML = `${totalMasa.toLocaleString()} <span>kg</span>`;
             document.getElementById("consumoHora").innerHTML = `${totalConsumo.toLocaleString()} <span>kg/h</span>`;
             document.getElementById("alarmasContador").innerText = totalAlarmas;
             document.getElementById("badgeAlarmas").innerText = totalAlarmas;
+            document.getElementById("navBadgeCount").innerText = totalAlarmas;
         }
 
-        // --- SIMULADOR DE DESCARGA E INMOVILIDAD DE ALIMENTO ---
+        // --- ITERADOR REPETITIVO SIMULADO ---
         setInterval(() => {
-            let hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            let timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             SILOS.forEach(s => {
                 if (s.estado === "Desconectado") return;
-
-                // Silo 6 simulado estático a propósito para forzar la alarma de "falta de variación" solicitada
-                if(s.id === 6) {
-                    s.variacion10min = 0;
-                    s.consumo = 0;
+                if (s.id === 6) { // Forzar estático
+                    s.variacion10min = 0; s.consumo = 0;
                 } else {
-                    let gasto = Math.floor(Math.random() * 30) + 10;
-                    s.peso = Math.max(0, s.peso - gasto);
-                    s.variacion10min = gasto * 4;
+                    let desc = Math.floor(Math.random() * 20) + 5;
+                    s.peso = Math.max(0, s.peso - desc);
+                    s.variacion10min = desc * 3;
                 }
-                s.fecha = hora;
+                s.fecha = timeString;
             });
-            renderCore();
+            runRender();
             if(globalChartDona) { globalChartDona.data.datasets[0].data = SILOS.map(s => s.peso); globalChartDona.update(); }
-        }, 3000);
+        }, 4000);
 
-        // --- COLAPSAR PANEL DERECHO ---
-        document.getElementById("btnToggleDerecho").addEventListener("click", () => {
-            document.querySelector(".right-panel").classList.toggle("hidden");
-            setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 400);
-        });
+        // Inicialización Básica
+        runRender();
 
-        // --- REALTIME CON FIREBASE ---
-        onValue(ref(db, 'silos'), (snap) => {
-            const data = snap.val(); if (data) { SILOS = Array.isArray(data) ? data : Object.values(data); renderCore(); }
-        });
-
-        // Inicializar vistas de arranque
-        renderCore();
-
-        // Inicialización de Gráficos de Soporte Visual
+        // --- CONFIGURACIÓN DE GRÁFICOS ---
         globalChartConsumo = new Chart(document.getElementById("chartConsumo"), {
             type: 'line',
             data: {
-                labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00"],
-                datasets: [{ data: [12000, 14500, 11000, 15000, 13000, 12450, 11800], borderColor: "#2cff88", borderWidth: 2, fill: false, tension: 0.4 }]
+                labels: ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"],
+                datasets: [{ data: [11000, 12500, 10800, 14000, 13200, 11900, 12450, 12000], borderColor: "#10b981", borderWidth: 2, fill: false, tension: 0.4, pointRadius: 0 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: "#142235" } } } }
         });
 
         globalChartDona = new Chart(document.getElementById("chartDona"), {
             type: 'doughnut',
             data: {
                 labels: SILOS.map(s => s.nombre),
-                datasets: [{ data: SILOS.map(s => s.peso), backgroundColor: ["#2cff88", "#3b82f6", "#ffb400", "#ff3b30", "#a25ddc", "#00cbc6", "#4b5563"], borderWidth: 0 }]
+                datasets: [{ data: SILOS.map(s => s.peso), backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#475569"], borderWidth: 0 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#fff' } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#64748b', font: { size: 10 } } } } }
         });
     </script>
 </body>
