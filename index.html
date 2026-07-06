@@ -1,17 +1,314 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURUM.SYS | Smart Silo Monitor</title>
-    <link rel="stylesheet" href="css/style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>AURUM.SYS | Smart Silo Monitor</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
 </head>
+
 <body>
 
-<h1>AURUM.SYS</h1>
-<h2>SMART SILO MONITOR</h2>
+<!-- SIDEBAR -->
 
-<script src="js/app.js"></script>
+<div class="sidebar">
+
+<div class="logo">
+
+<h1>AURUM.SYS</h1>
+
+<p>SMART SILO MONITOR</p>
+
+</div>
+
+<ul>
+
+<li class="active">🏠 Dashboard</li>
+
+<li>🌾 Silos</li>
+
+<li>📈 Consumo</li>
+
+<li>📜 Historial</li>
+
+<li>🚨 Alarmas</li>
+
+<li>📄 Reportes</li>
+
+<li>⚙ Configuración</li>
+
+<li>👤 Usuarios</li>
+
+<li>🔧 Mantenimiento</li>
+
+<li>📞 Soporte</li>
+
+</ul>
+
+</div>
+
+<!-- CONTENIDO -->
+
+<div class="content">
+
+<header>
+
+<div>
+
+<h2>Dashboard General</h2>
+
+<span>Monitoreo Industrial en Tiempo Real</span>
+
+</div>
+
+<div class="headerRight">
+
+<div class="online">
+
+🟢 Sistema Online
+
+</div>
+
+<div>
+
+Administrador
+
+</div>
+
+</div>
+
+</header>
+
+<!-- TARJETAS -->
+
+<section class="cards">
+
+<div class="card">
+
+<h3>7</h3>
+
+<p>Silos Activos</p>
+
+</div>
+
+<div class="card">
+
+<h3>126.580 Kg</h3>
+
+<p>Peso Total</p>
+
+</div>
+
+<div class="card">
+
+<h3>352 Kg/h</h3>
+
+<p>Consumo</p>
+
+</div>
+
+<div class="card danger">
+
+<h3>2</h3>
+
+<p>Alarmas</p>
+
+</div>
+
+</section>
+
+<!-- SILOS -->
+
+<section class="grid">
+
+<div class="silo">
+
+<h2>SILO 1</h2>
+
+<div class="tank">
+
+<div class="level level90"></div>
+
+</div>
+
+<p>90%</p>
+
+<p>4520 Kg</p>
+
+<p>Normal</p>
+
+</div>
+
+<div class="silo">
+
+<h2>SILO 2</h2>
+
+<div class="tank">
+
+<div class="level level74"></div>
+
+</div>
+
+<p>74%</p>
+
+<p>3750 Kg</p>
+
+<p>Normal</p>
+
+</div>
+
+<div class="silo">
+
+<h2>SILO 3</h2>
+
+<div class="tank">
+
+<div class="level warning"></div>
+
+</div>
+
+<p>38%</p>
+
+<p>1890 Kg</p>
+
+<p>Bajo</p>
+
+</div>
+
+<div class="silo">
+
+<h2>SILO 4</h2>
+
+<div class="tank">
+
+<div class="level level82"></div>
+
+</div>
+
+<p>82%</p>
+
+<p>4200 Kg</p>
+
+<p>Normal</p>
+
+</div>
+
+<div class="silo">
+
+<h2>SILO 5</h2>
+
+<div class="tank">
+
+<div class="level critical"></div>
+
+</div>
+
+<p>12%</p>
+
+<p>580 Kg</p>
+
+<p>Crítico</p>
+
+</div>
+
+<div class="silo">
+
+<h2>SILO 6</h2>
+
+<div class="tank">
+
+<div class="level level63"></div>
+
+</div>
+
+<p>63%</p>
+
+<p>3100 Kg</p>
+
+<p>Normal</p>
+
+</div>
+
+<div class="silo">
+
+<h2>SILO 7</h2>
+
+<div class="tank">
+
+<div class="level level55"></div>
+
+</div>
+
+<p>55%</p>
+
+<p>2780 Kg</p>
+
+<p>Normal</p>
+
+</div>
+
+</section>
+
+<!-- PARTE INFERIOR -->
+
+<div class="bottom">
+
+<div class="chart">
+
+<h3>Consumo por Hora</h3>
+
+<canvas id="horaChart"></canvas>
+
+</div>
+
+<div class="chart">
+
+<h3>Consumo Diario</h3>
+
+<canvas id="diaChart"></canvas>
+
+</div>
+
+<div class="alarmBox">
+
+<h3>Alarmas</h3>
+
+<ul>
+
+<li>🔴 Silo 5 Nivel Crítico</li>
+
+<li>🟠 Silo 3 Nivel Bajo</li>
+
+<li>🟢 Gateway LoRa Conectado</li>
+
+<li>🟢 Firebase Sincronizado</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<footer>
+
+AURUM.SYS Smart Silo Monitor ©2026
+
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="js/dashboard.js"></script>
 
 </body>
+
 </html>
