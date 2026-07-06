@@ -34,7 +34,91 @@ body{background:var(--bg);color:#fff}
 <div class="bottom">
 <div class="panel"><canvas id="chartHora"></canvas></div>
 <div class="panel"><canvas id="chartDia"></canvas></div>
-<div class="panel"><h3>Alarmas</h3><div id="listaAlarmas"></div></div>
+<div class="panel">
+
+<h3>Estado Sistema</h3>
+
+<div id="estadoSistema">
+
+<div class="estadoItem">
+
+<span>Gateway</span>
+
+<b id="stGateway">🟢 ONLINE</b>
+
+</div>
+
+<div class="estadoItem">
+
+<span>Firebase</span>
+
+<b id="stFirebase">🟢 ONLINE</b>
+
+</div>
+
+<div class="estadoItem">
+
+<span>Registrador 501</span>
+
+<b id="st501">🟢 ONLINE</b>
+
+</div>
+
+<div class="estadoItem">
+
+<span>ESP32</span>
+
+<b id="stESP">🟢 ONLINE</b>
+
+</div>
+
+<div class="estadoItem">
+
+<span>LoRa</span>
+
+<b id="stLoRa">🟢 ONLINE</b>
+
+</div>
+
+<div class="estadoItem">
+
+<span>RSSI</span>
+
+<b id="rssi">-63 dBm</b>
+
+</div>
+
+<div class="estadoItem">
+
+<span>SNR</span>
+
+<b id="snr">10.2</b>
+
+</div>
+
+<div class="estadoItem">
+
+<span>Última lectura</span>
+
+<b id="ultimaLectura">--:--:--</b>
+
+</div>
+
+</div>
+
+<hr style="margin:20px 0;border-color:#2b3b52;">
+
+<h3>Alarmas</h3>
+
+<div id="listaAlarmas"></div>
+
+<hr style="margin:20px 0;border-color:#2b3b52;">
+
+<h3>Actividad</h3>
+
+<div id="actividad"></div>
+
+</div>
 </div>
 </div>
 <script>
