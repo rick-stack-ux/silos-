@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AURUM.SYS Smart Silo Monitor</title>
-    <!-- Iconos Phosphor para replicar la interfaz original -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Chart.js para las gráficas inferiores -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -24,10 +22,18 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); display: flex; overflow-x: hidden; }
+        body { background-color: var(--bg); color: var(--text-main); display: flex; overflow-x: hidden; height: 100vh; }
+
+        /* --- LOGIN OVERLAY --- */
+        #loginScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; }
+        .login-card i { font-size: 48px; color: var(--green); margin-bottom: 16px; }
+        .login-field { width: 100%; padding: 12px; background: #070c14; border: 1px solid var(--card-border); border-radius: 8px; color: white; margin-top: 14px; font-size: 14px; }
+        .btn-login { width: 100%; padding: 12px; background: var(--green); color: #070c14; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.2s; }
+        .btn-login:hover { opacity: 0.9; }
 
         /* --- SIDEBAR IZQUIERDO --- */
-        .sidebar { width: 260px; height: 100vh; background: var(--sidebar-bg); padding: 24px; position: fixed; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--card-border); }
+        .sidebar { width: 260px; height: 100vh; background: var(--sidebar-bg); padding: 24px; position: fixed; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--card-border); z-index: 100; }
         .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
         .brand i { color: var(--green); font-size: 28px; }
         .brand h2 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
@@ -47,20 +53,25 @@
         .footer-metrics b { color: var(--text-main); display: block; font-size: 12px; }
 
         /* --- CONTENEDOR PRINCIPAL (CENTRO + DERECHA) --- */
-        .wrapper { margin-left: 260px; width: calc(100% - 260px); display: flex; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        .main-content { flex: 1; padding: 24px; min-width: 0; }
+        .wrapper { margin-left: 260px; width: calc(100% - 260px); display: flex; transition: all 0.4s ease; height: 100vh; overflow: hidden; }
+        .main-content { flex: 1; padding: 24px; overflow-y: auto; height: 100%; min-width: 0; }
         
-        /* HEADER PRINCIPAL */
+        /* VIEWS (PANTALLAS SPA) */
+        .app-view { display: none; }
+        .app-view.active-view { display: block; }
+
+        /* TABLAS E INTERFACES COMUNES */
         .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .main-header h1 { font-size: 24px; font-weight: 600; }
         .main-header p { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
-        .header-controls { display: flex; align-items: center; gap: 12px; }
-        .btn-group { display: flex; background: #121c2e; padding: 4px; border-radius: 8px; border: 1px solid var(--card-border); }
-        .btn-group button { background: transparent; border: none; color: var(--text-muted); padding: 6px 12px; font-size: 13px; border-radius: 6px; cursor: pointer; }
-        .btn-group button.active { background: var(--card-bg); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
-        .time-select { background: #121c2e; border: 1px solid var(--card-border); color: var(--text-main); padding: 8px 12px; border-radius: 8px; font-size: 13px; }
+        
+        .custom-table { width: 100%; border-collapse: collapse; margin-top: 16px; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); }
+        .custom-table th, .custom-table td { padding: 14px 16px; text-align: left; font-size: 13px; }
+        .custom-table th { background: rgba(255,255,255,0.02); color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--card-border); }
+        .custom-table td { border-bottom: 1px solid rgba(255,255,255,0.02); color: var(--text-main); }
+        .custom-table tr:hover { background: rgba(255,255,255,0.01); }
 
-        /* TARJETAS KPI SUPERIORES */
+        /* KPIS GRID */
         .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .kpi-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 16px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; }
         .kpi-info p { color: var(--text-muted); font-size: 12px; margin-bottom: 4px; }
@@ -80,20 +91,15 @@
         .silo-status { font-size: 11px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
         .silo-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
         
-        /* Clases dinámicas de estados */
         .status-normal { color: var(--green); }.status-normal::before { background: var(--green); }
         .status-baja { color: var(--yellow); }.status-baja::before { background: var(--yellow); }
         .status-critica { color: var(--red); }.status-critica::before { background: var(--red); }
         .status-sinflujo { color: var(--purple); }.status-sinflujo::before { background: var(--purple); }
         .status-desc { color: var(--text-muted); }.status-desc::before { background: var(--text-muted); }
 
-        /* Estructura del Tanque Gráfico */
         .silo-body { display: flex; align-items: center; justify-content: space-around; padding: 10px 0; }
         .tank-container { width: 85px; height: 170px; position: relative; background: #070c14; border: 3px solid #22344d; border-radius: 12px 12px 24px 24px; overflow: hidden; display: flex; align-items: flex-end; }
-        
-        /* Efecto cónico/3D en el CSS del líquido */
-        .tank-fluid { width: 100%; transition: height 1s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(90deg, rgba(44,255,136,0.8) 0%, rgba(22,182,95,0.9) 50%, rgba(10,110,55,1) 100%); position: relative; }
-        .tank-fluid::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: rgba(255,255,255,0.3); border-radius: 50%; }
+        .tank-fluid { width: 100%; transition: height 1s ease; position: relative; }
         
         .silo-readout { text-align: right; }
         .silo-percentage { font-size: 32px; font-weight: 700; line-height: 1; }
@@ -102,413 +108,375 @@
         .silo-footer { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 12px; padding-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 11px; color: var(--text-muted); }
         .silo-footer b { display: block; color: var(--text-main); font-size: 12px; margin-bottom: 2px; }
 
-        /* SECCIÓN INFERIOR DE GRÁFICOS */
         .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
         .chart-panel { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; min-width: 0; }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .chart-header h4 { font-size: 14px; font-weight: 600; color: var(--text-muted); }
-        .chart-summary { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
-        .chart-summary h2 { font-size: 24px; font-weight: 700; }
-        .chart-summary span { font-size: 12px; color: var(--green); }
 
-        /* --- SIDEBAR PANEL DERECHO CON SOPORTE COLAPSABLE --- */
-        .right-panel { width: 340px; min-width: 340px; background: var(--sidebar-bg); border-left: 1px solid var(--card-border); padding: 24px; display: flex; flex-direction: column; gap: 24px; height: 100vh; position: sticky; top: 0; overflow-y: auto; overflow-x: hidden; opacity: 1; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        
-        /* Clase añadida dinámicamente con JS para cerrarlo */
+        /* --- PANEL DERECHO --- */
+        .right-panel { width: 340px; min-width: 340px; background: var(--sidebar-bg); border-left: 1px solid var(--card-border); padding: 24px; display: flex; flex-direction: column; gap: 24px; height: 100vh; overflow-y: auto; transition: all 0.4s ease; }
         .right-panel.hidden { width: 0px; min-width: 0px; padding: 24px 0px; border-left: none; opacity: 0; pointer-events: none; }
         
-        .user-profile { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .user-profile { display: flex; align-items: center; justify-content: space-between; }
         .profile-info { display: flex; align-items: center; gap: 12px; }
         .avatar { width: 36px; height: 36px; background: #22344d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
-        .top-actions { display: flex; align-items: center; gap: 16px; font-size: 20px; color: var(--text-muted); cursor: pointer; transition: color 0.2s; }
-        .top-actions:hover { color: var(--text-main); }
-        
         .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .section-title h4 { font-size: 14px; font-weight: 600; letter-spacing: 0.3px; }
-        .section-title a { color: #3b82f6; text-decoration: none; font-size: 12px; }
         
-        /* Listas y Filas del Panel Derecho */
         .log-list { display: flex; flex-direction: column; gap: 10px; }
         .log-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03); }
         .log-details { display: flex; align-items: center; gap: 10px; font-size: 13px; }
         .log-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        .log-item span { font-size: 11px; color: var(--text-muted); }
 
-        /* Botones de Control Rápido */
         .control-btn { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.02); color: var(--text-main); font-weight: 500; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; margin-bottom: 8px; font-size: 13px; }
-        .control-btn:hover { background: rgba(255,255,255,0.05); }
         .control-btn.primary { background: rgba(44, 255, 136, 0.12); border-color: rgba(44, 255, 136, 0.3); color: var(--green); }
+        
+        /* CARD DE SOPORTE EXCLUSIVO */
+        .support-card { background: linear-gradient(135deg, #111c31 0%, #0c1322 100%); border: 1px solid var(--card-border); padding: 24px; border-radius: 16px; text-align: center; max-width: 500px; margin: 40px auto 0 auto; }
+        .support-card i { font-size: 48px; color: var(--green); margin-bottom: 14px; }
+        .support-link { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0; color: white; text-decoration: none; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); transition: 0.2s; }
+        .support-link:hover { border-color: var(--green); background: rgba(44, 255, 136, 0.02); }
     </style>
 </head>
 <body>
+
+    <!-- SCREEN DE CONTROL DE ACCESO (USUARIOS) -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <i class="ph-fill ph-lock-key"></i>
+            <h2 style="font-size:20px; margin-bottom:4px;">AURUM.SYS</h2>
+            <p style="color:var(--text-muted); font-size:13px;">Ingrese credenciales de operador</p>
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario de Fábrica">
+            <input type="password" id="passInput" class="login-field" placeholder="Contraseña">
+            <div id="loginError" style="color:var(--red); font-size:12px; margin-top:10px; display:none;">Datos incorrectos</div>
+            <button class="btn-login" id="btnLoginAction">Iniciar Sesión</button>
+        </div>
+    </div>
 
     <!-- SIDEBAR IZQUIERDO -->
     <div class="sidebar">
         <div>
             <div class="brand">
                 <i class="ph-fill ph-nut"></i>
-                <div>
-                    <h2>AURUM.SYS</h2>
-                    <span>Smart Silo Monitor</span>
-                </div>
+                <div><h2>AURUM.SYS</h2><span>Smart Silo Monitor</span></div>
             </div>
             <div class="menu-list">
-                <a href="#" class="menu-item active"><div><i class="ph ph-squares-four"></i>Dashboard</div></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-grains"></i>Silos</div></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-clock-counter-clockwise"></i>Historial</div></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-chart-line"></i>Consumo</div><i class="ph ph-caret-down"></i></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-bell"></i>Alarmas</div><span class="badge" id="badgeAlarmas">0</span></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-file-text"></i>Reportes</div></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-gear"></i>Configuración</div><i class="ph ph-caret-down"></i></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-users"></i>Usuarios</div></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-calendar"></i>Eventos</div></a>
-                <a href="#" class="menu-item"><div><i class="ph ph-question"></i>Soporte</div></a>
+                <div class="menu-item active" data-target="viewDashboard"><div><i class="ph ph-squares-four"></i>Dashboard</div></div>
+                <div class="menu-item" data-target="viewHistorial"><div><i class="ph ph-clock-counter-clockwise"></i>Historial</div></div>
+                <div class="menu-item" data-target="viewConsumo"><div><i class="ph ph-chart-line"></i>Consumo</div></div>
+                <div class="menu-item" data-target="viewAlarmas"><div><i class="ph ph-bell"></i>Alarmas</div><span class="badge" id="badgeAlarmas">0</span></div>
+                <div class="menu-item" data-target="viewReportes"><div><i class="ph ph-file-text"></i>Reportes</div></div>
+                <div class="menu-item" data-target="viewConfig"><div><i class="ph ph-gear"></i>Configuración</div></div>
+                <div class="menu-item" data-target="viewSoporte"><div><i class="ph ph-question"></i>Soporte</div></div>
             </div>
         </div>
 
         <div class="sidebar-footer">
-            <div class="status-box">
-                <div class="status-dot"></div>
-                <div>
-                    <strong>Estado del Sistema</strong>
-                    <div style="color: var(--green); font-size: 11px;">Todo Operativo</div>
-                </div>
-            </div>
-            <div class="footer-metrics">
-                <div>Gateways<b style="color: var(--green)">1/1 Online</b></div>
-                <div>Nodos<b style="color: var(--green)">7/7 Online</b></div>
-            </div>
-            <div style="text-align: center; color: var(--text-muted); font-size: 10px; margin-top: 12px;">AURUM.SYS © 2026 • V1.0.0</div>
+            <div class="status-box"><div class="status-dot"></div><div><strong>Sistema Central</strong><div style="color: var(--green); font-size: 11px;">Operativo</div></div></div>
+            <div class="footer-metrics"><div>Gateways<b style="color: var(--green)">1/1 Online</b></div><div>Nodos<b style="color: var(--green)">7/7 Online</b></div></div>
         </div>
     </div>
 
-    <!-- CONTENEDOR DERECHO COMPUESTO -->
+    <!-- WRAPPER DE PANTALLAS -->
     <div class="wrapper">
-        
-        <!-- PANEL CENTRAL PRINCIPAL -->
         <div class="main-content">
-            <div class="main-header">
-                <div>
-                    <h1>Dashboard General</h1>
-                    <p>Monitoreo en tiempo real de 7 silos</p>
+            
+            <!-- PANTALLA 1: DASHBOARD -->
+            <div id="viewDashboard" class="app-view active-view">
+                <div class="main-header">
+                    <div><h1>Dashboard General</h1><p>Monitoreo en tiempo real de 7 silos</p></div>
                 </div>
-                <div class="header-controls">
-                    <div class="btn-group">
-                        <button class="active">Vista General</button>
-                        <button>Vista Detallada</button>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-info"><p>Silos Activos</p><h3>7</h3></div>
+                        <div class="kpi-icon"><i class="ph ph-database"></i></div>
                     </div>
-                    <select class="time-select">
-                        <option>Auto</option>
-                        <option>Última hora</option>
-                    </select>
+                    <div class="kpi-card">
+                        <div class="kpi-info"><p>Peso Total Combinado</p><h3 id="pesoTotal">0 <span>kg</span></h3></div>
+                        <div class="kpi-icon"><i class="ph ph-scales"></i></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-info"><p>Demanda de Planta</p><h3 id="consumoHora">0 <span>kg/h</span></h3></div>
+                        <div class="kpi-icon"><i class="ph ph-lightning"></i></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-info"><p>Incidentes Críticos</p><h3 id="alarmasContador">0</h3></div>
+                        <div class="kpi-icon"><i class="ph ph-warning"></i></div>
+                    </div>
+                </div>
+                <div class="silos-grid" id="silosGrid"></div>
+                <div class="charts-row">
+                    <div class="chart-panel"><div class="chart-header"><h4>Curva de Despacho Combinado (Últimas 24 Horas)</h4></div><div style="height: 200px;"><canvas id="chartConsumo"></canvas></div></div>
+                    <div class="chart-panel"><div class="chart-header"><h4>Distribución de Inventario Interno</h4></div><div style="height: 200px;"><canvas id="chartDona"></canvas></div></div>
                 </div>
             </div>
 
-            <!-- TARJETAS KPI -->
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="kpi-info"><p>Silos Monitoreados</p><h3 id="totalSilos">7</h3></div>
-                    <div class="kpi-icon"><i class="ph ph-database"></i></div>
+            <!-- PANTALLA 2: HISTORIAL (DIARIO Y SEMANAL) -->
+            <div id="viewHistorial" class="app-view">
+                <div class="main-header">
+                    <div><h1>Historial Logístico</h1><p>Análisis de fluctuación diario y semanal por silo</p></div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-info"><p>Peso Total</p><h3 id="pesoTotal">0 <span>kg</span></h3></div>
-                    <div class="kpi-icon"><i class="ph ph-scales"></i></div>
+                <table class="custom-table">
+                    <thead>
+                        <tr><th>Identificador</th><th>Promedio Diario</th><th>Mínimo Alcanzado</th><th>Máximo Acumulado Semanal</th><th>Frecuencia de Lectura</th></tr>
+                    </thead>
+                    <tbody id="tablaHistorial"></tbody>
+                </table>
+            </div>
+
+            <!-- PANTALLA 3: CONSUMO (POR HORA Y DÍA) -->
+            <div id="viewConsumo" class="app-view">
+                <div class="main-header">
+                    <div><h1>Métricas de Consumo</h1><p>Tasas de desalojo de material por hora y día métrico</p></div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-info"><p>Consumo Actual</p><h3 id="consumoHora">0 <span>kg/h</span></h3></div>
-                    <div class="kpi-icon"><i class="ph ph-lightning"></i></div>
+                <table class="custom-table">
+                    <thead>
+                        <tr><th>Ubicación</th><th>Consumo por Hora Activa</th><th>Consumo Diario Total</th><th>Estado de Flujo</th></tr>
+                    </thead>
+                    <tbody id="tablaConsumo"></tbody>
+                </table>
+            </div>
+
+            <!-- PANTALLA 4: ALARMAS (PESOS CRÍTICOS Y ATASCAMIENTOS) -->
+            <div id="viewAlarmas" class="app-view">
+                <div class="main-header">
+                    <div><h1>Configuración & Estado de Alertas</h1><p>Pesos críticos establecidos y detección de nula variación de alimento (Puente/Bóveda)</p></div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-info"><p>Alarmas Activas</p><h3 id="alarmasContador">0</h3></div>
-                    <div class="kpi-icon"><i class="ph ph-warning"></i></div>
+                <table class="custom-table">
+                    <thead>
+                        <tr><th>Silo</th><th>Peso Actual</th><th>Límite Crítico Fijo</th><th>Variación de Peso (Últimos 10 min)</th><th>Estatus Alarma</th></tr>
+                    </thead>
+                    <tbody id="tablaAlarmasDetalle"></tbody>
+                </table>
+            </div>
+
+            <!-- PANTALLA 5: REPORTES (CARGAS SEMANALES) -->
+            <div id="viewReportes" class="app-view">
+                <div class="main-header">
+                    <div><h1>Reportes Operacionales</h1><p>Frecuencia de cargas de alimento registradas durante la semana actual</p></div>
+                </div>
+                <table class="custom-table">
+                    <thead>
+                        <tr><th>Unidad de Almacenamiento</th><th>Capacidad Estructural</th><th>Frecuencia Cargas (Esta Semana)</th><th>Última Carga Detectada</th></tr>
+                    </thead>
+                    <tbody id="tablaReportes"></tbody>
+                </table>
+            </div>
+
+            <!-- PANTALLA 6: CONFIGURACIÓN (LUEGO SE COMPLETA) -->
+            <div id="viewConfig" class="app-view">
+                <div class="main-header"><div><h1>Configuración del Sistema</h1><p>Módulo de ajuste de hardware (Próximamente)</p></div></div>
+                <div style="background:var(--card-bg); border:1px dashed var(--card-border); padding:40px; border-radius:12px; text-align:center; color:var(--text-muted)">Sección en desarrollo conjunto con AURUM.SYS.</div>
+            </div>
+
+            <!-- PANTALLA 7: SOPORTE TÉCNICO DIRECTO -->
+            <div id="viewSoporte" class="app-view">
+                <div class="support-card">
+                    <i class="ph ph-headset"></i>
+                    <h2>Soporte Técnico Especializado</h2>
+                    <p style="color: var(--text-muted); font-size:13px; margin-top:4px;">Comuníquese directamente con la mesa de ingeniería de AURUM.SYS para resolver dudas de nodos o calibración de celdas de carga.</p>
+                    <a href="mailto:aurumsysm@gmail.com" class="support-link"><i class="ph ph-envelope-simple" style="font-size:20px; color:var(--green)"></i> aurumsysm@gmail.com</a>
+                    <a href="tel:+56949287059" class="support-link"><i class="ph ph-phone" style="font-size:20px; color:var(--green)"></i> +56 9 4928 7059</a>
                 </div>
             </div>
 
-            <!-- REJILLA DINÁMICA DE SILOS -->
-            <div class="silos-grid" id="silosGrid">
-                <!-- Se inyecta dinámicamente con JS -->
-            </div>
-
-            <!-- GRÁFICOS INFERIORES -->
-            <div class="charts-row">
-                <div class="chart-panel">
-                    <div class="chart-header">
-                        <h4>Consumo Total (Últimas 24 Horas)</h4>
-                    </div>
-                    <div style="height: 200px;"><canvas id="chartConsumo"></canvas></div>
-                </div>
-                <div class="chart-panel">
-                    <div class="chart-header">
-                        <h4>Distribución de Consumo</h4>
-                    </div>
-                    <div style="height: 200px;"><canvas id="chartDona"></canvas></div>
-                </div>
-            </div>
         </div>
 
-        <!-- PANEL DERECHO DE ALARMAS Y CONTROLES -->
+        <!-- PANEL DERECHO -->
         <div class="right-panel">
             <div class="user-profile">
-                <div class="profile-info">
-                    <div class="avatar">EG</div>
-                    <div>
-                        <h4 style="font-size: 14px;">Erick Gomez</h4>
-                        <span style="font-size: 11px; color: var(--text-muted)">Administrador</span>
-                    </div>
-                </div>
-                <!-- ID AÑADIDO PARA DETECTAR EL CLIC Y ALTERNAR VISIBILIDAD -->
-                <div class="top-actions" id="btnToggleDerecho" title="Ocultar/Mostrar Panel">
-                    <i class="ph ph-bell-ringing" style="position: relative;"><span class="badge" style="position: absolute; top:-5px; right:-5px; scale: 0.8;">3</span></i>
-                </div>
+                <div class="profile-info"><div class="avatar" id="avatarName">OP</div><div><h4 id="profileUser">Operador Base</h4><span style="font-size: 11px; color: var(--text-muted)">AURUM Core</span></div></div>
+                <div class="top-actions" id="btnToggleDerecho"><i class="ph ph-bell-ringing"></i></div>
             </div>
-
             <div>
-                <div class="section-title">
-                    <h4>Alarmas Activas</h4>
-                    <a href="#">Ver todas</a>
-                </div>
-                <div class="log-list" id="panelAlarmas">
-                    <!-- Dinámico -->
-                </div>
-            </div>
-
-            <div>
-                <div class="section-title">
-                    <h4>Actividad Reciente</h4>
-                    <a href="#">Ver todas</a>
-                </div>
-                <div class="log-list" id="panelActividad">
-                    <!-- Dinámico -->
-                </div>
-            </div>
-
-            <div>
-                <div class="section-title">
-                    <h4>Control Rápido</h4>
-                </div>
-                <button class="control-btn primary"><i class="ph ph-play-circle"></i> Activar Vibradores</button>
-                <button class="control-btn"><i class="ph ph-stop-circle"></i> Detener Vibradores</button>
-                <button class="control-btn"><i class="ph ph-sliders"></i> Configurar Alarmas</button>
+                <div class="section-title"><h4>Consola de Eventos Rápida</h4></div>
+                <div class="log-list" id="panelAlarmasRapidas"></div>
             </div>
         </div>
-
     </div>
 
-    <!-- CONTROLADOR JAVASCRIPT MODULAR CON FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-        // CONFIGURACIÓN DE TU PROYECTO FIREBASE
         const firebaseConfig = {
-            apiKey: "TU_API_KEY_AQUÍ",
-            authDomain: "tu-proyecto.firebaseapp.com",
-            databaseURL: "https://tu-proyecto-default-rtdb.firebaseio.com",
-            projectId: "tu-proyecto",
-            storageBucket: "tu-proyecto.appspot.com",
-            messagingSenderId: "12345678",
-            appId: "1:123456:web:abcdef"
+            apiKey: "TU_API_KEY", authDomain: "tu-proyecto.firebaseapp.com",
+            databaseURL: "https://tu-proyecto.firebaseio.com", projectId: "tu-proyecto"
         };
+        const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // Instancias globales para poder redimensionar al colapsar el menú
         let globalChartConsumo, globalChartDona;
 
-        // Estructura Inicial Local con los datos de tu captura de pantalla
+        // Base de datos extendida local con simuladores de control de flujos y cargas solicitados
         let SILOS = [
-            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "10:30:30" },
-            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", fecha: "10:30:28" },
-            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 4200, consumo: 350, rssi: -72, estado: "Baja", fecha: "10:30:25" },
-            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 1800, consumo: 120, rssi: -75, estado: "Critica", fecha: "10:30:20" },
-            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 12750, consumo: 980, rssi: -60, estado: "Normal", fecha: "10:30:35" },
-            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo", fecha: "10:30:15" },
-            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado", fecha: "--:--:--" }
+            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "19:00", limiteCritico: 2000, variacion10min: 120, cargasSemana: 2, ultCarga: "Ayer" },
+            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", limiteCritico: 2000, variacion10min: 95, cargasSemana: 1, ultCarga: "Hace 4 días" },
+            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 4200, consumo: 350, rssi: -72, estado: "Baja", limiteCritico: 2500, variacion10min: 40, cargasSemana: 3, ultCarga: "Hoy 08:00" },
+            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 1800, consumo: 120, rssi: -75, estado: "Critica", limiteCritico: 2000, variacion10min: 15, cargasSemana: 2, ultCarga: "Hace 6 días" },
+            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 12750, consumo: 980, rssi: -60, estado: "Normal", limiteCritico: 3000, variacion10min: 180, cargasSemana: 4, ultCarga: "Hoy 14:20" },
+            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo", limiteCritico: 2000, variacion10min: 0, cargasSemana: 1, ultCarga: "Hace 5 días" },
+            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado", limiteCritico: 2000, variacion10min: 0, cargasSemana: 0, ultCarga: "N/A" }
         ];
 
-        function renderSilos() {
+        // --- SISTEMA LOGIN DE SEGURIDAD ---
+        document.getElementById("btnLoginAction").addEventListener("click", () => {
+            const user = document.getElementById("userInput").value;
+            const pass = document.getElementById("passInput").value;
+            if(user === "admin" && pass === "aurum2026") {
+                document.getElementById("loginScreen").style.display = "none";
+                document.getElementById("profileUser").innerText = user.toUpperCase();
+                document.getElementById("avatarName").innerText = user.substring(0,2).toUpperCase();
+            } else {
+                const err = document.getElementById("loginError"); err.style.display = "block";
+            }
+        });
+
+        // --- SISTEMA NAVEGACIÓN ENTRE VISTAS (SPA) ---
+        const menuItems = document.querySelectorAll(".menu-item");
+        menuItems.forEach(item => {
+            item.addEventListener("click", () => {
+                menuItems.forEach(i => i.classList.remove("active"));
+                item.classList.add("active");
+                const targetView = item.getAttribute("data-target");
+                document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active-view"));
+                document.getElementById(targetView).classList.add("active-view");
+                
+                // Forzar redimensionamiento de gráficos si regresa al Dashboard
+                if(targetView === "viewDashboard" && globalChartConsumo) {
+                    setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 50);
+                }
+            });
+        });
+
+        // --- CORE DE RENDERIZACIÓN ---
+        function renderCore() {
+            let pesoAcumulado = 0; let totalConsumo = 0; let totalAlarmas = 0;
             const grid = document.getElementById("silosGrid");
-            grid.innerHTML = "";
-            let pesoAcumulado = 0;
-            let totalConsumo = 0;
-            let totalAlarmas = 0;
+            const tHistorial = document.getElementById("tablaHistorial");
+            const tConsumo = document.getElementById("tablaConsumo");
+            const tAlarmas = document.getElementById("tablaAlarmasDetalle");
+            const tReportes = document.getElementById("tablaReportes");
+            const rPanel = document.getElementById("panelAlarmasRapidas");
+
+            grid.innerHTML = ""; tHistorial.innerHTML = ""; tConsumo.innerHTML = ""; tAlarmas.innerHTML = ""; tReportes.innerHTML = ""; rPanel.innerHTML = "";
 
             SILOS.forEach(s => {
                 let pct = s.capacidad > 0 ? Math.round((s.peso / s.capacidad) * 100) : 0;
-                pesoAcumulado += s.peso;
-                totalConsumo += s.consumo;
+                pesoAcumulado += s.peso; totalConsumo += s.consumo;
 
                 let estadoClass = "status-desc";
                 if(s.estado === "Normal") estadoClass = "status-normal";
                 if(s.estado === "Baja") estadoClass = "status-baja";
-                if(s.estado === "Critica") { estadoClass = "status-critica"; totalAlarmas++; }
-                if(s.estado === "Sin Flujo") estadoClass = "status-sinflujo";
+                if(s.estado === "Critica" || s.peso <= s.limiteCritico) { s.estado = "Critica"; estadoClass = "status-critica"; totalAlarmas++; }
+                if(s.estado === "Sin Flujo" || (s.variacion10min === 0 && s.estado !== "Desconectado" && s.peso > 0)) { s.estado = "Sin Flujo"; estadoClass = "status-sinflujo"; totalAlarmas++; }
 
                 let colorFluido = "var(--green)";
                 if(s.estado === "Baja") colorFluido = "var(--yellow)";
                 if(s.estado === "Critica") colorFluido = "var(--red)";
                 if(s.estado === "Sin Flujo") colorFluido = "var(--purple)";
 
+                // Inyección Dashboard Principal
                 grid.innerHTML += `
                     <div class="silo-card">
-                        <div class="silo-header">
-                            <span class="silo-title">${s.nombre}</span>
-                            <span class="silo-status ${estadoClass}">${s.estado}</span>
-                        </div>
+                        <div class="silo-header"><span class="silo-title">${s.nombre}</span><span class="silo-status ${estadoClass}">${s.estado}</span></div>
                         <div class="silo-body">
-                            <div class="tank-container">
-                                <div class="tank-fluid" style="height: ${s.estado === 'Desconectado' ? 0 : pct}%; background: linear-gradient(90deg, ${colorFluido} 0%, rgba(22,182,95,0.4) 100%)"></div>
-                            </div>
-                            <div class="silo-readout">
-                                <div class="silo-percentage">${s.estado === 'Desconectado' ? '--' : pct}%</div>
-                                <div class="silo-weight">${s.estado === 'Desconectado' ? '--' : s.peso.toLocaleString()} kg</div>
-                            </div>
+                            <div class="tank-container"><div class="tank-fluid" style="height: ${s.estado === 'Desconectado' ? 0 : pct}%; background: linear-gradient(90deg, ${colorFluido} 0%, rgba(255,255,255,0.1) 100%)"></div></div>
+                            <div class="silo-readout"><div class="silo-percentage">${s.estado === 'Desconectado' ? '--' : pct}%</div><div class="silo-weight">${s.estado === 'Desconectado' ? '--' : s.peso.toLocaleString()} kg</div></div>
                         </div>
-                        <div class="silo-footer">
-                            <div><b>${s.estado === 'Desconectado' ? '--' : s.consumo + ' kg/h'}</b>Consumo</div>
-                            <div><b>${s.fecha}</b>Actualizado</div>
-                            <div><b>${s.rssi ? s.rssi + ' dBm' : '--'}</b>RSSI</div>
-                        </div>
+                        <div class="silo-footer"><div><b>${s.estado === 'Desconectado' ? '--' : s.consumo + ' kg/h'}</b>Consumo</div><div><b>${s.fecha}</b>Hora</div><div><b>${s.rssi ? s.rssi + ' dBm' : '--'}</b>RSSI</div></div>
                     </div>
+                `;
+
+                // Inyección Tabla Historial (Diario y Semanal)
+                tHistorial.innerHTML += `
+                    <tr><td><b>${s.nombre}</b></td><td>${(s.peso * 0.95).toFixed(0)} kg/Día (Prom)</td><td>${(s.peso * 0.6).toFixed(0)} kg</td><td>${(s.capacidad * 2.1).toFixed(0)} kg/Semana</td><td>98.6% Telemetría</td></tr>
+                `;
+
+                // Inyección Tabla Consumos
+                tConsumo.innerHTML += `
+                    <tr><td><b>${s.nombre}</b></td><td>${s.consumo} kg/h</td><td>${s.consumo * 24} kg/Día</td><td><span class="silo-status ${estadoClass}">${s.estado === 'Sin Flujo' ? 'Atascado / Bloqueado' : 'Fluido Dinámico'}</span></td></tr>
+                `;
+
+                // Inyección Alarmas Especiales (Pesos Críticos y Variación Atascada)
+                let msgAlarma = "Estable"; let rowColor = "inherit";
+                if(s.peso <= s.limiteCritico && s.peso > 0) { msgAlarma = "ALERTA: Peso Bajo Límite Crítico"; rowColor = "var(--red)"; }
+                else if(s.variacion10min === 0 && s.peso > 0 && s.estado !== "Desconectado") { msgAlarma = "CRÍTICO: Sin variación de alimento (Atascado)"; rowColor = "var(--purple)"; }
+
+                tAlarmas.innerHTML += `
+                    <tr style="color: ${rowColor}"><td><b>${s.nombre}</b></td><td>${s.peso} kg</td><td>${s.limiteCritico} kg</td><td>${s.variacion10min} kg</td><td><b>${msgAlarma}</b></td></tr>
+                `;
+
+                // Inyección Sidebar rápido si hay incidentes
+                if(msgAlarma !== "Estable") {
+                    rPanel.innerHTML += `
+                        <div class="log-item" style="border-left:4px solid ${rowColor}">
+                            <div class="log-details"><div class="log-icon" style="color:${rowColor}"><i class="ph-fill ph-warning"></i></div><div><b>${s.nombre}</b><p style="font-size:11px;">${msgAlarma}</p></div></div>
+                        </div>
+                    `;
+                }
+
+                // Inyección Reportes (Cargas en la semana)
+                tReportes.innerHTML += `
+                    <tr><td><b>${s.nombre}</b></td><td>${s.capacidad.toLocaleString()} kg</td><td><span style="background:rgba(44,255,136,0.1); padding:4px 10px; border-radius:12px; color:var(--green)">${s.cargasSemana} Cargas</span></td><td>${s.ultCarga}</td></tr>
                 `;
             });
 
-            // Actualizar KPIs Globales
             document.getElementById("pesoTotal").innerHTML = `${pesoAcumulado.toLocaleString()} <span>kg</span>`;
             document.getElementById("consumoHora").innerHTML = `${totalConsumo.toLocaleString()} <span>kg/h</span>`;
             document.getElementById("alarmasContador").innerText = totalAlarmas;
             document.getElementById("badgeAlarmas").innerText = totalAlarmas;
         }
 
-        // Simulación de Logs del panel lateral derecho para igualar la UI
-        function renderDerecha() {
-            const alarmasPanel = document.getElementById("panelAlarmas");
-            alarmasPanel.innerHTML = `
-                <div class="log-item" style="border-left: 4px solid var(--red)">
-                    <div class="log-details"><div class="log-icon" style="background:rgba(255,77,90,0.1);color:var(--red)"><i class="ph-fill ph-warning"></i></div>
-                    <div><b>SILO 4 - Nivel Crítico</b><p style="font-size:11px;color:var(--text-muted)">Nivel por debajo del 15%</p></div></div>
-                    <span>10:30</span>
-                </div>
-                <div class="log-item" style="border-left: 4px solid var(--yellow)">
-                    <div class="log-details"><div class="log-icon" style="background:rgba(255,180,0,0.1);color:var(--yellow)"><i class="ph-fill ph-warning-diamonds"></i></div>
-                    <div><b>SILO 3 - Nivel Bajo</b><p style="font-size:11px;color:var(--text-muted)">Nivel por debajo del 30%</p></div></div>
-                    <span>10:29</span>
-                </div>
-            `;
-
-            const actividadPanel = document.getElementById("panelActividad");
-            actividadPanel.innerHTML = `
-                <div class="log-item">
-                    <div class="log-details"><div class="log-icon" style="background:rgba(44,255,136,0.1);color:var(--green)"><i class="ph ph-check-circle"></i></div>
-                    <div><b>SILO 1 - Peso Actualizado</b><p style="font-size:11px;color:var(--text-muted)">11.700 kg</p></div></div>
-                    <span>10:30</span>
-                </div>
-            `;
-        }
-
-        /* ========================================================
-           LÓGICA PEDIDA: SIMULACIÓN DE PORCENTAJES PARA EL CLIENTE
-           ======================================================== */
-        function simularDescargaComplejoIndustrial() {
-            let horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
+        // --- SIMULADOR DE DESCARGA E INMOVILIDAD DE ALIMENTO ---
+        setInterval(() => {
+            let hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             SILOS.forEach(s => {
-                if (s.estado === "Desconectado" || s.estado === "Sin Flujo") return;
+                if (s.estado === "Desconectado") return;
 
-                // Simular vaciado variando entre 15 y 60 kg en cada ciclo de la demo
-                let descarga = Math.floor(Math.random() * 45) + 15;
-                s.peso = Math.max(0, s.peso - descarga);
-                s.fecha = horaActual;
-
-                // Ajustar umbrales industriales de forma automática según la pérdida simulada
-                let pct = Math.round((s.peso / s.capacidad) * 100);
-                if (pct <= 15) s.estado = "Critica";
-                else if (pct <= 30) s.estado = "Baja";
-                else s.estado = "Normal";
+                // Silo 6 simulado estático a propósito para forzar la alarma de "falta de variación" solicitada
+                if(s.id === 6) {
+                    s.variacion10min = 0;
+                    s.consumo = 0;
+                } else {
+                    let gasto = Math.floor(Math.random() * 30) + 10;
+                    s.peso = Math.max(0, s.peso - gasto);
+                    s.variacion10min = gasto * 4;
+                }
+                s.fecha = hora;
             });
+            renderCore();
+            if(globalChartDona) { globalChartDona.data.datasets[0].data = SILOS.map(s => s.peso); globalChartDona.update(); }
+        }, 3000);
 
-            // Re-renderizar tarjetas con los porcentajes simulados corriendo en vivo
-            renderSilos();
-
-            // Refrescar dona de distribución de consumo en base a los pesos simulados actuales
-            if(globalChartDona) {
-                globalChartDona.data.datasets[0].data = SILOS.map(s => s.peso);
-                globalChartDona.update();
-            }
-        }
-        // Iniciar bucle de simulación automática cada 3.5 segundos para la propuesta
-        setInterval(simularDescargaComplejoIndustrial, 3500);
-
-
-        /* ========================================================
-           LÓGICA PEDIDA: OCULTAR/MOSTRAR LA BARRA LATERAL DERECHA
-           ======================================================== */
-        const btnToggle = document.getElementById("btnToggleDerecho");
-        const panelDerecho = document.querySelector(".right-panel");
-
-        if (btnToggle && panelDerecho) {
-            btnToggle.addEventListener("click", () => {
-                panelDerecho.classList.toggle("hidden");
-                
-                // Mientras corre la transición CSS (400ms), avisamos a Chart.js para redibujarse perfectamente
-                let intervalResize = setInterval(() => {
-                    if (globalChartConsumo) globalChartConsumo.resize();
-                    if (globalChartDona) globalChartDona.resize();
-                }, 16);
-
-                // Apagar el ajuste repetitivo una vez concluido el movimiento
-                setTimeout(() => { clearInterval(intervalResize); }, 410);
-            });
-        }
-
-
-        // ESCHUCHADOR EN TIEMPO REAL DESDE FIREBASE REALTIME DATABASE
-        const silosRef = ref(db, 'silos');
-        onValue(silosRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                SILOS = Array.isArray(data) ? data : Object.values(data);
-                renderSilos();
-            }
+        // --- COLAPSAR PANEL DERECHO ---
+        document.getElementById("btnToggleDerecho").addEventListener("click", () => {
+            document.querySelector(".right-panel").classList.toggle("hidden");
+            setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 400);
         });
 
-        // Inicializar Renderizado Visual y Gráficas
-        renderSilos();
-        renderDerecha();
+        // --- REALTIME CON FIREBASE ---
+        onValue(ref(db, 'silos'), (snap) => {
+            const data = snap.val(); if (data) { SILOS = Array.isArray(data) ? data : Object.values(data); renderCore(); }
+        });
 
-        // Gráfico de líneas (Consumo)
+        // Inicializar vistas de arranque
+        renderCore();
+
+        // Inicialización de Gráficos de Soporte Visual
         globalChartConsumo = new Chart(document.getElementById("chartConsumo"), {
             type: 'line',
             data: {
-                labels: ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00", "02:00", "04:00", "06:00"],
-                datasets: [{
-                    data: [8000, 12000, 9500, 14000, 11000, 13000, 10500, 12500, 11500, 13500, 12450],
-                    borderColor: "#2cff88",
-                    borderWidth: 2,
-                    backgroundGradient: 'vertical',
-                    backgroundColor: 'rgba(44, 255, 136, 0.05)',
-                    fill: true,
-                    tension: 0.4
-                }]
+                labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00"],
+                datasets: [{ data: [12000, 14500, 11000, 15000, 13000, 12450, 11800], borderColor: "#2cff88", borderWidth: 2, fill: false, tension: 0.4 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        // Gráfico de Dona (Distribución)
         globalChartDona = new Chart(document.getElementById("chartDona"), {
             type: 'doughnut',
             data: {
-                labels: ["Silo 1", "Silo 2", "Silo 3", "Silo 4", "Silo 5", "Silo 6", "Silo 7"],
-                datasets: [{
-                    data: SILOS.map(s => s.peso),
-                    backgroundColor: ["#2cff88", "#3b82f6", "#ffb400", "#ff3b30", "#a25ddc", "#00cbc6", "#4b5563"],
-                    borderWidth: 0
-                }]
+                labels: SILOS.map(s => s.nombre),
+                datasets: [{ data: SILOS.map(s => s.peso), backgroundColor: ["#2cff88", "#3b82f6", "#ffb400", "#ff3b30", "#a25ddc", "#00cbc6", "#4b5563"], borderWidth: 0 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#fff', boxWidth: 12 } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#fff' } } } }
         });
-
     </script>
 </body>
 </html>
