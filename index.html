@@ -138,8 +138,8 @@
         .charts-container-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
         .chart-box-panel { background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; }
 
-        /* --- PANEL LATERAL DERECHO --- */
-        .right-panel { width: 320px; background: var(--bg-sidebar); border-left: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; flex-shrink: 0; }
+        /* --- PANEL LATERAL DERECHO PANEL --- */
+        .right-panel { width: 320px; background: var(--bg-sidebar); border-left: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; flex-shrink: 0; transition: all 0.2s ease; }
         .panel-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .panel-section-header h4 { font-size: 13px; font-weight: 700; color: white; letter-spacing: 0.4px; }
         .panel-section-header a { font-size: 11px; color: #3b82f6; text-decoration: none; font-weight: 500; }
@@ -169,7 +169,7 @@
 </head>
 <body>
 
-    <!-- CONTROL DE AUTENTICACIÓN -->
+    <!-- CONTROL DE AUTENTICACIÓN (REQUERIDO) -->
     <div id="loginScreen">
         <div class="login-card">
             <i class="ph-fill ph-lock-keyhole"></i>
@@ -281,63 +281,122 @@
                     </div>
                 </div>
 
-                <!-- SUBPANTALLA HISTORIAL -->
+                <!-- SUBPANTALLA HISTORIAL (SOLICITADO) -->
                 <div id="viewHistorial" class="app-view">
-                    <div class="main-header"><h1>Historial de Almacenamiento</h1><p>Métricas consolidadas de comportamiento diario y semanal</p></div>
+                    <div class="main-header">
+                        <h1>Historial de Almacenamiento</h1>
+                        <p>Métricas consolidadas de comportamiento diario y semanal de cada silo estructural</p>
+                    </div>
                     <table class="custom-table">
-                        <thead><tr><th>Silo</th><th>Consumo Diario Promedio</th><th>Nivel Mínimo Detectado</th><th>Acumulado Semanal</th><th>Estado de Enlace</th></tr></thead>
-                        <tbody id="tablaHistorial"></tbody>
+                        <thead>
+                            <tr>
+                                <th>Silo</th>
+                                <th>Consumo Diario Promedio</th>
+                                <th>Nivel Mínimo Detectado</th>
+                                <th>Acumulado Semanal</th>
+                                <th>Estado de Enlace</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaHistorial">
+                            <!-- Inyección dinámica -->
+                        </tbody>
                     </table>
                 </div>
 
-                <!-- SUBPANTALLA CONSUMO -->
+                <!-- SUBPANTALLA CONSUMO (SOLICITADO) -->
                 <div id="viewConsumo" class="app-view">
-                    <div class="main-header"><h1>Análisis de Desalojo</h1><p>Tasas calculadas por hora operativa y acumulación por jornada diaria</p></div>
+                    <div class="main-header">
+                        <h1>Análisis de Desalojo</h1>
+                        <p>Tasas calculadas por hora operativa y acumulación por jornada diaria</p>
+                    </div>
                     <table class="custom-table">
-                        <thead><tr><th>Estructura</th><th>Consumo Promedio / Hora</th><th>Consumo Registrado / Día</th><th>Condición de Salida</th></tr></thead>
-                        <tbody id="tablaConsumo"></tbody>
+                        <thead>
+                            <tr>
+                                <th>Estructura</th>
+                                <th>Consumo Promedio / Hora</th>
+                                <th>Consumo Registrado / Día</th>
+                                <th>Condición de Salida</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaConsumo">
+                            <!-- Inyección dinámica -->
+                        </tbody>
                     </table>
                 </div>
 
-                <!-- SUBPANTALLA ALARMAS -->
+                <!-- SUBPANTALLA ALARMAS (SOLICITADO) -->
                 <div id="viewAlarmas" class="app-view">
-                    <div class="main-header"><h1>Umbrales de Seguridad & Variación</h1><p>Pesos críticos fijos y monitoreo de inmovilidad de carga</p></div>
+                    <div class="main-header">
+                        <h1>Umbrales de Seguridad & Variación</h1>
+                        <p>Pesos críticos fijos y monitoreo de inmovilidad de carga (Falta de variación de alimento)</p>
+                    </div>
                     <table class="custom-table">
-                        <thead><tr><th>Silo</th><th>Masa Actual</th><th>Peso Límite de Alerta</th><th>Cambio Neto (10 Min)</th><th>Diagnóstico de Evento</th></tr></thead>
-                        <tbody id="tablaAlarmasDetalle"></tbody>
+                        <thead>
+                            <tr>
+                                <th>Silo</th>
+                                <th>Masa Actual</th>
+                                <th>Peso Límite de Alerta</th>
+                                <th>Cambio Neto (10 Min)</th>
+                                <th>Diagnóstico de Evento</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaAlarmasDetalle">
+                            <!-- Inyección dinámica -->
+                        </tbody>
                     </table>
                 </div>
 
-                <!-- SUBPANTALLA REPORTES -->
+                <!-- SUBPANTALLA REPORTES (SOLICITADO) -->
                 <div id="viewReportes" class="app-view">
-                    <div class="main-header"><h1>Frecuencia de Abastecimientos</h1><p>Conteo semanal de eventos de recarga por unidad</p></div>
+                    <div class="main-header">
+                        <h1>Frecuencia de Abastecimientos</h1>
+                        <p>Conteo semanal de eventos de recarga por unidad estructural</p>
+                    </div>
                     <table class="custom-table">
-                        <thead><tr><th>Unidad</th><th>Capacidad de Placa</th><th>Cargas Hechas (Esta Semana)</th><th>Última Detección</th></tr></thead>
-                        <tbody id="tablaReportes"></tbody>
+                        <thead>
+                            <tr>
+                                <th>Unidad</th>
+                                <th>Capacidad de Placa</th>
+                                <th>Cargas Hechas (Esta Semana)</th>
+                                <th>Última Detección</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaReportes">
+                            <!-- Inyección dinámica -->
+                        </tbody>
                     </table>
                 </div>
 
                 <!-- SUBPANTALLA CONFIGURACIÓN -->
                 <div id="viewConfig" class="app-view">
-                    <div class="main-header"><h1>Configuración Avanzada</h1><p>Calibración de celdas y mapeo de hardware</p></div>
-                    <div style="border:1px dashed var(--border-color); padding:40px; text-align:center; color:var(--text-sub); border-radius:8px; font-size:13px;">Sección de Fábrica - Ajustes posteriores.</div>
+                    <div class="main-header">
+                        <h1>Configuración Avanzada</h1>
+                        <p>Calibración de celdas de carga y mapeo de hardware</p>
+                    </div>
+                    <div style="border:1px dashed var(--border-color); padding:40px; text-align:center; color:var(--text-sub); border-radius:8px; font-size:13px;">
+                        Sección de Fábrica - Ajustes posteriores (Lo vemos luego).
+                    </div>
                 </div>
 
-                <!-- SUBPANTALLA SOPORTE INTEGRADO -->
+                <!-- SUBPANTALLA SOPORTE (SOLICITADO) -->
                 <div id="viewSoporte" class="app-view">
                     <div class="support-wrapper-card">
                         <i class="ph ph-shield-check" style="font-size:44px; color:var(--color-green)"></i>
                         <h2 style="font-size:18px; margin-top:12px; font-weight:700;">Ingeniería de Planta AURUM.SYS</h2>
                         <p style="color:var(--text-sub); font-size:12px; margin-bottom:20px;">Comuníquese con soporte ante fallas de telemetría de celdas de carga</p>
-                        <a href="mailto:aurumsysm@gmail.com" class="support-anchor"><i class="ph ph-envelope-open" style="color:var(--color-green)"></i> aurumsysm@gmail.com</a>
-                        <a href="tel:+56949287059" class="support-anchor"><i class="ph ph-phone-call" style="color:var(--color-green)"></i> +56 9 4928 7059</a>
+                        <a href="mailto:aurumsysm@gmail.com" class="support-anchor">
+                            <i class="ph ph-envelope-open" style="color:var(--color-green)"></i> aurumsysm@gmail.com
+                        </a>
+                        <a href="tel:+56949287059" class="support-anchor">
+                            <i class="ph ph-phone-call" style="color:var(--color-green)"></i> +56 9 4928 7059
+                        </a>
                     </div>
                 </div>
 
             </div>
 
             <!-- PANEL LATERAL DERECHO EXACTO -->
-            <div class="right-panel">
+            <div class="right-panel" id="panelDerechoControl">
                 <div>
                     <div class="panel-section-header"><h4>Alarmas Activas</h4><a href="#">Ver todas</a></div>
                     <div class="list-container" id="panelAlarmasRapidas"></div>
@@ -357,7 +416,7 @@
     <script>
         let globalChartConsumo, globalChartDona;
 
-        // Base de Datos Maestra de los 7 Silos con Parámetros de la Imagen
+        // Base de Datos Maestra de los 7 Silos con Parámetros Solicitados
         let SILOS = [
             { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "10:30:30", limiteCritico: 2250, variacion10min: 120, cargasSemana: 2, ultCarga: "Ayer" },
             { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", fecha: "10:30:28", limiteCritico: 2250, variacion10min: 90, cargasSemana: 1, ultCarga: "Hace 3 días" },
@@ -381,22 +440,30 @@
             }
         });
 
-        // --- ROUTING INTERNO SPA ---
+        // --- SPA ROUTING: OCULTAR PANEL DERECHO EXCEPTO EN DASHBOARD ---
         const itemsMenu = document.querySelectorAll(".menu-item");
         itemsMenu.forEach(item => {
             item.addEventListener("click", () => {
                 itemsMenu.forEach(i => i.classList.remove("active"));
                 item.classList.add("active");
+                
                 const targetView = item.getAttribute("data-target");
+                
+                // Toggle del Panel Derecho solicitado
+                const panelDerecho = document.getElementById("panelDerechoControl");
+                if (targetView === "viewDashboard") {
+                    panelDerecho.style.display = "flex";
+                    if(globalChartConsumo) { setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 40); }
+                } else {
+                    panelDerecho.style.display = "none";
+                }
+
                 document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active-view"));
                 document.getElementById(targetView).classList.add("active-view");
-                if(targetView === "viewDashboard" && globalChartConsumo) {
-                    setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 40);
-                }
             });
         });
 
-        // --- ENCARGADO DE RENDERIZAR LA INTERFAZ EXACTA ---
+        // --- ENCARGADO DE RENDERIZAR LA INTERFAZ EXACTA Y TABLAS ---
         function runMasterRender() {
             let acumuladoPeso = 0; let combinadoConsumo = 0; let totalAlertasFallas = 0;
             
@@ -450,7 +517,7 @@
                     </div>
                 `;
 
-                // Inyección Tablas Relacionales (SPA)
+                // Inyección Tablas Relacionales (Funcionalidad SPA pedida)
                 tHistorial.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${(s.peso * 0.92).toFixed(0)} kg</td><td>${(s.peso * 0.5).toFixed(0)} kg</td><td>${(s.capacidad * 2).toFixed(0)} kg</td><td>Estable</td></tr>`;
                 tConsumo.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.consumo} kg/h</td><td>${s.consumo * 24} kg/Día</td><td><span>${s.estado === 'Sin Flujo' ? 'Ausencia de Flujo' : 'Flujo Activo'}</span></td></tr>`;
                 
@@ -461,7 +528,7 @@
                 
                 tReportes.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.capacidad.toLocaleString()} kg</td><td><span style="color:var(--color-green); font-weight:700;">${s.cargasSemana} Cargas</span></td><td>${s.ultCarga}</td></tr>`;
 
-                // Inyección de Tarjetas en Panel Lateral Derecho (Alertas Activas Exactas)
+                // Inyección de Alertas en Panel Derecho
                 if(diagStr !== "Operando Correctamente" && s.estado !== "Desconectado") {
                     let cAlert = s.estado === 'Sin Flujo' ? 'var(--color-purple)' : 'var(--color-red)';
                     panelAlertasRapidas.innerHTML += `
@@ -485,12 +552,12 @@
             document.getElementById("navBadgeCount").innerText = totalAlertasFallas;
         }
 
-        // --- CRONÓMETRO REPETITIVO DE CONSUMO REAL ---
+        // --- CRONÓMETRO REPETITIVO DE CONSUMO REAL (SIMULACIÓN DINÁMICA) ---
         setInterval(() => {
             let t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             SILOS.forEach(s => {
                 if (s.estado === "Desconectado") return;
-                if (s.id === 6) { // Conservar estático sin variación
+                if (s.id === 6) { // Conservar estático sin variación para forzar Alerta de Atasco solicitado
                     s.variacion10min = 0; s.consumo = 0;
                 } else {
                     let desc = Math.floor(Math.random() * 15) + 5;
@@ -506,7 +573,7 @@
         // Arranque Inicial
         runMasterRender();
 
-        // --- GENERACIÓN DE CHART.JS CON COLORES IDÉNTICOS ---
+        // --- GENERACIÓN DE GRÁFICOS ---
         globalChartConsumo = new Chart(document.getElementById("chartConsumo"), {
             type: 'line',
             data: {
