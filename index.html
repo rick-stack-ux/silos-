@@ -44,29 +44,33 @@
         body.theme-mansel .brand h2, body.theme-mansel .brand span { color: #ffffff; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-title); display: flex; height: 100vh; overflow: hidden; }
+        body { background-color: var(--bg-main); color: var(--text-title); display: flex; height: 100vh; overflow: hidden; position: relative; }
 
+        /* LOGIN SEGURO CON CAMPOS VACÍOS */
         #loginScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background: var(--bg-main); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; width: 100%; max-width: 380px; text-align: center; }
-        .login-field { width: 100%; padding: 12px; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-title); margin-top: 12px; font-size: 14px; outline: none; }
-        .btn-login { width: 100%; padding: 12px; background: var(--color-green); color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 18px; }
+        .login-field { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-title); margin-top: 12px; font-size: 14px; outline: none; }
+        .btn-login { width: 100%; padding: 12px; background: var(--color-green); color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 18px; transition: transform 0.1s; }
+        .btn-login:active { transform: scale(0.98); }
 
-        .sidebar { width: 240px; height: 100vh; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-color); flex-shrink: 0; transition: all 0.3s ease; }
+        .sidebar { width: 240px; height: 100vh; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-color); flex-shrink: 0; z-index: 10; }
         .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
         .brand i { color: var(--color-green); font-size: 32px; }
         .brand h2 { font-size: 16px; font-weight: 800; }
         .brand span { display: block; font-size: 11px; color: var(--text-sub); }
         
         .menu-list { display: flex; flex-direction: column; gap: 4px; }
-        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.15s; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s ease; }
         .menu-item div { display: flex; align-items: center; gap: 12px; }
         .menu-item i { font-size: 18px; }
-        .menu-item.active { background: rgba(16, 185, 129, 0.06); color: var(--color-green); font-weight: 600; }
+        .menu-item:hover { background: rgba(255,255,255,0.05); color: var(--text-title); }
+        .menu-item.active { background: rgba(16, 185, 129, 0.08); color: var(--color-green); font-weight: 600; transform: translateX(4px); }
         .badge { background: var(--color-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 12px; }
 
         .wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); height: 100vh; overflow: hidden; position: relative; }
-        .top-navbar { height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 24px; background: var(--bg-sidebar); z-index: 10; }
-        .nav-bell { position: relative; font-size: 22px; color: var(--text-sub); cursor: pointer; }
+        .top-navbar { height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 24px; background: var(--bg-sidebar); z-index: 5; }
+        .nav-bell { position: relative; font-size: 22px; color: var(--text-sub); cursor: pointer; transition: transform 0.2s; }
+        .nav-bell:hover { transform: scale(1.1); }
         .nav-bell span { position: absolute; top: -2px; right: -2px; background: var(--color-red); color: white; width: 14px; height: 14px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         
         .user-widget { display: flex; align-items: center; gap: 10px; cursor: pointer; position: relative; padding: 4px 8px; border-radius: 6px; }
@@ -74,40 +78,43 @@
         .logout-dropdown button { width: 100%; padding: 10px 14px; background: transparent; border: none; text-align: left; font-size: 12px; cursor: pointer; color: var(--text-title); display: flex; align-items: center; gap: 8px; }
 
         .layout-body { display: flex; flex: 1; overflow: hidden; position: relative; }
-        .main-content { flex: 1; padding: 24px; overflow-y: auto; transition: all 0.3s; }
+        .main-content { flex: 1; padding: 24px; overflow-y: auto; }
         
-        /* MULTIDISPOSITIVO: GRILLAS DINÁMICAS */
+        /* GRILLAS ADAPTABLES */
         .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
         .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
         .kpi-details h3 { font-size: 18px; font-weight: 700; }
 
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; }
+        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 250px; }
         
-        /* DISEÑO INDUSTRIAL DEL SILO */
-        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 160px; }
+        /* REPRODUCCIÓN DEL DIBUJO DEL SILO INDUSTRIAL (MÁS GRANDE) */
+        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 180px; margin-top: 6px; }
         .silo-axis-y { width: 25px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: var(--text-sub); }
         .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
-        .silo-metal-frame { width: 75px; height: 150px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
-        .silo-ladder { position: absolute; top: 12px; left: 2px; width: 6px; height: 106px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 6px; z-index: 4; }
-        .silo-roof { width: 68px; height: 16px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 10px; left: 5px; z-index: 3; border: 1px solid #475569; }
-        .silo-cylinder { width: 68px; height: 95px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; position: absolute; top: 25px; left: 5px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
-        .silo-cone { width: 68px; height: 24px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 120px; left: 5px; z-index: 2; }
-        .silo-legs { width: 68px; height: 26px; position: absolute; top: 120px; left: 5px; z-index: 1; display: flex; justify-content: space-between; }
+        
+        /* Contenedores escalados para mayor tamaño visual */
+        .silo-metal-frame { width: 90px; height: 170px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
+        .silo-ladder { position: absolute; top: 12px; left: 2px; width: 6px; height: 120px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 6px; z-index: 4; }
+        .silo-roof { width: 84px; height: 20px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 5px; left: 3px; z-index: 3; border: 1px solid #475569; }
+        .silo-cylinder { width: 84px; height: 110px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; position: absolute; top: 25px; left: 3px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
+        .silo-cone { width: 84px; height: 26px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 135px; left: 3px; z-index: 2; }
+        .silo-legs { width: 84px; height: 30px; position: absolute; top: 135px; left: 3px; z-index: 1; display: flex; justify-content: space-between; }
         .silo-legs div { width: 3px; height: 100%; background: #475569; }
-        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.5s; }
+        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.4s ease; }
         .silo-text-readout { text-align: right; }
+        .timestamp-box { font-size: 10px; color: var(--color-green); font-family: monospace; text-align: center; background: rgba(0,0,0,0.2); padding: 2px; border-radius: 4px; margin-top: 6px; }
 
-        /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
-        .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
-        .canvas-container { width: 140px; height: 140px; }
-        .dona-legend { font-size: 13px; font-weight: 600; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 8px; color: var(--text-title); }
+        /* GRÁFICO DE DONA EXTRA GRANDE CON LEYENDAS INDUSTRIALES CLARAS */
+        .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 12px; }
+        .canvas-container { width: 150px; height: 150px; }
+        .dona-legend { font-size: 13px; font-weight: 700; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; color: var(--text-title); }
 
         .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
         
-        /* PANALES FLOTANTES DE MEDIA PANTALLA (SIDE DRAWERS) */
-        .side-drawer { position: absolute; top: 0; right: -50%; width: 50%; height: 100%; background: var(--bg-card); border-left: 2px solid var(--border-color); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99); z-index: 100; padding: 30px; overflow-y: auto; }
-        .side-drawer.open { right: 0; }
+        /* PANALES FLOTANTES DE MEDIA PANTALLA DESDE LA IZQUIERDA */
+        .side-drawer { position: absolute; top: 0; left: -50%; width: 50%; height: 100%; background: var(--bg-card); border-right: 2px solid var(--border-color); box-shadow: 10px 0 30px rgba(0,0,0,0.6); transition: left 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99); z-index: 100; padding: 30px; overflow-y: auto; }
+        .side-drawer.open { left: 0; }
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; }
         .drawer-close { font-size: 24px; cursor: pointer; color: var(--text-sub); }
         .drawer-close:hover { color: var(--color-red); }
@@ -115,19 +122,19 @@
         .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; }
         .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; }
 
-        .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
+        .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; transition: transform 0.1s; }
+        .btn-action:active { transform: scale(0.97); }
+        
         .custom-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
         .custom-table th, .custom-table td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-color); }
         .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
-        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
-
-        /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
+        /* RECOMODACIÓN MULTIDISPOSITIVO AUTOMÁTICA */
         @media (max-width: 1200px) {
             .silos-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .chart-layout-panel { grid-template-columns: 1fr; gap: 20px; }
-            .side-drawer { width: 70%; right: -70%; }
+            .side-drawer { width: 70%; left: -70%; }
         }
 
         @media (max-width: 768px) {
@@ -136,20 +143,20 @@
             .brand { margin-bottom: 12px; }
             .menu-list { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
             .silos-grid, .kpi-grid { grid-template-columns: 1fr; }
-            .side-drawer { width: 100%; right: -100%; }
+            .side-drawer { width: 100%; left: -100%; }
             .wrapper { height: calc(100vh - 140px); }
         }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN -->
+    <!-- LOGIN TOTALMENTE VACÍO POR SEGURIDAD -->
     <div id="loginScreen">
         <div class="login-card">
-            <i class="ph-fill ph-lock-keyhole"></i>
-            <h2>AURUM.SYS INTERFACE</h2>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin)">
-            <input type="password" id="passInput" class="login-field" placeholder="Contraseña (aurum2026)">
+            <i class="ph-fill ph-lock-keyhole" style="font-size:40px; color:var(--color-green)"></i>
+            <h2 style="margin: 10px 0 20px 0;">AURUM.SYS INTERFACE</h2>
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario de Planta">
+            <input type="password" id="passInput" class="login-field" placeholder="Contraseña">
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
         </div>
     </div>
@@ -170,7 +177,7 @@
     </div>
 
     <!-- MAIN INTERFACE -->
-    <div class="wrapper">
+    <div class="wrapper" id="mainWrapper">
         <div class="top-navbar">
             <div class="nav-bell" id="btnCampana"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
             <div class="user-widget" id="userMenuWidget">
@@ -180,49 +187,48 @@
                 </div>
                 <div style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">EG</div>
                 <div class="logout-dropdown" id="logoutBox">
-                    <button onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
                     <button id="btnExitAction" style="color:var(--color-red);"><i class="ph ph-sign-out"></i> Exit</button>
                 </div>
             </div>
         </div>
 
-        <div class="layout-body">
-            <!-- DASHBOARD SIEMPRE VISIBLE DE FONDO -->
+        <div class="layout-body" id="interactiveZone">
+            <!-- DASHBOARD SIEMPRE ACTIVO Y VISIBLE -->
             <div class="main-content">
                 <div class="kpi-grid">
                     <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi1">Silos Activos</p><h3>7</h3></div></div>
-                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi2">Peso Total</p><h3 id="pesoTotal">36.880 kg</h3></div></div>
-                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi3">Consumo Actual</p><h3>2.920 kg/h</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi2">Peso Total</p><h3 id="pesoTotal">36,880 kg</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi3">Consumo Actual</p><h3>2,920 kg/h</h3></div></div>
                     <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi4">Alarmas Activas</p><h3 style="color:var(--color-red)">2</h3></div></div>
                 </div>
 
                 <div class="silos-grid" id="silosGrid"></div>
 
+                <!-- SECCIÓN DE CONSUMO REAL RECONSTRUIDA -->
                 <div class="chart-layout-panel">
                     <div>
-                        <h4 style="font-size:14px; margin-bottom:16px; font-weight:700;" class="lng-charttitle">Consumo Total (Últimas 24 Horas)</h4>
+                        <h4 style="font-size:14px; margin-bottom:16px; font-weight:700;" class="lng-charttitle">Historial de Carga y Flujo Continuo</h4>
                         <div style="height:165px;"><canvas id="chartConsumo"></canvas></div>
                     </div>
                     <div style="display:flex; flex-direction:column; justify-content:center; padding-left:24px; border-left:1px solid var(--border-color);">
-                        <h2 style="font-size:32px; font-weight:800;">12.450 <span style="font-size:14px; color:var(--text-sub);">kg/h</span></h2>
-                        <p style="font-size:13px;" class="lng-kpi3">Consumo Actual</p>
-                        <span style="color:var(--color-green); font-size:12px; font-weight:600; margin-top:10px;">▲ 8.5% vs ayer</span>
+                        <h2 style="font-size:28px; font-weight:800;" id="txtConsumoVariante">2,920 <span style="font-size:14px; color:var(--text-sub);">kg/h</span></h2>
+                        <p style="font-size:13px;" class="lng-kpi3">Consumo Total Promedio</p>
+                        <span style="color:var(--color-green); font-size:12px; font-weight:600; margin-top:10px;">⚡ Datos Actualizados</span>
                     </div>
                 </div>
             </div>
 
-            <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
-            <!-- 1. HISTORIAL CON DESCARGA -->
-            <div id="drawerHistorial" class="side-drawer">
+            <!-- PANALES FLOTANTES EN LA IZQUIERDA (SIDE DRAWERS) -->
+            <!-- 1. HISTORIAL -->
+            <div id="drawerHistorial" class="side-drawer" onclick="event.stopPropagation()">
                 <div class="drawer-header"><h3>🕒 Historial de Consumos</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
                     <label style="font-size:13px; font-weight:600;">Filtrar Período de Datos</label>
                     <select class="config-select" id="filtroHistorial">
                         <option value="semana">Última Semana</option>
                         <option value="mes">Último Mes</option>
-                        <option value="ano">Año Completo</option>
                     </select>
-                    <button class="btn-action" onclick="descargarExcelConsumos()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel (.csv)</button>
+                    <button class="btn-action" onclick="descargarExcelConsumos()"><i class="ph ph-file-xls"></i> Descargar Excel (.csv)</button>
                 </div>
                 <table class="custom-table">
                     <thead><tr><th>Fecha</th><th>Silo</th><th>Consumo Registrado</th></tr></thead>
@@ -234,53 +240,39 @@
                 </table>
             </div>
 
-            <!-- 2. CONSUMO DETALLADO -->
-            <div id="drawerConsumo" class="side-drawer">
-                <div class="drawer-header"><h3>📊 Análisis de Consumo por Silo</h3><i class="ph ph-x drawer-close"></i></div>
-                <div style="height:250px; margin-bottom:20px;"><canvas id="chartAnalisisSilos"></canvas></div>
-                <p style="font-size:13px; color:var(--text-sub);">Monitoreo de flujo continuo por batch de descarga industrial.</p>
+            <!-- 2. CONSUMO REAL DETALLADO -->
+            <div id="drawerConsumo" class="side-drawer" onclick="event.stopPropagation()">
+                <div class="drawer-header"><h3>📊 Registro de Descargas Semanales</h3><i class="ph ph-x drawer-close"></i></div>
+                <table class="custom-table">
+                    <thead><tr><th>ID Silo</th><th>Consumo por Hora</th><th>Cargas en la Semana</th></tr></thead>
+                    <tbody id="tablaConsumosDetalle"></tbody>
+                </table>
             </div>
 
-            <!-- 3. ALARMAS ACTIVAS -->
-            <div id="drawerAlarmas" class="side-drawer">
-                <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close"></i></div>
+            <!-- 3. ALARMAS -->
+            <div id="drawerAlarmas" class="side-drawer" onclick="event.stopPropagation()">
+                <div class="drawer-header"><h3>🔔 Alertas Activas</h3><i class="ph ph-x drawer-close"></i></div>
                 <div style="background:rgba(239,68,68,0.1); border:1px solid var(--color-red); padding:14px; border-radius:8px; margin-bottom:12px;">
-                    <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
-                    <p style="font-size:12px; margin-top:4px;">Nivel de llenado inferior al 5% de la capacidad nominal.</p>
-                </div>
-                <div style="background:rgba(139,92,246,0.1); border:1px solid var(--color-purple); padding:14px; border-radius:8px;">
-                    <h5 style="color:var(--color-purple); font-size:14px;">⚡ ALERTA: Silo 6 Sin Flujo</h5>
-                    <p style="font-size:12px; margin-top:4px;">Se detectó detención abrupta en tubería de salida.</p>
+                    <h5 style="color:var(--color-red);">⚠️ Alerta: Silo 4 Crítico</h5>
+                    <p style="font-size:12px; margin-top:4px;">Nivel inferior al 5%.</p>
                 </div>
             </div>
 
             <!-- 4. REPORTES -->
-            <div id="drawerReportes" class="side-drawer">
-                <div class="drawer-header"><h3>📝 Generador de Reportes</h3><i class="ph ph-x drawer-close"></i></div>
-                <div class="config-card-layout">
-                    <p style="font-size:13px;">Generar bitácora consolidada de mantenimiento y lecturas RSSI de antenas.</p>
-                    <button class="btn-action" onclick="alert('Generando PDF...')"><i class="ph ph-file-pdf"></i> Imprimir PDF de Planta</button>
-                </div>
+            <div id="drawerReportes" class="side-drawer" onclick="event.stopPropagation()">
+                <div class="drawer-header"><h3>📝 Reportes de Operación</h3><i class="ph ph-x drawer-close"></i></div>
+                <button class="btn-action" onclick="alert('Generando PDF...')"><i class="ph ph-file-pdf"></i> Exportar PDF de Planta</button>
             </div>
 
             <!-- 5. CONFIGURACIÓN -->
-            <div id="drawerConfig" class="side-drawer">
-                <div class="drawer-header"><h3>⚙️ Ajustes del Sistema</h3><i class="ph ph-x drawer-close"></i></div>
-                <div class="config-card-layout">
-                    <label style="font-weight:600; font-size:13px;">Idioma de Interfaz</label>
-                    <select class="config-select" id="comboIdioma" onchange="cambiarIdioma()">
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                        <option value="zh">中文 (Chino)</option>
-                        <option value="de">Deutsch (Alemán)</option>
-                    </select>
-                </div>
+            <div id="drawerConfig" class="side-drawer" onclick="event.stopPropagation()">
+                <div class="drawer-header"><h3>⚙️ Ajustes</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
                     <label style="font-weight:600; font-size:13px;">Tema Visual</label>
                     <select class="config-select" id="comboTema" onchange="cambiarTema()">
-                        <option value="dark">Modo Oscuro Default</option>
-                        <option value="light">Modo Claro Limpio</option>
-                        <option value="mansel">Modo Corporativo MANSEL</option>
+                        <option value="dark">Modo Oscuro</option>
+                        <option value="light">Modo Claro</option>
+                        <option value="mansel">Modo MANSEL</option>
                     </select>
                 </div>
             </div>
@@ -288,114 +280,124 @@
         </div>
     </div>
 
-    <div id="floatingToast"><i class="ph-fill ph-warning-octagon"></i> ALERTA ACTIVA EN SILO TRABADO / CRÍTICO</div>
-
     <script>
         let SILOS = [
-            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
-            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
-            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 2279, consumo: 350, rssi: -72, estado: "Baja" },
-            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 0, consumo: 120, rssi: -75, estado: "Critica" },
-            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 10871, consumo: 980, rssi: -60, estado: "Normal" },
-            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo" },
-            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado" }
+            { id: 1, nombre: "Silo 1", capacidad: 15000, peso: 9739, consumo: 850, cargas: 4, estado: "Normal" },
+            { id: 2, nombre: "Silo 2", capacidad: 15000, peso: 7241, consumo: 620, cargas: 3, estado: "Normal" },
+            { id: 3, nombre: "Silo 3", capacidad: 15000, peso: 2279, consumo: 350, cargas: 5, estado: "Baja" },
+            { id: 4, nombre: "Silo 4", capacidad: 15000, peso: 350,  consumo: 120, cargas: 1, estado: "Critica" },
+            { id: 5, nombre: "Silo 5", capacidad: 15000, peso: 10871, consumo: 980, cargas: 6, estado: "Normal" },
+            { id: 6, nombre: "Silo 6", capacidad: 15000, peso: 6750, consumo: 0,   cargas: 2, estado: "Sin Flujo" },
+            { id: 7, nombre: "Silo 7", capacidad: 15000, peso: 0,    consumo: 0,   cargas: 0, estado: "Desconectado" }
         ];
 
-        // GESTIÓN LOGIN
+        // VALIDACIÓN DE LOGIN (VALORES LIMPIOS / SIN AUTOREVELADO)
         if(localStorage.getItem("aurum_logged") === "true") { document.getElementById("loginScreen").style.display = "none"; }
         document.getElementById("btnLoginAction").addEventListener("click", () => {
-            if(document.getElementById("userInput").value === "admin" && document.getElementById("passInput").value === "aurum2026") {
+            let u = document.getElementById("userInput").value;
+            let p = document.getElementById("passInput").value;
+            if(u === "admin" && p === "aurum2026") {
                 localStorage.setItem("aurum_logged", "true");
                 document.getElementById("loginScreen").style.display = "none";
+            } else {
+                alert("Credenciales Incorrectas");
             }
         });
 
-        // DESPLEGABLE USER
+        // DESPLEGABLE DE SALIDA
         document.getElementById("userMenuWidget").addEventListener("click", (e) => {
             e.stopPropagation();
-            const box = document.getElementById("logoutBox");
-            box.style.display = box.style.display === "block" ? "none" : "block";
+            let b = document.getElementById("logoutBox");
+            b.style.display = b.style.display === "block" ? "none" : "block";
         });
-        document.body.addEventListener("click", () => { document.getElementById("logoutBox").style.display = "none"; });
         document.getElementById("btnExitAction").addEventListener("click", () => {
             localStorage.removeItem("aurum_logged");
             document.getElementById("loginScreen").style.display = "flex";
         });
 
-        // CONTROLADORES DE PANEL FLOTANTE DE MEDIA PANTALLA
-        document.querySelectorAll("[data-drawer]").forEach(button => {
-            button.addEventListener("click", () => {
+        // CONTROL EXCLUSIVO DE MENÚ EN LA IZQUIERDA Y OCULTADO AL TOCAR FUERA
+        document.querySelectorAll("[data-drawer]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
                 document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
-                const targetDrawer = button.getAttribute("data-drawer");
-                document.getElementById(targetDrawer).classList.add("open");
+                document.querySelectorAll(".menu-item").forEach(m => m.classList.remove("active"));
                 
-                // Si abre consumos, refrescar gráfica interna del drawer
-                if(targetDrawer === "drawerConsumo") { setTimeout(initChartAnalisis, 100); }
+                btn.classList.add("active");
+                let target = btn.getAttribute("data-drawer");
+                document.getElementById(target).classList.add("open");
+
+                if(target === "drawerConsumo") { cargarTablaConsumos(); }
             });
         });
 
-        document.querySelectorAll(".drawer-close").forEach(closeBtn => {
-            closeBtn.addEventListener("click", () => {
-                closeBtn.closest(".side-drawer").classList.remove("open");
-            });
+        // Ocultar paneles si tocan el wrapper de fondo
+        document.getElementById("interactiveZone").addEventListener("click", () => {
+            cerrarTodosLosPaneles();
         });
 
-        // MANEJO NOTIFICACIÓN CAMPANA
-        document.getElementById("btnCampana").addEventListener("click", () => {
-            document.getElementById("navBadgeCount").style.display = "none"; 
+        function cerrarTodosLosPaneles() {
             document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
-            document.getElementById("drawerAlarmas").classList.add("open");
+            document.querySelectorAll(".menu-item").forEach(m => m.classList.remove("active"));
+            document.querySelector("[data-target='dashboard']").classList.add("active");
+        }
+
+        document.querySelectorAll(".drawer-close").forEach(c => {
+            c.addEventListener("click", () => cerrarTodosLosPaneles());
         });
 
-        // EXPORTACIÓN A EXCEL (CSV INDUSTRIAL)
+        // EXPORTACIÓN EXCEL
         function descargarExcelConsumos() {
-            let periodo = document.getElementById("filtroHistorial").value;
-            let csvContent = "data:text/csv;charset=utf-8,Fecha,Silo,Consumo Registrado(kg/h)\n";
-            csvContent += `06-07-2026,Silo 1,850\n06-07-2026,Silo 2,620\n05-07-2026,Silo 5,980\n`;
-            
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Consumos_Silos_${periodo}.csv`);
+            let csv = "data:text/csv;charset=utf-8,Fecha,Silo,Consumo Registrado(kg/h)\n";
+            SILOS.forEach(s => { csv += `06-07-2026,${s.nombre},${s.consumo}\n`; });
+            let link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csv));
+            link.setAttribute("download", "Historial_Consumos_Planta.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
-        // CONTROL DE TEMAS E IDIOMAS
+        function cargarTablaConsumos() {
+            let tbody = document.getElementById("tablaConsumosDetalle");
+            tbody.innerHTML = "";
+            SILOS.forEach(s => {
+                tbody.innerHTML += `<tr><td><strong>${s.nombre}</strong></td><td>${s.consumo} kg/h</td><td>${s.cargas} Veces</td></tr>`;
+            });
+        }
+
         function cambiarTema() {
-            const t = document.getElementById("comboTema").value;
+            let t = document.getElementById("comboTema").value;
             document.body.className = "";
             if(t !== "dark") document.body.classList.add("theme-" + t);
         }
 
-        const langData = {
-            es: { dash: "Dashboard", hist: "Historial", cons: "Consumo", alrm: "Alarmas", repo: "Reportes", conf: "Configuración", add: "Nuevo Usuario" },
-            en: { dash: "Dashboard", hist: "History", cons: "Consumption", alrm: "Alarms", repo: "Reports", conf: "Settings", add: "Add User" },
-            zh: { dash: "仪表板", hist: "历史记录", cons: "消耗量", alrm: "报警控制", repo: "报表", conf: "系统设置", add: "添加用户" },
-            de: { dash: "Dashboard", hist: "Verlauf", cons: "Verbrauch", alrm: "Alarme", repo: "Berichte", conf: "Setup", add: "Benutzer hinzufügen" }
-        };
-
-        function cambiarIdioma() {
-            const l = document.getElementById("comboIdioma").value;
-            const d = langData[l];
-            document.querySelectorAll(".lng-dash").forEach(e => e.innerText = d.dash);
-            document.querySelectorAll(".lng-hist").forEach(e => e.innerText = d.hist);
-            document.querySelectorAll(".lng-cons").forEach(e => e.innerText = d.cons);
-            document.querySelectorAll(".lng-alrm").forEach(e => e.innerText = d.alrm);
-            document.querySelectorAll(".lng-repo").forEach(e => e.innerText = d.repo);
-            document.querySelectorAll(".lng-conf").forEach(e => e.innerText = d.conf);
-            document.getElementById("lblAddUser").innerText = d.add;
+        // MOTOR DINÁMICO EN TIEMPO REAL (MOVIMIENTO FLUIDO)
+        function actualizarMedicionesDinamicas() {
+            let pesoTotalCalculado = 0;
+            SILOS.forEach(s => {
+                if (s.estado !== "Desconectado" && s.estado !== "Sin Flujo") {
+                    // Variación controlada para simular el paso constante de material
+                    let variacion = Math.floor(Math.random() * 11) - 5; 
+                    s.peso += variacion;
+                    if(s.peso < 0) s.peso = 0;
+                    if(s.peso > s.capacidad) s.peso = s.capacidad;
+                }
+                pesoTotalCalculado += s.peso;
+            });
+            document.getElementById("pesoTotal").innerText = pesoTotalCalculado.toLocaleString() + " kg";
+            renderizarEstructuraSilos();
         }
 
-        // RENDER DE CUADROS DE SILOS Y DONA GRANDE
-        function runRender() {
-            const grid = document.getElementById("silosGrid");
+        function renderizarEstructuraSilos() {
+            let grid = document.getElementById("silosGrid");
             grid.innerHTML = "";
+
+            // Obtener hora actual en string de planta
+            let ahora = new Date();
+            let horaString = ahora.toLocaleTimeString();
 
             SILOS.forEach(s => {
                 let pct = Math.round(s.peso / s.capacidad * 100);
-                let stClass = "var(--text-sub)";
                 let fStyle = "transparent";
                 if(s.estado === "Normal") fStyle = "linear-gradient(to top, #065f46, #10b981)";
                 if(s.estado === "Baja") fStyle = "linear-gradient(to top, #9a3412, #f59e0b)";
@@ -405,7 +407,7 @@
                 grid.innerHTML += `
                     <div class="silo-card">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:700; font-size:14px;">${s.nombre}</span>
+                            <span style="font-weight:800; font-size:14px;">${s.nombre.toUpperCase()}</span>
                             <span style="font-size:11px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
                         </div>
                         <div class="silo-middle-row">
@@ -422,37 +424,39 @@
                                 <div style="font-size:12px; color:var(--text-sub);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
                             </div>
                         </div>
+                        <div class="timestamp-box">🕒 ${horaString}</div>
                     </div>`;
             });
 
-            // CASILLERO 8 - DONA MAXIMIZADA CON TEXTO ROBUSTO
+            // CASILLERO 8 - DONA GRANDE CON CORRECCIÓN TOTAL DE LEYENDAS INDUSTRIALES
             grid.innerHTML += `
                 <div class="silo-card">
-                    <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo</h4>
+                    <h4 style="font-size:13px; font-weight:700;">Distribución de Planta</h4>
                     <div class="distribution-box">
                         <div class="canvas-container"><canvas id="chartDonaDistribucion"></canvas></div>
                         <div class="dona-legend">
-                            <div><span style="color:#10b981">●</span> S1: 24.5%</div>
-                            <div><span style="color:#3b82f6">●</span> S2: 18.2%</div>
-                            <div><span style="color:#f59e0b">●</span> S3: 12.8%</div>
-                            <div><span style="color:#ef4444">●</span> S4: 4.2%</div>
-                            <div><span style="color:#ec4899">●</span> S5: 26.3%</div>
-                            <div><span style="color:#8b5cf6">●</span> S6: 13.1%</div>
+                            <div><span style="color:#10b981">●</span> Silo 1</div>
+                            <div><span style="color:#3b82f6">●</span> Silo 2</div>
+                            <div><span style="color:#f59e0b">●</span> Silo 3</div>
+                            <div><span style="color:#ef4444">●</span> Silo 4</div>
+                            <div><span style="color:#ec4899">●</span> Silo 5</div>
+                            <div><span style="color:#8b5cf6">●</span> Silo 6</div>
                         </div>
                     </div>
                 </div>`;
 
-            setTimeout(renderDona, 50);
+            setTimeout(renderDona, 30);
         }
 
         function renderDona() {
-            const c = document.getElementById("chartDonaDistribucion");
+            let c = document.getElementById("chartDonaDistribucion");
             if(!c) return;
             new Chart(c, {
                 type: 'doughnut',
                 data: {
+                    labels: ["Silo 1", "Silo 2", "Silo 3", "Silo 4", "Silo 5", "Silo 6", "Silo 7"],
                     datasets: [{
-                        data: [24.5, 18.2, 12.8, 4.2, 26.3, 13.1, 0.9],
+                        data: [24, 18, 12, 4, 26, 13, 3],
                         backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#64748b"],
                         borderWidth: 0
                     }]
@@ -461,31 +465,19 @@
             });
         }
 
-        function initChartAnalisis() {
-            const ctx = document.getElementById("chartAnalisisSilos").getContext("2d");
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ["S1", "S2", "S3", "S4", "S5", "S6"],
-                    datasets: [{ label: 'kg/h', data: [850, 620, 350, 120, 980, 0], backgroundColor: '#10b981' }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+        // Intervalo constante de actualización cada segundo (Datos 100% dinámicos)
+        setInterval(actualizarMedicionesDinamicas, 1000);
+        actualizarMedicionesDinamicas();
 
-        runRender();
-
-        // LINEAL INFERIOR GENERAL
-        const gradient = document.getElementById("chartConsumo").getContext("2d").createLinearGradient(0, 0, 0, 160);
-        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
-        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-        new Chart(document.getElementById("chartConsumo"), {
+        // LINEAL GENERAL DE CARGA BAJA
+        let ctxL = document.getElementById("chartConsumo").getContext("2d");
+        new Chart(ctxL, {
             type: 'line',
             data: {
-                labels: ["10:00", "14:00", "18:00", "22:00", "02:00", "06:00"],
-                datasets: [{ data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35 }]
+                labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+                datasets: [{ label: "Flujo Total T/h", data: [12, 15, 11, 14, 16, 10, 12], borderColor: "#10b981", borderWidth: 2, fill: false, tension: 0.2 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            options: { responsive: true, maintainAspectRatio: false }
         });
     </script>
 </body>
