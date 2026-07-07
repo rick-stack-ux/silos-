@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURUM.SYS Smart Silo Monitor</title>
+    <title>AURUM.SYS Smart Silo Monitor - MANSEL Edition</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -12,627 +12,481 @@
             --bg-sidebar: #090d14;
             --bg-card: #0b111a;
             --border-color: #141f2e;
-            
             --color-green: #10b981;
             --color-yellow: #f59e0b;
             --color-red: #ef4444;
             --color-purple: #8b5cf6;
             --color-gray: #475569;
-            
             --text-title: #ffffff;
             --text-sub: #64748b;
         }
 
+        body.theme-light {
+            --bg-main: #f1f5f9;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #cbd5e1;
+            --text-title: #0f172a;
+            --text-sub: #64748b;
+        }
+
+        body.theme-mansel {
+            --bg-main: #c6bfb3; 
+            --bg-sidebar: #1b521f; 
+            --bg-card: #ffffff;
+            --border-color: #a39c91;
+            --text-title: #1b521f;
+            --text-sub: #4a544c;
+            --color-green: #1b521f;
+        }
+        body.theme-mansel .menu-item.active { background: rgba(27, 82, 31, 0.15); color: #ffffff !important; }
+        body.theme-mansel .menu-item { color: #e2e8f0; }
+        body.theme-mansel .brand h2, body.theme-mansel .brand span { color: #ffffff; }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-title); display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- PANTALLA LOGIN DE ACCESO --- */
         #loginScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background: var(--bg-main); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; width: 100%; max-width: 380px; text-align: center; }
-        .login-card i { font-size: 40px; color: var(--color-green); margin-bottom: 16px; }
-        .login-field { width: 100%; padding: 12px; background: #030508; border: 1px solid var(--border-color); border-radius: 6px; color: white; margin-top: 12px; font-size: 14px; outline: none; }
+        .login-field { width: 100%; padding: 12px; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-title); margin-top: 12px; font-size: 14px; outline: none; }
         .btn-login { width: 100%; padding: 12px; background: var(--color-green); color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 18px; }
 
-        /* --- SIDEBAR IZQUIERDO --- */
-        .sidebar { width: 240px; height: 100vh; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-color); flex-shrink: 0; }
+        .sidebar { width: 240px; height: 100vh; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-color); flex-shrink: 0; transition: all 0.3s ease; }
         .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
         .brand i { color: var(--color-green); font-size: 32px; }
-        .brand h2 { font-size: 16px; font-weight: 800; letter-spacing: 0.5px; }
-        .brand span { display: block; font-size: 11px; color: var(--text-sub); font-weight: 400; }
+        .brand h2 { font-size: 16px; font-weight: 800; }
+        .brand span { display: block; font-size: 11px; color: var(--text-sub); }
         
         .menu-list { display: flex; flex-direction: column; gap: 4px; }
-        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; text-decoration: none; transition: 0.15s; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.15s; }
         .menu-item div { display: flex; align-items: center; gap: 12px; }
         .menu-item i { font-size: 18px; }
         .menu-item.active { background: rgba(16, 185, 129, 0.06); color: var(--color-green); font-weight: 600; }
-        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.02); color: #fff; }
-        .badge { background: var(--color-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 12px; font-weight: 700; }
-        
-        .sidebar-footer { background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px; }
-        .status-box { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 12px; font-weight: 600; }
-        .status-dot { width: 6px; height: 6px; background: var(--color-green); border-radius: 50%; }
+        .badge { background: var(--color-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 12px; }
 
-        /* --- CONTENEDOR CENTRAL --- */
-        .wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); height: 100vh; overflow: hidden; }
-        
-        /* HEADER SUPERIOR */
-        .top-navbar { height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 24px; background: var(--bg-sidebar); }
-        .nav-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-sub); }
-        .nav-status span { color: var(--color-green); font-weight: 600; }
+        .wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); height: 100vh; overflow: hidden; position: relative; }
+        .top-navbar { height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 24px; background: var(--bg-sidebar); z-index: 10; }
         .nav-bell { position: relative; font-size: 22px; color: var(--text-sub); cursor: pointer; }
         .nav-bell span { position: absolute; top: -2px; right: -2px; background: var(--color-red); color: white; width: 14px; height: 14px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .user-widget { display: flex; align-items: center; gap: 10px; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2a3b4d; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
-
-        .layout-body { display: flex; flex: 1; overflow: hidden; }
-        .main-content { flex: 1; padding: 24px; overflow-y: auto; }
         
-        /* NAVEGACIÓN INTERNA SPA */
-        .app-view { display: none; }
-        .app-view.active-view { display: block; }
-        
-        .main-header { margin-bottom: 20px; }
-        .main-header h1 { font-size: 22px; font-weight: 700; color: white; }
-        .main-header p { color: var(--text-sub); font-size: 13px; margin-top: 2px; }
+        .user-widget { display: flex; align-items: center; gap: 10px; cursor: pointer; position: relative; padding: 4px 8px; border-radius: 6px; }
+        .logout-dropdown { display: none; position: absolute; top: 48px; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; width: 160px; z-index: 1000; }
+        .logout-dropdown button { width: 100%; padding: 10px 14px; background: transparent; border: none; text-align: left; font-size: 12px; cursor: pointer; color: var(--text-title); display: flex; align-items: center; gap: 8px; }
 
-        /* --- KPIS SUPERIORES --- */
+        .layout-body { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .main-content { flex: 1; padding: 24px; overflow-y: auto; transition: all 0.3s; }
+        
+        /* MULTIDISPOSITIVO: GRILLAS DINÁMICAS */
         .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
-        .kpi-card-left { display: flex; align-items: center; gap: 14px; }
-        .kpi-icon-container { width: 38px; height: 38px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .kpi-card:nth-child(1) .kpi-icon-container { background: rgba(16,185,129,0.1); color: var(--color-green); }
-        .kpi-card:nth-child(2) .kpi-icon-container { background: rgba(59,130,246,0.1); color: #3b82f6; }
-        .kpi-card:nth-child(3) .kpi-icon-container { background: rgba(245,158,11,0.1); color: var(--color-yellow); }
-        .kpi-card:nth-child(4) .kpi-icon-container { background: rgba(239,68,68,0.1); color: var(--color-red); }
-        .kpi-details p { color: var(--text-sub); font-size: 11px; }
-        .kpi-details h3 { font-size: 18px; font-weight: 700; color: white; margin-top: 1px; }
-        .kpi-details h3 span { font-size: 12px; color: var(--text-sub); font-weight: 400; }
-        .kpi-pulse-icon { color: var(--text-sub); font-size: 14px; opacity: 0.5; }
+        .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
+        .kpi-details h3 { font-size: 18px; font-weight: 700; }
 
-        /* --- GRILLA DE SILOS INDUSTRIALES --- */
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .silo-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .silo-card-name { font-size: 14px; font-weight: 700; color: white; letter-spacing: 0.3px; }
-        .silo-card-status { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .silo-card-status::before { content:''; width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; }
         
-        .status-normal { color: var(--color-green); }.status-normal::before { background: var(--color-green); }
-        .status-baja { color: var(--color-yellow); }.status-baja::before { background: var(--color-yellow); }
-        .status-critica { color: var(--color-red); }.status-critica::before { background: var(--color-red); }
-        .status-sinflujo { color: var(--color-purple); }.status-sinflujo::before { background: var(--color-purple); }
-        .status-desconectado { color: var(--color-gray); }.status-desconectado::before { background: var(--color-gray); }
+        /* DISEÑO INDUSTRIAL DEL SILO */
+        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 160px; }
+        .silo-axis-y { width: 25px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: var(--text-sub); }
+        .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
+        .silo-metal-frame { width: 75px; height: 150px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
+        .silo-ladder { position: absolute; top: 12px; left: 2px; width: 6px; height: 106px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 6px; z-index: 4; }
+        .silo-roof { width: 68px; height: 16px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 10px; left: 5px; z-index: 3; border: 1px solid #475569; }
+        .silo-cylinder { width: 68px; height: 95px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; position: absolute; top: 25px; left: 5px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
+        .silo-cone { width: 68px; height: 24px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 120px; left: 5px; z-index: 2; }
+        .silo-legs { width: 68px; height: 26px; position: absolute; top: 120px; left: 5px; z-index: 1; display: flex; justify-content: space-between; }
+        .silo-legs div { width: 3px; height: 100%; background: #475569; }
+        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.5s; }
+        .silo-text-readout { text-align: right; }
 
-        /* RENDER INDUSTRIAL DE SILO METÁLICO REAL */
-        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 160px; position: relative; margin-bottom: 14px; }
-        .silo-axis-y { width: 30px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: #475569; text-align: left; padding-right: 4px; border-right: 1px dashed rgba(255,255,255,0.05); }
-        .silo-graphic-box { flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; }
+        /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
+        .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
+        .canvas-container { width: 140px; height: 140px; }
+        .dona-legend { font-size: 13px; font-weight: 600; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 8px; color: var(--text-title); }
+
+        .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
         
-        /* Contenedor del Silo Metálico con Patas */
-        .silo-metal-frame { width: 70px; height: 145px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
-        .silo-roof { width: 100%; height: 14px; background: linear-gradient(90deg, #334155, #1e293b); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 6px; left: 0; z-index: 3; border: 1px solid #475569; }
-        .silo-cylinder { width: 100%; height: 110px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; border-radius: 4px 4px 0 0; position: relative; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
-        .silo-cylinder::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 100% 16px; pointer-events: none; }
-        .silo-cone { width: 100%; height: 26px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: relative; z-index: 2; }
-        .silo-legs { width: 100%; height: 26px; position: absolute; bottom: 0; left: 0; z-index: 1; display: flex; justify-content: space-between; padding: 0 4px; pointer-events: none; }
-        .silo-legs::before, .silo-legs::after { content: ''; width: 3px; height: 100%; background: #475569; }
-        
-        /* Fluido / Carga líquida-sólida interna */
-        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* PANALES FLOTANTES DE MEDIA PANTALLA (SIDE DRAWERS) */
+        .side-drawer { position: absolute; top: 0; right: -50%; width: 50%; height: 100%; background: var(--bg-card); border-left: 2px solid var(--border-color); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99); z-index: 100; padding: 30px; overflow-y: auto; }
+        .side-drawer.open { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; }
+        .drawer-close { font-size: 24px; cursor: pointer; color: var(--text-sub); }
+        .drawer-close:hover { color: var(--color-red); }
 
-        .silo-text-readout { width: 85px; text-align: right; display: flex; flex-direction: column; justify-content: center; }
-        .silo-big-pct { font-size: 26px; font-weight: 800; color: white; line-height: 1; }
-        .silo-sub-weight { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+        .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+        .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; }
 
-        .silo-bottom-metrics { border-top: 1px solid rgba(255,255,255,0.04); padding-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: left; font-size: 11px; color: var(--text-sub); }
-        .silo-bottom-metrics div { display: flex; flex-direction: column; }
-        .silo-bottom-metrics span { color: white; font-weight: 600; margin-top: 2px; font-size: 11px; }
+        .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
+        .custom-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+        .custom-table th, .custom-table td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-color); }
+        .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
-        /* GRÁFICOS INFERIORES DEL DASHBOARD */
-        .charts-container-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
-        .chart-box-panel { background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; }
+        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
 
-        /* --- PANEL LATERAL DERECHO --- */
-        .right-panel { width: 320px; background: var(--bg-sidebar); border-left: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; flex-shrink: 0; transition: all 0.2s ease; }
-        .panel-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .panel-section-header h4 { font-size: 13px; font-weight: 700; color: white; letter-spacing: 0.4px; }
-        .panel-section-header a { font-size: 11px; color: #3b82f6; text-decoration: none; font-weight: 500; }
-        
-        .list-container { display: flex; flex-direction: column; gap: 8px; }
-        .alert-item-box { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; display: flex; align-items: flex-start; gap: 12px; }
-        .alert-icon-wrapper { width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 13px; margin-top: 1px; }
-        .alert-text-info { flex: 1; font-size: 12px; }
-        .alert-text-info h5 { font-size: 12px; font-weight: 700; color: white; }
-        .alert-text-info p { color: var(--text-sub); font-size: 11px; margin-top: 1px; }
-        .alert-time-stamp { font-size: 10px; color: var(--text-sub); }
+        /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
+        @media (max-width: 1200px) {
+            .silos-grid { grid-template-columns: repeat(2, 1fr); }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .chart-layout-panel { grid-template-columns: 1fr; gap: 20px; }
+            .side-drawer { width: 70%; right: -70%; }
+        }
 
-        .action-button-control { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: white; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s; }
-        .action-button-control.btn-success-soft { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: var(--color-green); }
-        .action-button-control:hover { background: rgba(255,255,255,0.02); }
-
-        /* ESTILO GLOBAL PARA TODAS LAS TABLAS DE LAS SUBPANTALLAS */
-        .custom-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
-        .custom-table th, .custom-table td { padding: 14px 16px; text-align: left; font-size: 13px; }
-        .custom-table th { background: rgba(255,255,255,0.01); color: var(--text-sub); font-weight: 600; border-bottom: 1px solid var(--border-color); }
-        .custom-table td { border-bottom: 1px solid rgba(255,255,255,0.01); color: white; }
-        .custom-table tbody tr:hover { background: rgba(255,255,255,0.01); }
-
-        /* SOPORTE CARD EXCLUSIVA */
-        .support-wrapper-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 32px; border-radius: 12px; text-align: center; max-width: 460px; margin: 40px auto; }
-        .support-anchor { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px 0; color: white; text-decoration: none; background: rgba(255,255,255,0.01); padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 13px; }
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); padding: 12px; }
+            .brand { margin-bottom: 12px; }
+            .menu-list { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+            .silos-grid, .kpi-grid { grid-template-columns: 1fr; }
+            .side-drawer { width: 100%; right: -100%; }
+            .wrapper { height: calc(100vh - 140px); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- CONTROL DE AUTENTICACIÓN -->
+    <!-- LOGIN -->
     <div id="loginScreen">
         <div class="login-card">
             <i class="ph-fill ph-lock-keyhole"></i>
-            <h2 style="font-size:18px; font-weight:700; margin-bottom:4px;">AURUM.SYS INTERFACE</h2>
-            <p style="color:var(--text-sub); font-size:12px; margin-bottom:12px;">Ingrese datos de operador para desbloquear</p>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario Operador">
-            <input type="password" id="passInput" class="login-field" placeholder="Contraseña de Resguardo">
-            <div id="loginError" style="color:var(--color-red); font-size:12px; margin-top:10px; display:none;">Acceso inválido</div>
+            <h2>AURUM.SYS INTERFACE</h2>
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin)">
+            <input type="password" id="passInput" class="login-field" placeholder="Contraseña (aurum2026)">
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
         </div>
     </div>
 
-    <!-- SIDEBAR DE SECCIONES (SPA) -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <div>
-            <div class="brand">
-                <i class="ph-fill ph-nut"></i>
-                <div><h2>AURUM.SYS</h2><span>Smart Silo Monitor</span></div>
-            </div>
+            <div class="brand"><i class="ph-fill ph-nut"></i><div><h2>AURUM.SYS</h2><span>Smart Silo Monitor</span></div></div>
             <div class="menu-list">
-                <div class="menu-item active" data-target="viewDashboard"><div><i class="ph-fill ph-squares-four"></i>Dashboard</div></div>
-                <div class="menu-item" data-target="viewHistorial"><div><i class="ph ph-clock-counter-clockwise"></i>Historial</div></div>
-                <div class="menu-item" data-target="viewConsumo"><div><i class="ph ph-chart-line"></i>Consumo</div></div>
-                <div class="menu-item" data-target="viewAlarmas"><div><i class="ph ph-bell"></i>Alarmas</div><span class="badge" id="badgeAlarmas">0</span></div>
-                <div class="menu-item" data-target="viewReportes"><div><i class="ph ph-file-text"></i>Reportes</div></div>
-                <div class="menu-item" data-target="viewConfig"><div><i class="ph ph-gear"></i>Configuración</div></div>
-                <div class="menu-item" data-target="viewSoporte"><div><i class="ph ph-headset"></i>Soporte</div></div>
-            </div>
-        </div>
-        <div class="sidebar-footer">
-            <div class="status-box"><div class="status-dot"></div><span>Estado del Sistema</span></div>
-            <div style="display:flex; justify-content:space-between; color:var(--text-sub); font-size:11px;">
-                <div>Gateways: <span style="color:white; font-weight:600;">1/1</span></div>
-                <div>Nodos: <span style="color:white; font-weight:600;">7/7</span></div>
+                <div class="menu-item active" data-target="dashboard"><div><i class="ph-fill ph-squares-four"></i><span class="lng-dash">Dashboard</span></div></div>
+                <div class="menu-item" data-drawer="drawerHistorial"><div><i class="ph ph-clock-counter-clockwise"></i><span class="lng-hist">Historial</span></div></div>
+                <div class="menu-item" data-drawer="drawerConsumo"><div><i class="ph ph-chart-line"></i><span class="lng-cons">Consumo</span></div></div>
+                <div class="menu-item" data-drawer="drawerAlarmas"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
+                <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i><span class="lng-repo">Reportes</span></div></div>
+                <div class="menu-item" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
             </div>
         </div>
     </div>
 
-    <!-- WRAPPER DE TRABAJO -->
+    <!-- MAIN INTERFACE -->
     <div class="wrapper">
-        <!-- BARRA DE ACCIONES TOP -->
         <div class="top-navbar">
-            <div class="nav-status"><div class="status-dot"></div>Sistema Operativo: <span>Online</span></div>
-            <div class="nav-bell"><i class="ph ph-bell"></i><span id="navBadgeCount">0</span></div>
-            <div class="user-widget">
+            <div class="nav-bell" id="btnCampana"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
+            <div class="user-widget" id="userMenuWidget">
                 <div style="text-align:right; font-size:12px;">
-                    <h4 id="profileUser" style="font-weight:700; color:white;">Erick Gomez</h4>
+                    <h4 style="color:var(--text-title);">Erick Gomez</h4>
                     <span style="color:var(--text-sub); font-size:10px;">Administrador</span>
                 </div>
-                <div class="user-avatar" id="avatarName">EG</div>
+                <div style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">EG</div>
+                <div class="logout-dropdown" id="logoutBox">
+                    <button onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
+                    <button id="btnExitAction" style="color:var(--color-red);"><i class="ph ph-sign-out"></i> Exit</button>
+                </div>
             </div>
         </div>
 
         <div class="layout-body">
+            <!-- DASHBOARD SIEMPRE VISIBLE DE FONDO -->
             <div class="main-content">
-                
-                <!-- PANTALLA 1: DASHBOARD GENERAL -->
-                <div id="viewDashboard" class="app-view active-view">
-                    <div class="main-header">
-                        <h1>Dashboard General</h1><p>Monitoreo en tiempo real de 7 silos</p>
-                    </div>
-
-                    <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-database"></i></div>
-                                <div class="kpi-details"><p>Silos Monitoreados</p><h3>7</h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-scales"></i></div>
-                                <div class="kpi-details"><p>Peso Total</p><h3 id="pesoTotal">0 <span>kg</span></h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-lightning"></i></div>
-                                <div class="kpi-details"><p>Consumo Actual</p><h3 id="consumoHora">0 <span>kg/h</span></h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-warning"></i></div>
-                                <div class="kpi-details"><p>Alarmas Activas</p><h3 id="alarmasContador">0</h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
-                    </div>
-
-                    <!-- GRID DINÁMICO DE SILOS -->
-                    <div class="silos-grid" id="silosGrid"></div>
-
-                    <!-- PANELES DE GRÁFICOS DEL CUADRO DE WORD -->
-                    <div class="charts-container-row">
-                        <div class="chart-box-panel">
-                            <h4 style="font-size:12px; margin-bottom:12px; font-weight:700;">Consumo Total (Últimas 24 Horas)</h4>
-                            <div style="height:150px;"><canvas id="chartConsumo"></canvas></div>
-                        </div>
-                        <div class="chart-box-panel">
-                            <h4 style="font-size:12px; margin-bottom:12px; font-weight:700;">Distribución de Consumo</h4>
-                            <div style="height:150px;"><canvas id="chartDona"></canvas></div>
-                        </div>
-                    </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi1">Silos Activos</p><h3>7</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi2">Peso Total</p><h3 id="pesoTotal">36.880 kg</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi3">Consumo Actual</p><h3>2.920 kg/h</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi4">Alarmas Activas</p><h3 style="color:var(--color-red)">2</h3></div></div>
                 </div>
 
-                <!-- PANTALLA 2: HISTORIAL -->
-                <div id="viewHistorial" class="app-view">
-                    <div class="main-header">
-                        <h1>Historial de Almacenamiento</h1>
-                        <p>Métricas consolidadas de comportamiento diario y semanal de cada silo estructural</p>
-                    </div>
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Silo</th>
-                                <th>Consumo Diario Promedio</th>
-                                <th>Nivel Mínimo Detectado</th>
-                                <th>Acumulado Semanal</th>
-                                <th>Estado de Enlace</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaHistorial"></tbody>
-                    </table>
-                </div>
+                <div class="silos-grid" id="silosGrid"></div>
 
-                <!-- PANTALLA 3: CONSUMO -->
-                <div id="viewConsumo" class="app-view">
-                    <div class="main-header">
-                        <h1>Análisis de Desalojo</h1>
-                        <p>Tasas calculadas por hora operativa y acumulación por jornada diaria</p>
+                <div class="chart-layout-panel">
+                    <div>
+                        <h4 style="font-size:14px; margin-bottom:16px; font-weight:700;" class="lng-charttitle">Consumo Total (Últimas 24 Horas)</h4>
+                        <div style="height:165px;"><canvas id="chartConsumo"></canvas></div>
                     </div>
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Estructura</th>
-                                <th>Consumo Promedio / Hora</th>
-                                <th>Consumo Registrado / Día</th>
-                                <th>Condición de Salida</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaConsumo"></tbody>
-                    </table>
-                </div>
-
-                <!-- PANTALLA 4: ALARMAS -->
-                <div id="viewAlarmas" class="app-view">
-                    <div class="main-header">
-                        <h1>Umbrales de Seguridad & Variación</h1>
-                        <p>Pesos críticos fijos y monitoreo de inmovilidad de carga (Falta de variación de alimento)</p>
-                    </div>
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Silo</th>
-                                <th>Masa Actual</th>
-                                <th>Peso Límite de Alerta</th>
-                                <th>Cambio Neto (10 Min)</th>
-                                <th>Diagnóstico de Evento</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaAlarmasDetalle"></tbody>
-                    </table>
-                </div>
-
-                <!-- PANTALLA 5: REPORTES -->
-                <div id="viewReportes" class="app-view">
-                    <div class="main-header">
-                        <h1>Frecuencia de Abastecimientos</h1>
-                        <p>Conteo semanal de eventos de recarga por unidad estructural</p>
-                    </div>
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Unidad</th>
-                                <th>Capacidad de Placa</th>
-                                <th>Cargas Hechas (Esta Semana)</th>
-                                <th>Última Detección</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaReportes"></tbody>
-                    </table>
-                </div>
-
-                <!-- PANTALLA 6: CONFIGURACIÓN -->
-                <div id="viewConfig" class="app-view">
-                    <div class="main-header">
-                        <h1>Configuración Avanzada</h1>
-                        <p>Calibración de celdas de carga y mapeo de hardware</p>
-                    </div>
-                    <div style="border:1px dashed var(--border-color); padding:40px; text-align:center; color:var(--text-sub); border-radius:8px; font-size:13px;">
-                        Sección de Fábrica - Ajustes posteriores (Lo vemos luego).
-                    </div>
-                </div>
-
-                <!-- PANTALLA 7: SOPORTE -->
-                <div id="viewSoporte" class="app-view">
-                    <div class="support-wrapper-card">
-                        <i class="ph ph-shield-check" style="font-size:44px; color:var(--color-green)"></i>
-                        <h2 style="font-size:18px; margin-top:12px; font-weight:700;">Ingeniería de Planta AURUM.SYS</h2>
-                        <p style="color:var(--text-sub); font-size:12px; margin-bottom:20px;">Comuníquese con soporte ante fallas de telemetría de celdas de carga</p>
-                        <a href="mailto:aurumsysm@gmail.com" class="support-anchor">
-                            <i class="ph ph-envelope-open" style="color:var(--color-green)"></i> aurumsysm@gmail.com
-                        </a>
-                        <a href="tel:+56949287059" class="support-anchor">
-                            <i class="ph ph-phone-call" style="color:var(--color-green)"></i> +56 9 4928 7059
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- PANEL LATERAL DERECHO ASOCIADO AL DASHBOARD -->
-            <div class="right-panel" id="panelDerechoControl">
-                <div>
-                    <div class="panel-section-header"><h4>Alarmas Activas</h4><a href="#" onclick="document.querySelector('[data-target=\'viewAlarmas\']').click(); return false;">Ver todas</a></div>
-                    <div class="list-container" id="panelAlarmasRapidas"></div>
-                </div>
-                <div>
-                    <div class="panel-section-header"><h4>Control Rápido</h4></div>
-                    <div class="list-container">
-                        <button class="action-button-control btn-success-soft"><i class="ph-fill ph-play"></i> Activar Vibradores</button>
-                        <button class="action-button-control"><i class="ph-fill ph-stop"></i> Detener Vibradores</button>
-                        <button class="action-button-control" onclick="document.querySelector('[data-target=\'viewAlarmas\']').click();"><i class="ph-fill ph-sliders-horizontal"></i> Configurar Alarmas</button>
+                    <div style="display:flex; flex-direction:column; justify-content:center; padding-left:24px; border-left:1px solid var(--border-color);">
+                        <h2 style="font-size:32px; font-weight:800;">12.450 <span style="font-size:14px; color:var(--text-sub);">kg/h</span></h2>
+                        <p style="font-size:13px;" class="lng-kpi3">Consumo Actual</p>
+                        <span style="color:var(--color-green); font-size:12px; font-weight:600; margin-top:10px;">▲ 8.5% vs ayer</span>
                     </div>
                 </div>
             </div>
+
+            <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
+            <!-- 1. HISTORIAL CON DESCARGA -->
+            <div id="drawerHistorial" class="side-drawer">
+                <div class="drawer-header"><h3>🕒 Historial de Consumos</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="config-card-layout">
+                    <label style="font-size:13px; font-weight:600;">Filtrar Período de Datos</label>
+                    <select class="config-select" id="filtroHistorial">
+                        <option value="semana">Última Semana</option>
+                        <option value="mes">Último Mes</option>
+                        <option value="ano">Año Completo</option>
+                    </select>
+                    <button class="btn-action" onclick="descargarExcelConsumos()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel (.csv)</button>
+                </div>
+                <table class="custom-table">
+                    <thead><tr><th>Fecha</th><th>Silo</th><th>Consumo Registrado</th></tr></thead>
+                    <tbody>
+                        <tr><td>06-07-2026</td><td>Silo 1</td><td>850 kg/h</td></tr>
+                        <tr><td>06-07-2026</td><td>Silo 2</td><td>620 kg/h</td></tr>
+                        <tr><td>05-07-2026</td><td>Silo 5</td><td>980 kg/h</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 2. CONSUMO DETALLADO -->
+            <div id="drawerConsumo" class="side-drawer">
+                <div class="drawer-header"><h3>📊 Análisis de Consumo por Silo</h3><i class="ph ph-x drawer-close"></i></div>
+                <div style="height:250px; margin-bottom:20px;"><canvas id="chartAnalisisSilos"></canvas></div>
+                <p style="font-size:13px; color:var(--text-sub);">Monitoreo de flujo continuo por batch de descarga industrial.</p>
+            </div>
+
+            <!-- 3. ALARMAS ACTIVAS -->
+            <div id="drawerAlarmas" class="side-drawer">
+                <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close"></i></div>
+                <div style="background:rgba(239,68,68,0.1); border:1px solid var(--color-red); padding:14px; border-radius:8px; margin-bottom:12px;">
+                    <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
+                    <p style="font-size:12px; margin-top:4px;">Nivel de llenado inferior al 5% de la capacidad nominal.</p>
+                </div>
+                <div style="background:rgba(139,92,246,0.1); border:1px solid var(--color-purple); padding:14px; border-radius:8px;">
+                    <h5 style="color:var(--color-purple); font-size:14px;">⚡ ALERTA: Silo 6 Sin Flujo</h5>
+                    <p style="font-size:12px; margin-top:4px;">Se detectó detención abrupta en tubería de salida.</p>
+                </div>
+            </div>
+
+            <!-- 4. REPORTES -->
+            <div id="drawerReportes" class="side-drawer">
+                <div class="drawer-header"><h3>📝 Generador de Reportes</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="config-card-layout">
+                    <p style="font-size:13px;">Generar bitácora consolidada de mantenimiento y lecturas RSSI de antenas.</p>
+                    <button class="btn-action" onclick="alert('Generando PDF...')"><i class="ph ph-file-pdf"></i> Imprimir PDF de Planta</button>
+                </div>
+            </div>
+
+            <!-- 5. CONFIGURACIÓN -->
+            <div id="drawerConfig" class="side-drawer">
+                <div class="drawer-header"><h3>⚙️ Ajustes del Sistema</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="config-card-layout">
+                    <label style="font-weight:600; font-size:13px;">Idioma de Interfaz</label>
+                    <select class="config-select" id="comboIdioma" onchange="cambiarIdioma()">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="zh">中文 (Chino)</option>
+                        <option value="de">Deutsch (Alemán)</option>
+                    </select>
+                </div>
+                <div class="config-card-layout">
+                    <label style="font-weight:600; font-size:13px;">Tema Visual</label>
+                    <select class="config-select" id="comboTema" onchange="cambiarTema()">
+                        <option value="dark">Modo Oscuro Default</option>
+                        <option value="light">Modo Claro Limpio</option>
+                        <option value="mansel">Modo Corporativo MANSEL</option>
+                    </select>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <script>
-        let globalChartConsumo, globalChartDona;
+    <div id="floatingToast"><i class="ph-fill ph-warning-octagon"></i> ALERTA ACTIVA EN SILO TRABADO / CRÍTICO</div>
 
-        // Base de Datos Maestra Rescatada
+    <script>
         let SILOS = [
-            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "10:30:30", limiteCritico: 2250, variacion10min: 120, cargasSemana: 2, ultCarga: "Ayer" },
-            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", fecha: "10:30:28", limiteCritico: 2250, variacion10min: 90, cargasSemana: 1, ultCarga: "Hace 3 días" },
-            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 4200, consumo: 350, rssi: -72, estado: "Baja", fecha: "10:30:25", limiteCritico: 2250, variacion10min: 40, cargasSemana: 3, ultCarga: "Hoy 06:10" },
-            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 1800, consumo: 120, rssi: -75, estado: "Critica", fecha: "10:30:20", limiteCritico: 2250, variacion10min: 10, cargasSemana: 4, ultCarga: "Hace 5 días" },
-            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 12750, consumo: 980, rssi: -60, estado: "Normal", fecha: "10:30:35", limiteCritico: 2250, variacion10min: 150, cargasSemana: 2, ultCarga: "Hoy 09:25" },
-            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo", fecha: "10:30:15", limiteCritico: 2250, variacion10min: 0, cargasSemana: 1, ultCarga: "Hace 4 días" },
-            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado", fecha: "--:--:--", limiteCritico: 2250, variacion10min: 0, cargasSemana: 0, ultCarga: "N/A" }
+            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
+            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
+            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 2279, consumo: 350, rssi: -72, estado: "Baja" },
+            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 0, consumo: 120, rssi: -75, estado: "Critica" },
+            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 10871, consumo: 980, rssi: -60, estado: "Normal" },
+            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo" },
+            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado" }
         ];
 
-        // --- MANEJO DE LOGEO ---
+        // GESTIÓN LOGIN
+        if(localStorage.getItem("aurum_logged") === "true") { document.getElementById("loginScreen").style.display = "none"; }
         document.getElementById("btnLoginAction").addEventListener("click", () => {
-            const u = document.getElementById("userInput").value;
-            const p = document.getElementById("passInput").value;
-            if(u === "admin" && p === "aurum2026") {
+            if(document.getElementById("userInput").value === "admin" && document.getElementById("passInput").value === "aurum2026") {
+                localStorage.setItem("aurum_logged", "true");
                 document.getElementById("loginScreen").style.display = "none";
-                document.getElementById("profileUser").innerText = u.toUpperCase();
-                document.getElementById("avatarName").innerText = u.substring(0,2).toUpperCase();
-            } else {
-                document.getElementById("loginError").style.display = "block";
             }
         });
 
-        // --- ENRUTAMIENTO SPA INTERNO ---
-        const itemsMenu = document.querySelectorAll(".menu-item");
-        itemsMenu.forEach(item => {
-            item.addEventListener("click", () => {
-                itemsMenu.forEach(i => i.classList.remove("active"));
-                item.classList.add("active");
-                
-                const targetView = item.getAttribute("data-target");
-                const panelDerecho = document.getElementById("panelDerechoControl");
-                
-                if (targetView === "viewDashboard") {
-                    panelDerecho.style.display = "flex";
-                    if(globalChartConsumo) { setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 40); }
-                } else {
-                    panelDerecho.style.display = "none";
-                }
+        // DESPLEGABLE USER
+        document.getElementById("userMenuWidget").addEventListener("click", (e) => {
+            e.stopPropagation();
+            const box = document.getElementById("logoutBox");
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        });
+        document.body.addEventListener("click", () => { document.getElementById("logoutBox").style.display = "none"; });
+        document.getElementById("btnExitAction").addEventListener("click", () => {
+            localStorage.removeItem("aurum_logged");
+            document.getElementById("loginScreen").style.display = "flex";
+        });
 
-                document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active-view"));
-                document.getElementById(targetView).classList.add("active-view");
+        // CONTROLADORES DE PANEL FLOTANTE DE MEDIA PANTALLA
+        document.querySelectorAll("[data-drawer]").forEach(button => {
+            button.addEventListener("click", () => {
+                document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
+                const targetDrawer = button.getAttribute("data-drawer");
+                document.getElementById(targetDrawer).classList.add("open");
+                
+                // Si abre consumos, refrescar gráfica interna del drawer
+                if(targetDrawer === "drawerConsumo") { setTimeout(initChartAnalisis, 100); }
             });
         });
 
-        // --- RENDERIZADOR MAESTRO DE SILOS, HISTORIALES Y CONSUMOS ---
-        function runMasterRender() {
-            let acumuladoPeso = 0; 
-            let combinadoConsumo = 0; 
-            let totalAlarmas = 0;
+        document.querySelectorAll(".drawer-close").forEach(closeBtn => {
+            closeBtn.addEventListener("click", () => {
+                closeBtn.closest(".side-drawer").classList.remove("open");
+            });
+        });
 
-            let gridHtml = "";
-            let historialHtml = "";
-            let consumoHtml = "";
-            let alarmasDetalleHtml = "";
-            let reportesHtml = "";
-            let alarmasRapidasHtml = "";
+        // MANEJO NOTIFICACIÓN CAMPANA
+        document.getElementById("btnCampana").addEventListener("click", () => {
+            document.getElementById("navBadgeCount").style.display = "none"; 
+            document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
+            document.getElementById("drawerAlarmas").classList.add("open");
+        });
 
-            SILOS.forEach(silo => {
-                let pct = silo.capacidad > 0 ? Math.round((silo.peso / silo.capacidad) * 100) : 0;
-                let claseEstado = "status-normal";
-                let colorFluido = "#10b981"; // Verde por defecto
+        // EXPORTACIÓN A EXCEL (CSV INDUSTRIAL)
+        function descargarExcelConsumos() {
+            let periodo = document.getElementById("filtroHistorial").value;
+            let csvContent = "data:text/csv;charset=utf-8,Fecha,Silo,Consumo Registrado(kg/h)\n";
+            csvContent += `06-07-2026,Silo 1,850\n06-07-2026,Silo 2,620\n05-07-2026,Silo 5,980\n`;
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Consumos_Silos_${periodo}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
-                if (silo.estado === "Baja") { claseEstado = "status-baja"; colorFluido = "#f59e0b"; }
-                else if (silo.estado === "Critica") { claseEstado = "status-critica"; colorFluido = "#ef4444"; totalAlarmas++; }
-                else if (silo.estado === "Sin Flujo") { claseEstado = "status-sinflujo"; colorFluido = "#8b5cf6"; totalAlarmas++; }
-                else if (silo.estado === "Desconectado") { claseEstado = "status-desconectado"; colorFluido = "#475569"; pct = 0; }
+        // CONTROL DE TEMAS E IDIOMAS
+        function cambiarTema() {
+            const t = document.getElementById("comboTema").value;
+            document.body.className = "";
+            if(t !== "dark") document.body.classList.add("theme-" + t);
+        }
 
-                acumuladoPeso += silo.peso;
-                combinadoConsumo += silo.consumo;
+        const langData = {
+            es: { dash: "Dashboard", hist: "Historial", cons: "Consumo", alrm: "Alarmas", repo: "Reportes", conf: "Configuración", add: "Nuevo Usuario" },
+            en: { dash: "Dashboard", hist: "History", cons: "Consumption", alrm: "Alarms", repo: "Reports", conf: "Settings", add: "Add User" },
+            zh: { dash: "仪表板", hist: "历史记录", cons: "消耗量", alrm: "报警控制", repo: "报表", conf: "系统设置", add: "添加用户" },
+            de: { dash: "Dashboard", hist: "Verlauf", cons: "Verbrauch", alrm: "Alarme", repo: "Berichte", conf: "Setup", add: "Benutzer hinzufügen" }
+        };
 
-                // 1. RENDERIZACIÓN DE LOS COMPONENTES DE SILOS INDUSTRIALES
-                gridHtml += `
-                <div class="silo-card">
-                    <div class="silo-top-row">
-                        <span class="silo-card-name">${silo.nombre}</span>
-                        <span class="silo-card-status ${claseEstado}">${silo.estado}</span>
-                    </div>
-                    <div class="silo-middle-row">
-                        <div class="silo-axis-y"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
-                        <div class="silo-graphic-box">
-                            <div class="silo-metal-frame">
-                                <div class="silo-roof"></div>
-                                <div class="silo-cylinder">
-                                    <div class="silo-internal-fluid" style="height: ${pct}%; background: ${colorFluido};"></div>
+        function cambiarIdioma() {
+            const l = document.getElementById("comboIdioma").value;
+            const d = langData[l];
+            document.querySelectorAll(".lng-dash").forEach(e => e.innerText = d.dash);
+            document.querySelectorAll(".lng-hist").forEach(e => e.innerText = d.hist);
+            document.querySelectorAll(".lng-cons").forEach(e => e.innerText = d.cons);
+            document.querySelectorAll(".lng-alrm").forEach(e => e.innerText = d.alrm);
+            document.querySelectorAll(".lng-repo").forEach(e => e.innerText = d.repo);
+            document.querySelectorAll(".lng-conf").forEach(e => e.innerText = d.conf);
+            document.getElementById("lblAddUser").innerText = d.add;
+        }
+
+        // RENDER DE CUADROS DE SILOS Y DONA GRANDE
+        function runRender() {
+            const grid = document.getElementById("silosGrid");
+            grid.innerHTML = "";
+
+            SILOS.forEach(s => {
+                let pct = Math.round(s.peso / s.capacidad * 100);
+                let stClass = "var(--text-sub)";
+                let fStyle = "transparent";
+                if(s.estado === "Normal") fStyle = "linear-gradient(to top, #065f46, #10b981)";
+                if(s.estado === "Baja") fStyle = "linear-gradient(to top, #9a3412, #f59e0b)";
+                if(s.estado === "Critica") fStyle = "linear-gradient(to top, #991b1b, #ef4444)";
+                if(s.estado === "Sin Flujo") fStyle = "linear-gradient(to top, #5b21b6, #8b5cf6)";
+
+                grid.innerHTML += `
+                    <div class="silo-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:700; font-size:14px;">${s.nombre}</span>
+                            <span style="font-size:11px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
+                        </div>
+                        <div class="silo-middle-row">
+                            <div class="silo-axis-y"><span>100%</span><span>50%</span><span>0%</span></div>
+                            <div class="silo-graphic-box">
+                                <div class="silo-metal-frame">
+                                    <div class="silo-ladder"></div><div class="silo-roof"></div>
+                                    <div class="silo-cylinder"><div class="silo-internal-fluid" style="height:${s.estado==='Desconectado'?0:pct}%; background:${fStyle};"></div></div>
+                                    <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
                                 </div>
-                                <div class="silo-cone"></div>
-                                <div class="silo-legs"></div>
+                            </div>
+                            <div class="silo-text-readout">
+                                <div style="font-size:26px; font-weight:800;">${s.estado==='Desconectado'?'--':pct+'%'}</div>
+                                <div style="font-size:12px; color:var(--text-sub);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
                             </div>
                         </div>
-                        <div class="silo-text-readout">
-                            <span class="silo-big-pct">${silo.estado === 'Desconectado' ? '--' : pct}%</span>
-                            <span class="silo-sub-weight">${silo.estado === 'Desconectado' ? '--' : silo.peso.toLocaleString('es-CL')} kg</span>
+                    </div>`;
+            });
+
+            // CASILLERO 8 - DONA MAXIMIZADA CON TEXTO ROBUSTO
+            grid.innerHTML += `
+                <div class="silo-card">
+                    <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo</h4>
+                    <div class="distribution-box">
+                        <div class="canvas-container"><canvas id="chartDonaDistribucion"></canvas></div>
+                        <div class="dona-legend">
+                            <div><span style="color:#10b981">●</span> S1: 24.5%</div>
+                            <div><span style="color:#3b82f6">●</span> S2: 18.2%</div>
+                            <div><span style="color:#f59e0b">●</span> S3: 12.8%</div>
+                            <div><span style="color:#ef4444">●</span> S4: 4.2%</div>
+                            <div><span style="color:#ec4899">●</span> S5: 26.3%</div>
+                            <div><span style="color:#8b5cf6">●</span> S6: 13.1%</div>
                         </div>
-                    </div>
-                    <div class="silo-bottom-metrics">
-                        <div>Consumo<span>${silo.estado === 'Desconectado' ? '--' : silo.consumo + ' kg/h'}</span></div>
-                        <div>Actualizado<span>${silo.fecha}</span></div>
-                        <div>RSSI<span style="color:${silo.rssi < -70 ? '#f59e0b' : '#10b981'}">${silo.rssi === 0 ? '--' : silo.rssi + ' dBm'}</span></div>
                     </div>
                 </div>`;
 
-                // 2. RESCATE DE LA SUBPANTALLA HISTORIAL
-                historialHtml += `
-                <tr>
-                    <td style="font-weight:700;">${silo.nombre}</td>
-                    <td>${silo.estado === 'Desconectado' ? '--' : (silo.consumo * 18).toLocaleString('es-CL') + ' kg'}</td>
-                    <td>${silo.estado === 'Desconectado' ? '--' : Math.round(silo.capacidad * 0.12).toLocaleString('es-CL') + ' kg'}</td>
-                    <td>${silo.estado === 'Desconectado' ? '--' : (silo.consumo * 110).toLocaleString('es-CL') + ' kg'}</td>
-                    <td><span style="color:${silo.estado === 'Desconectado' ? 'var(--color-red)' : 'var(--color-green)'}; font-weight:600;">
-                        ${silo.estado === 'Desconectado' ? 'Inactivo' : 'Enlazado'}
-                    </span></td>
-                </tr>`;
-
-                // 3. RESCATE DE LA SUBPANTALLA CONSUMO (ANÁLISIS DE DESALOJO)
-                consumoHtml += `
-                <tr>
-                    <td style="font-weight:700;">${silo.nombre}</td>
-                    <td>${silo.estado === 'Desconectado' ? '--' : silo.consumo + ' kg/h'}</td>
-                    <td>${silo.estado === 'Desconectado' ? '--' : (silo.consumo * 24).toLocaleString('es-CL') + ' kg'}</td>
-                    <td><span style="padding:2px 6px; border-radius:4px; font-size:11px; font-weight:700; background:${silo.consumo > 500 ? 'rgba(16,185,129,0.1)' : 'rgba(255,255,255,0.02)'}; color:${silo.consumo > 500 ? 'var(--color-green)' : 'var(--text-sub)'}">
-                        ${silo.consumo > 0 ? 'Flujo Activo' : silo.estado === 'Desconectado' ? 'Fuera de Línea' : 'Inmóvil'}
-                    </span></td>
-                </tr>`;
-
-                // 4. RESCATE DE LA SUBPANTALLA ALARMAS UMBRALES
-                alarmasDetalleHtml += `
-                <tr>
-                    <td style="font-weight:700;">${silo.nombre}</td>
-                    <td>${silo.estado === 'Desconectado' ? '--' : silo.peso.toLocaleString('es-CL') + ' kg'}</td>
-                    <td>${silo.limiteCritico.toLocaleString('es-CL')} kg</td>
-                    <td style="color:${silo.variacion10min === 0 && silo.estado !== 'Desconectado' ? 'var(--color-purple)' : 'white'}">${silo.estado === 'Desconectado' ? '--' : silo.variacion10min + ' kg'}</td>
-                    <td style="font-weight:600; color:${silo.estado === 'Critica' ? 'var(--color-red)' : silo.estado === 'Sin Flujo' ? 'var(--color-purple)' : 'var(--text-sub)'}">
-                        ${silo.estado === 'Critica' ? 'Masa Bajo Umbral Crítico' : silo.estado === 'Sin Flujo' ? 'Alimento Bloqueado (Falta Variación)' : 'Condición Estable'}
-                    </td>
-                </tr>`;
-
-                // 5. RESCATE DE LA SUBPANTALLA REPORTES
-                reportesHtml += `
-                <tr>
-                    <td style="font-weight:700;">${silo.nombre}</td>
-                    <td>${silo.capacidad.toLocaleString('es-CL')} kg</td>
-                    <td style="font-weight:700; color:var(--color-green);">${silo.cargasSemana}</td>
-                    <td>${silo.ultCarga}</td>
-                </tr>`;
-
-                // 6. PANEL LATERAL RÁPIDO DE ALARMAS ACTIVAS
-                if(silo.estado === "Critica" || silo.estado === "Sin Flujo") {
-                    let iconAlert = silo.estado === "Critica" ? "ph-warning" : "ph-hourglass-low";
-                    let bgAlert = silo.estado === "Critica" ? "rgba(239,68,68,0.1)" : "rgba(139,92,246,0.1)";
-                    let colAlert = silo.estado === "Critica" ? "var(--color-red)" : "var(--color-purple)";
-                    alarmasRapidasHtml += `
-                    <div class="alert-item-box">
-                        <div class="alert-icon-wrapper" style="background:${bgAlert}; color:${colAlert};"><i class="ph-fill ${iconAlert}"></i></div>
-                        <div class="alert-text-info">
-                            <h5>${silo.nombre}: ${silo.estado.toUpperCase()}</h5>
-                            <p>${silo.estado === 'Critica' ? 'Peso crítico bajo límite.' : 'Falta de variación de carga detectada.'}</p>
-                        </div>
-                        <span class="alert-time-stamp">${silo.fecha}</span>
-                    </div>`;
-                }
-            });
-
-            // INYECCIÓN DINÁMICA FINAL DE CONTENIDOS EN EL DOM
-            document.getElementById("silosGrid").innerHTML = gridHtml;
-            document.getElementById("tablaHistorial").innerHTML = historialHtml;
-            document.getElementById("tablaConsumo").innerHTML = consumoHtml;
-            document.getElementById("tablaAlarmasDetalle").innerHTML = alarmasDetalleHtml;
-            document.getElementById("tablaReportes").innerHTML = reportesHtml;
-            document.getElementById("panelAlarmasRapidas").innerHTML = alarmasRapidasHtml || '<div style="font-size:11px; color:var(--text-sub); text-align:center; padding:10px;">No hay alertas pendientes</div>';
-
-            // Actualización de Widgets de Contadores Generales
-            document.getElementById("pesoTotal").innerHTML = `${acumuladoPeso.toLocaleString('es-CL')} <span>kg</span>`;
-            document.getElementById("consumoHora").innerHTML = `${combinadoConsumo.toLocaleString('es-CL')} <span>kg/h</span>`;
-            document.getElementById("alarmasContador").innerText = totalAlarmas;
-            document.getElementById("badgeAlarmas").innerText = totalAlarmas;
-            document.getElementById("navBadgeCount").innerText = totalAlarmas;
+            setTimeout(renderDona, 50);
         }
 
-        // --- INICIALIZACIÓN DE LOS GRÁFICOS ORIGINALES DE TU ARCHIVO WORD ---
-        function initCharts() {
-            const ctxBar = document.getElementById('chartConsumo').getContext('2d');
-            globalChartConsumo = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'],
-                    datasets: [{
-                        label: 'Desalojo Acumulado (kg)',
-                        data: [2100, 2400, 1900, 3200, 4100, 3800, 2900, 3400, 4200, 4800, 3100, 2500],
-                        backgroundColor: '#10b981',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
-                        y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748b', font: { size: 9 } } }
-                    }
-                }
-            });
-
-            const ctxDoughnut = document.getElementById('chartDona').getContext('2d');
-            globalChartDona = new Chart(ctxDoughnut, {
+        function renderDona() {
+            const c = document.getElementById("chartDonaDistribucion");
+            if(!c) return;
+            new Chart(c, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Silo 1', 'Silo 2', 'Silo 3', 'Silo 5', 'Silo 6'],
                     datasets: [{
-                        data: [11700, 9300, 4200, 12750, 6750],
-                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#64748b'],
+                        data: [24.5, 18.2, 12.8, 4.2, 26.3, 13.1, 0.9],
+                        backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#64748b"],
                         borderWidth: 0
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { color: '#64748b', boxWidth: 10, font: { size: 9 } } }
-                    },
-                    cutout: '70%'
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
-        // Ejecutar al cargar la interfaz
-        window.onload = () => {
-            runMasterRender();
-            initCharts();
-        };
+        function initChartAnalisis() {
+            const ctx = document.getElementById("chartAnalisisSilos").getContext("2d");
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["S1", "S2", "S3", "S4", "S5", "S6"],
+                    datasets: [{ label: 'kg/h', data: [850, 620, 350, 120, 980, 0], backgroundColor: '#10b981' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        runRender();
+
+        // LINEAL INFERIOR GENERAL
+        const gradient = document.getElementById("chartConsumo").getContext("2d").createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+        new Chart(document.getElementById("chartConsumo"), {
+            type: 'line',
+            data: {
+                labels: ["10:00", "14:00", "18:00", "22:00", "02:00", "06:00"],
+                datasets: [{ data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
     </script>
 </body>
 </html>
