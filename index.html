@@ -33,7 +33,7 @@
         .login-field { width: 100%; padding: 12px; background: #030508; border: 1px solid var(--border-color); border-radius: 6px; color: white; margin-top: 12px; font-size: 14px; outline: none; }
         .btn-login { width: 100%; padding: 12px; background: var(--color-green); color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 18px; }
 
-        /* --- SIDEBAR IZQUIERDO REPLICADO --- */
+        /* --- SIDEBAR IZQUIERDO --- */
         .sidebar { width: 240px; height: 100vh; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-color); flex-shrink: 0; }
         .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
         .brand i { color: var(--color-green); font-size: 32px; }
@@ -61,13 +61,18 @@
         .nav-status span { color: var(--color-green); font-weight: 600; }
         .nav-bell { position: relative; font-size: 22px; color: var(--text-sub); cursor: pointer; }
         .nav-bell span { position: absolute; top: -2px; right: -2px; background: var(--color-red); color: white; width: 14px; height: 14px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .user-widget { display: flex; align-items: center; gap: 10px; }
+        
+        .user-widget { display: flex; align-items: center; gap: 10px; cursor: pointer; position: relative; padding: 4px 8px; border-radius: 6px; transition: background 0.2s; }
+        .user-widget:hover { background: rgba(255,255,255,0.02); }
         .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2a3b4d; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+        
+        .logout-dropdown { display: none; position: absolute; top: 45px; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; width: 110px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        .logout-dropdown button { width: 100%; padding: 10px; background: transparent; border: none; color: var(--color-red); font-weight: 600; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .logout-dropdown button:hover { background: rgba(239, 68, 68, 0.08); }
 
         .layout-body { display: flex; flex: 1; overflow: hidden; }
         .main-content { flex: 1; padding: 24px; overflow-y: auto; }
         
-        /* NAVEGACIÓN INTERNA SPA */
         .app-view { display: none; }
         .app-view.active-view { display: block; }
         
@@ -87,13 +92,12 @@
         .kpi-details p { color: var(--text-sub); font-size: 11px; }
         .kpi-details h3 { font-size: 18px; font-weight: 700; color: white; margin-top: 1px; }
         .kpi-details h3 span { font-size: 12px; color: var(--text-sub); font-weight: 400; }
-        .kpi-pulse-icon { color: var(--text-sub); font-size: 14px; opacity: 0.5; }
 
         /* --- GRILLA DE SILOS EXACTA --- */
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
         .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .silo-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .silo-card-name { font-size: 14px; font-weight: 700; color: white; letter-spacing: 0.3px; }
+        .silo-card-name { font-size: 14px; font-weight: 700; color: white; }
         .silo-card-status { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .silo-card-status::before { content:''; width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
         
@@ -103,80 +107,76 @@
         .status-sinflujo { color: var(--color-purple); }.status-sinflujo::before { background: var(--color-purple); }
         .status-desconectado { color: var(--color-gray); }.status-desconectado::before { background: var(--color-gray); }
 
-        /* RENDER INDUSTRIAL DE SILO REAL */
+        /* RENDER INDUSTRIAL ALTA FIDELIDAD */
         .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 160px; position: relative; margin-bottom: 14px; }
-        .silo-axis-y { width: 30px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: #475569; text-align: left; padding-right: 4px; border-right: 1px dashed rgba(255,255,255,0.05); }
-        
+        .silo-axis-y { width: 30px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: #475569; padding-right: 4px; border-right: 1px dashed rgba(255,255,255,0.05); }
         .silo-graphic-box { flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; }
         
-        /* Contenedor del Silo Metálico con Patas */
-        .silo-metal-frame { width: 70px; height: 145px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
-        /* Cuerpo cilíndrico de chapas de acero acanaladas */
-        .silo-cylinder { width: 100%; height: 110px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; border-radius: 4px 4px 0 0; position: relative; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
-        /* Líneas horizontales de unión de láminas metálicas */
-        .silo-cylinder::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 100% 16px; pointer-events: none; }
-        /* Techo cónico superior */
-        .silo-roof { width: 100%; height: 14px; background: linear-gradient(90deg, #334155, #1e293b); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 6px; left: 0; z-index: 3; border: 1px solid #475569; }
-        /* Tolva cónica inferior */
-        .silo-cone { width: 100%; height: 26px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: relative; z-index: 2; }
-        /* Patas de Soporte Estructurales Inferiores */
-        .silo-legs { width: 100%; height: 26px; position: absolute; bottom: 0; left: 0; z-index: 1; display: flex; justify-content: space-between; padding: 0 4px; pointer-events: none; }
-        .silo-legs::before, .silo-legs::after { content: ''; width: 3px; height: 100%; background: #475569; transform: skewX(2deg); }
+        /* Estructura Completa del Silo */
+        .silo-metal-frame { width: 80px; height: 150px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
         
-        /* Fluido dinámico interno */
-        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* Tubería externa superior de carga */
+        .silo-pipe-line { position: absolute; top: -2px; left: 12px; width: 32px; height: 14px; border: 1.5px solid #475569; border-bottom: none; border-left: none; border-radius: 0 4px 0 0; z-index: 4; }
+        
+        /* Escalera lateral de servicio */
+        .silo-ladder { position: absolute; top: 12px; left: 4px; width: 6px; height: 106px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 6px; z-index: 4; }
 
-        .silo-text-readout { width: 75px; text-align: right; display: flex; flex-direction: column; justify-content: center; }
-        .silo-big-pct { font-size: 26px; font-weight: 800; color: white; line-height: 1; }
+        /* Techo Cónico */
+        .silo-roof { width: 68px; height: 16px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 10px; left: 10px; z-index: 3; border: 1px solid #475569; }
+        
+        /* Cuerpo cilíndrico con rejilla de chapas cuadradas */
+        .silo-cylinder { width: 68px; height: 95px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; position: absolute; top: 25px; left: 10px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
+        .silo-cylinder::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 14px 14px; pointer-events: none; }
+        
+        /* Tolva Inferior */
+        .silo-cone { width: 68px; height: 24px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 120px; left: 10px; z-index: 2; }
+        
+        /* Patas Reforzadas con Crucetas */
+        .silo-legs { width: 68px; height: 26px; position: absolute; top: 120px; left: 10px; z-index: 1; display: flex; justify-content: space-between; }
+        .silo-legs div { width: 3px; height: 100%; background: #475569; }
+        .silo-legs::after { content: '✕✕✕'; font-size: 8px; color: rgba(71, 85, 105, 0.6); position: absolute; width: 100%; text-align: center; top: 4px; letter-spacing: 4px; }
+
+        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.6s ease; }
+
+        .silo-text-readout { width: 75px; text-align: right; }
+        .silo-big-pct { font-size: 26px; font-weight: 800; color: white; }
         .silo-sub-weight { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
 
         .silo-bottom-metrics { border-top: 1px solid rgba(255,255,255,0.04); padding-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: left; font-size: 11px; color: var(--text-sub); }
-        .silo-bottom-metrics div { display: flex; flex-direction: column; }
-        .silo-bottom-metrics span { color: white; font-weight: 600; margin-top: 2px; font-size: 11px; }
+        .silo-bottom-metrics span { color: white; font-weight: 600; margin-top: 2px; display: block; }
 
-        /* GRÁFICOS INFERIORES */
-        .charts-container-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
-        .chart-box-panel { background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; }
+        /* GRÁFICO MEJORADO DE ALTA FIDELIDAD */
+        .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
+        .chart-side-data { display: flex; flex-direction: column; justify-content: center; padding-left: 32px; border-left: 1px solid var(--border-color); }
 
-        /* --- PANEL LATERAL DERECHO PANEL --- */
-        .right-panel { width: 320px; background: var(--bg-sidebar); border-left: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; flex-shrink: 0; transition: all 0.2s ease; }
-        .panel-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .panel-section-header h4 { font-size: 13px; font-weight: 700; color: white; letter-spacing: 0.4px; }
-        .panel-section-header a { font-size: 11px; color: #3b82f6; text-decoration: none; font-weight: 500; }
-        
-        .list-container { display: flex; flex-direction: column; gap: 8px; }
-        .alert-item-box { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; display: flex; align-items: flex-start; gap: 12px; }
-        .alert-icon-wrapper { width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 13px; margin-top: 1px; }
-        .alert-text-info { flex: 1; font-size: 12px; }
-        .alert-text-info h5 { font-size: 12px; font-weight: 700; color: white; }
-        .alert-text-info p { color: var(--text-sub); font-size: 11px; margin-top: 1px; }
-        .alert-time-stamp { font-size: 10px; color: var(--text-sub); }
+        /* MENSAJE FLOTANTE TOAST ALERTA */
+        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; display: none; align-items: center; gap: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.6); z-index: 5000; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .action-button-control { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: white; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s; }
-        .action-button-control.btn-success-soft { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: var(--color-green); }
-        .action-button-control:hover { background: rgba(255,255,255,0.02); }
+        /* CONTENEDOR DE TARJETAS ROJAS DE ALARMAS */
+        .alarm-danger-box { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); padding: 16px; border-radius: 8px; color: white; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .alarm-danger-box:hover { background: rgba(239, 68, 68, 0.15); border-color: var(--color-red); }
 
-        /* TABLAS CONFIGURACIÓN SPA */
+        /* TABLAS SPA */
         .custom-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
         .custom-table th, .custom-table td { padding: 12px 16px; text-align: left; font-size: 12px; }
-        .custom-table th { background: rgba(255,255,255,0.01); color: var(--text-sub); font-weight: 600; border-bottom: 1px solid var(--border-color); }
+        .custom-table th { background: rgba(255,255,255,0.01); color: var(--text-sub); border-bottom: 1px solid var(--border-color); }
         .custom-table td { border-bottom: 1px solid rgba(255,255,255,0.01); color: white; }
 
-        /* SOPORTE CARD EXCLUSIVA */
         .support-wrapper-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 32px; border-radius: 12px; text-align: center; max-width: 460px; margin: 40px auto; }
         .support-anchor { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px 0; color: white; text-decoration: none; background: rgba(255,255,255,0.01); padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 13px; }
     </style>
 </head>
 <body>
 
-    <!-- CONTROL DE AUTENTICACIÓN (REQUERIDO) -->
+    <!-- CONTROL DE AUTENTICACIÓN -->
     <div id="loginScreen">
         <div class="login-card">
             <i class="ph-fill ph-lock-keyhole"></i>
             <h2 style="font-size:18px; font-weight:700; margin-bottom:4px;">AURUM.SYS INTERFACE</h2>
             <p style="color:var(--text-sub); font-size:12px; margin-bottom:12px;">Ingrese datos de operador para desbloquear</p>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario Operador">
-            <input type="password" id="passInput" class="login-field" placeholder="Contraseña de Resguardo">
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario">
+            <input type="password" id="passInput" class="login-field" placeholder="Contraseña">
             <div id="loginError" style="color:var(--color-red); font-size:12px; margin-top:10px; display:none;">Acceso inválido</div>
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
         </div>
@@ -213,268 +213,212 @@
         <!-- BARRA DE ACCIONES TOP -->
         <div class="top-navbar">
             <div class="nav-status"><div class="status-dot"></div>Sistema Operativo: <span>Online</span></div>
-            <div class="nav-bell"><i class="ph ph-bell"></i><span id="navBadgeCount">0</span></div>
-            <div class="user-widget">
+            <div class="nav-bell" id="btnCampana"><i class="ph ph-bell"></i><span id="navBadgeCount">0</span></div>
+            <div class="user-widget" id="userMenuWidget">
                 <div style="text-align:right; font-size:12px;">
                     <h4 id="profileUser" style="font-weight:700; color:white;">Erick Gomez</h4>
                     <span style="color:var(--text-sub); font-size:10px;">Administrador</span>
                 </div>
                 <div class="user-avatar" id="avatarName">EG</div>
+                <div class="logout-dropdown" id="logoutBox">
+                    <button id="btnExitAction"><i class="ph ph-sign-out"></i> Exit</button>
+                </div>
             </div>
         </div>
 
         <div class="layout-body">
-            <!-- VISTAS DE ENRUTAMIENTO SPA -->
             <div class="main-content">
                 
-                <!-- PANTALLA GENERAL: DASHBOARD -->
+                <!-- DASHBOARD -->
                 <div id="viewDashboard" class="app-view active-view">
                     <div class="main-header">
                         <h1>Dashboard General</h1><p>Monitoreo en tiempo real de 7 silos</p>
                     </div>
 
-                    <!-- REPLICACIÓN COMPLETA DE CARD KPIS -->
                     <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-database"></i></div>
-                                <div class="kpi-details"><p>Silos Monitoreados</p><h3>7</h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-scales"></i></div>
-                                <div class="kpi-details"><p>Peso Total</p><h3 id="pesoTotal">0 <span>kg</span></h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-lightning"></i></div>
-                                <div class="kpi-details"><p>Consumo Actual</p><h3 id="consumoHora">0 <span>kg/h</span></h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-card-left">
-                                <div class="kpi-icon-container"><i class="ph-fill ph-warning"></i></div>
-                                <div class="kpi-details"><p>Alarmas Activas</p><h3 id="alarmasContador">0</h3></div>
-                            </div>
-                            <i class="ph ph-pulse kpi-pulse-icon"></i>
-                        </div>
+                        <div class="kpi-card"><div class="kpi-card-left"><div class="kpi-icon-container"><i class="ph-fill ph-database"></i></div><div class="kpi-details"><p>Silos Monitoreados</p><h3>7</h3></div></div></div>
+                        <div class="kpi-card"><div class="kpi-card-left"><div class="kpi-icon-container"><i class="ph-fill ph-scales"></i></div><div class="kpi-details"><p>Peso Total</p><h3 id="pesoTotal">0 <span>kg</span></h3></div></div></div>
+                        <div class="kpi-card"><div class="kpi-card-left"><div class="kpi-icon-container"><i class="ph-fill ph-lightning"></i></div><div class="kpi-details"><p>Consumo Actual</p><h3 id="consumoHora">0 <span>kg/h</span></h3></div></div></div>
+                        <div class="kpi-card"><div class="kpi-card-left"><div class="kpi-icon-container"><i class="ph-fill ph-warning"></i></div><div class="kpi-details"><p>Alarmas Activas</p><h3 id="alarmasContador">0</h3></div></div></div>
                     </div>
 
-                    <!-- GRID DE SILOS COPIA FIEL -->
                     <div class="silos-grid" id="silosGrid"></div>
 
-                    <!-- PANELES DE GRÁFICOS -->
-                    <div class="charts-container-row">
-                        <div class="chart-box-panel">
-                            <h4 style="font-size:12px; margin-bottom:12px; font-weight:700;">Consumo Total (Últimas 24 Horas)</h4>
-                            <div style="height:150px;"><canvas id="chartConsumo"></canvas></div>
+                    <!-- NUEVO GRÁFICO DE ALTA FIDELIDAD SEGÚN IMAGEN -->
+                    <div class="chart-layout-panel">
+                        <div>
+                            <h4 style="font-size:14px; margin-bottom:16px; font-weight:700;">Consumo Total <span style="font-weight:400; color:var(--text-sub);">(Últimas 24 Horas)</span></h4>
+                            <div style="height:165px;"><canvas id="chartConsumo"></canvas></div>
                         </div>
-                        <div class="chart-box-panel">
-                            <h4 style="font-size:12px; margin-bottom:12px; font-weight:700;">Distribución de Consumo</h4>
-                            <div style="height:150px;"><canvas id="chartDona"></canvas></div>
+                        <div class="chart-side-data">
+                            <h2 style="font-size: 32px; font-weight: 800; color: white; line-height:1;">12.450 <span style="font-size:16px; font-weight:400; color:var(--text-sub);">kg/h</span></h2>
+                            <p style="color:var(--text-title); font-size:13px; margin-top:2px; font-weight:500;">Consumo Actual</p>
+                            <span style="color:var(--color-green); font-size:12px; font-weight:600; margin-top:10px; display:flex; align-items:center; gap:4px;">
+                                <i class="ph-fill ph-arrow-up-right"></i> 8.5% vs ayer
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                <!-- SUBPANTALLA HISTORIAL (SOLICITADO) -->
+                <!-- HISTORIAL -->
                 <div id="viewHistorial" class="app-view">
-                    <div class="main-header">
-                        <h1>Historial de Almacenamiento</h1>
-                        <p>Métricas consolidadas de comportamiento diario y semanal de cada silo estructural</p>
-                    </div>
+                    <div class="main-header"><h1>Historial de Almacenamiento</h1><p>Métricas consolidadas de comportamiento diario y semanal</p></div>
                     <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Silo</th>
-                                <th>Consumo Diario Promedio</th>
-                                <th>Nivel Mínimo Detectado</th>
-                                <th>Acumulado Semanal</th>
-                                <th>Estado de Enlace</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaHistorial">
-                            <!-- Inyección dinámica -->
-                        </tbody>
+                        <thead><tr><th>Silo</th><th>Consumo Diario Promedio</th><th>Nivel Mínimo Detectado</th><th>Acumulado Semanal</th><th>Estado de Enlace</th></tr></thead>
+                        <tbody id="tablaHistorial"></tbody>
                     </table>
                 </div>
 
-                <!-- SUBPANTALLA CONSUMO (SOLICITADO) -->
+                <!-- CONSUMO -->
                 <div id="viewConsumo" class="app-view">
-                    <div class="main-header">
-                        <h1>Análisis de Desalojo</h1>
-                        <p>Tasas calculadas por hora operativa y acumulación por jornada diaria</p>
-                    </div>
+                    <div class="main-header"><h1>Análisis de Desalojo</h1><p>Tasas calculadas por hora operativa y acumulación por jornada diaria</p></div>
                     <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Estructura</th>
-                                <th>Consumo Promedio / Hora</th>
-                                <th>Consumo Registrado / Día</th>
-                                <th>Condición de Salida</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaConsumo">
-                            <!-- Inyección dinámica -->
-                        </tbody>
+                        <thead><tr><th>Estructura</th><th>Consumo Promedio / Hora</th><th>Consumo Registrado / Día</th><th>Condición de Salida</th></tr></thead>
+                        <tbody id="tablaConsumo"></tbody>
                     </table>
                 </div>
 
-                <!-- SUBPANTALLA ALARMAS (SOLICITADO) -->
+                <!-- SECCIÓN ALARMAS INTERACTIVAS -->
                 <div id="viewAlarmas" class="app-view">
-                    <div class="main-header">
-                        <h1>Umbrales de Seguridad & Variación</h1>
-                        <p>Pesos críticos fijos y monitoreo de inmovilidad de carga (Falta de variación de alimento)</p>
-                    </div>
+                    <div class="main-header"><h1>Umbrales de Seguridad & Variación</h1><p>Haga clic sobre una alerta activa roja para silenciarla por 5 minutos</p></div>
+                    
+                    <div id="contenedorTarjetasRojas" style="margin-bottom:24px;"></div>
+
                     <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Silo</th>
-                                <th>Masa Actual</th>
-                                <th>Peso Límite de Alerta</th>
-                                <th>Cambio Neto (10 Min)</th>
-                                <th>Diagnóstico de Evento</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaAlarmasDetalle">
-                            <!-- Inyección dinámica -->
-                        </tbody>
+                        <thead><tr><th>Silo</th><th>Masa Actual</th><th>Peso Límite de Alerta</th><th>Cambio Neto (10 Min)</th><th>Diagnóstico de Evento</th></tr></thead>
+                        <tbody id="tablaAlarmasDetalle"></tbody>
                     </table>
                 </div>
 
-                <!-- SUBPANTALLA REPORTES (SOLICITADO) -->
+                <!-- REPORTES -->
                 <div id="viewReportes" class="app-view">
-                    <div class="main-header">
-                        <h1>Frecuencia de Abastecimientos</h1>
-                        <p>Conteo semanal de eventos de recarga por unidad estructural</p>
-                    </div>
+                    <div class="main-header"><h1>Frecuencia de Abastecimientos</h1><p>Conteo semanal de eventos de recarga por unidad estructural</p></div>
                     <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Unidad</th>
-                                <th>Capacidad de Placa</th>
-                                <th>Cargas Hechas (Esta Semana)</th>
-                                <th>Última Detección</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaReportes">
-                            <!-- Inyección dinámica -->
-                        </tbody>
+                        <thead><tr><th>Unidad</th><th>Capacidad de Placa</th><th>Cargas Hechas (Esta Semana)</th><th>Última Detección</th></tr></thead>
+                        <tbody id="tablaReportes"></tbody>
                     </table>
                 </div>
 
-                <!-- SUBPANTALLA CONFIGURACIÓN -->
+                <!-- CONFIGURACIÓN -->
                 <div id="viewConfig" class="app-view">
-                    <div class="main-header">
-                        <h1>Configuración Avanzada</h1>
-                        <p>Calibración de celdas de carga y mapeo de hardware</p>
-                    </div>
-                    <div style="border:1px dashed var(--border-color); padding:40px; text-align:center; color:var(--text-sub); border-radius:8px; font-size:13px;">
-                        Sección de Fábrica - Ajustes posteriores (Lo vemos luego).
-                    </div>
+                    <div class="main-header"><h1>Configuración Avanzada</h1><p>Calibración de celdas de carga y mapeo de hardware</p></div>
+                    <div style="border:1px dashed var(--border-color); padding:40px; text-align:center; color:var(--text-sub); border-radius:8px; font-size:13px;">Sección de Fábrica - Ajustes posteriores (Lo vemos luego).</div>
                 </div>
 
-                <!-- SUBPANTALLA SOPORTE (SOLICITADO) -->
+                <!-- SOPORTE -->
                 <div id="viewSoporte" class="app-view">
                     <div class="support-wrapper-card">
                         <i class="ph ph-shield-check" style="font-size:44px; color:var(--color-green)"></i>
                         <h2 style="font-size:18px; margin-top:12px; font-weight:700;">Ingeniería de Planta AURUM.SYS</h2>
                         <p style="color:var(--text-sub); font-size:12px; margin-bottom:20px;">Comuníquese con soporte ante fallas de telemetría de celdas de carga</p>
-                        <a href="mailto:aurumsysm@gmail.com" class="support-anchor">
-                            <i class="ph ph-envelope-open" style="color:var(--color-green)"></i> aurumsysm@gmail.com
-                        </a>
-                        <a href="tel:+56949287059" class="support-anchor">
-                            <i class="ph ph-phone-call" style="color:var(--color-green)"></i> +56 9 4928 7059
-                        </a>
+                        <a href="mailto:aurumsysm@gmail.com" class="support-anchor"><i class="ph ph-envelope-open" style="color:var(--color-green)"></i> aurumsysm@gmail.com</a>
+                        <a href="tel:+56949287059" class="support-anchor"><i class="ph ph-phone-call" style="color:var(--color-green)"></i> +56 9 4928 7059</a>
                     </div>
                 </div>
 
-            </div>
-
-            <!-- PANEL LATERAL DERECHO EXACTO -->
-            <div class="right-panel" id="panelDerechoControl">
-                <div>
-                    <div class="panel-section-header"><h4>Alarmas Activas</h4><a href="#">Ver todas</a></div>
-                    <div class="list-container" id="panelAlarmasRapidas"></div>
-                </div>
-                <div>
-                    <div class="panel-section-header"><h4>Control Rápido</h4></div>
-                    <div class="list-container">
-                        <button class="action-button-control btn-success-soft"><i class="ph-fill ph-play"></i> Activar Vibradores</button>
-                        <button class="action-button-control"><i class="ph-fill ph-stop"></i> Detener Vibradores</button>
-                        <button class="action-button-control"><i class="ph-fill ph-sliders-horizontal"></i> Configurar Alarmas</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        let globalChartConsumo, globalChartDona;
+    <!-- TOAST MENSAJE FLOTANTE SOLICITADO -->
+    <div id="floatingToast"><i class="ph-fill ph-warning-octagon"></i> ALERTA ACTIVA EN SILO TRABADO / CRÍTICO</div>
 
-        // Base de Datos Maestra de los 7 Silos con Parámetros Solicitados
+    <script>
+        let globalChartConsumo;
+        let alarmasSilenciadas = {}; // Guarda marcas temporales de descarte
+
         let SILOS = [
-            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "10:30:30", limiteCritico: 2250, variacion10min: 120, cargasSemana: 2, ultCarga: "Ayer" },
-            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", fecha: "10:30:28", limiteCritico: 2250, variacion10min: 90, cargasSemana: 1, ultCarga: "Hace 3 días" },
-            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 4200, consumo: 350, rssi: -72, estado: "Baja", fecha: "10:30:25", limiteCritico: 2250, variacion10min: 40, cargasSemana: 3, ultCarga: "Hoy 06:10" },
-            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 1800, consumo: 120, rssi: -75, estado: "Critica", fecha: "10:30:20", limiteCritico: 2250, variacion10min: 10, cargasSemana: 4, ultCarga: "Hace 5 días" },
-            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 12750, consumo: 980, rssi: -60, estado: "Normal", fecha: "10:30:35", limiteCritico: 2250, variacion10min: 150, cargasSemana: 2, ultCarga: "Hoy 09:25" },
-            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo", fecha: "10:30:15", limiteCritico: 2250, variacion10min: 0, cargasSemana: 1, ultCarga: "Hace 4 días" },
+            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 11700, consumo: 850, rssi: -65, estado: "Normal", fecha: "20:30:00", limiteCritico: 2250, variacion10min: 120, cargasSemana: 2, ultCarga: "Ayer" },
+            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 9300, consumo: 620, rssi: -68, estado: "Normal", fecha: "20:30:00", limiteCritico: 2250, variacion10min: 90, cargasSemana: 1, ultCarga: "Hace 3 días" },
+            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 4200, consumo: 350, rssi: -72, estado: "Baja", fecha: "20:30:00", limiteCritico: 2250, variacion10min: 40, cargasSemana: 3, ultCarga: "Hoy 06:10" },
+            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 1800, consumo: 120, rssi: -75, estado: "Critica", fecha: "20:30:00", limiteCritico: 2250, variacion10min: 10, cargasSemana: 4, ultCarga: "Hace 5 días" },
+            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 12750, consumo: 980, rssi: -60, estado: "Normal", fecha: "20:30:00", limiteCritico: 2250, variacion10min: 150, cargasSemana: 2, ultCarga: "Hoy 09:25" },
+            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo", fecha: "20:30:00", limiteCritico: 2250, variacion10min: 0, cargasSemana: 1, ultCarga: "Hace 4 días" },
             { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado", fecha: "--:--:--", limiteCritico: 2250, variacion10min: 0, cargasSemana: 0, ultCarga: "N/A" }
         ];
 
-        // --- VALIDACIÓN DE LOGEO OPERATIVO ---
+        // VERIFICAR REFRESH MEDIANTE LOCALSTORAGE
+        if(localStorage.getItem("aurum_logged") === "true") {
+            document.getElementById("loginScreen").style.display = "none";
+        }
+
+        // ACCIÓN LOGIN
         document.getElementById("btnLoginAction").addEventListener("click", () => {
             const u = document.getElementById("userInput").value;
             const p = document.getElementById("passInput").value;
             if(u === "admin" && p === "aurum2026") {
+                localStorage.setItem("aurum_logged", "true");
                 document.getElementById("loginScreen").style.display = "none";
-                document.getElementById("profileUser").innerText = u.toUpperCase();
-                document.getElementById("avatarName").innerText = u.substring(0,2).toUpperCase();
             } else {
                 document.getElementById("loginError").style.display = "block";
             }
         });
 
-        // --- SPA ROUTING: OCULTAR PANEL DERECHO EXCEPTO EN DASHBOARD ---
+        // DESPLEGAR MENÚ DE EXIT
+        document.getElementById("userMenuWidget").addEventListener("click", (e) => {
+            e.stopPropagation();
+            const drop = document.getElementById("logoutBox");
+            drop.style.display = drop.style.display === "block" ? "none" : "block";
+        });
+        document.body.addEventListener("click", () => { document.getElementById("logoutBox").style.display = "none"; });
+
+        // SALIDA EXPLICITA (EXIT)
+        document.getElementById("btnExitAction").addEventListener("click", () => {
+            localStorage.removeItem("aurum_logged");
+            document.getElementById("userInput").value = "";
+            document.getElementById("passInput").value = "";
+            document.getElementById("loginScreen").style.display = "flex";
+        });
+
+        // NAVEGACIÓN SPA INTERNA
+        let currentActiveView = "viewDashboard";
         const itemsMenu = document.querySelectorAll(".menu-item");
         itemsMenu.forEach(item => {
             item.addEventListener("click", () => {
                 itemsMenu.forEach(i => i.classList.remove("active"));
                 item.classList.add("active");
                 
-                const targetView = item.getAttribute("data-target");
+                currentActiveView = item.getAttribute("data-target");
                 
-                // Toggle del Panel Derecho solicitado
-                const panelDerecho = document.getElementById("panelDerechoControl");
-                if (targetView === "viewDashboard") {
-                    panelDerecho.style.display = "flex";
-                    if(globalChartConsumo) { setTimeout(() => { globalChartConsumo.resize(); globalChartDona.resize(); }, 40); }
-                } else {
-                    panelDerecho.style.display = "none";
+                // Si ingresa a Alarmas, ocultar mensaje flotante permanentemente
+                if (currentActiveView === "viewAlarmas") {
+                    document.getElementById("floatingToast").style.display = "none";
                 }
 
                 document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active-view"));
-                document.getElementById(targetView).classList.add("active-view");
+                document.getElementById(currentActiveView).classList.add("active-view");
+                if (currentActiveView === "viewDashboard" && globalChartConsumo) { globalChartConsumo.resize(); }
             });
         });
 
-        // --- ENCARGADO DE RENDERIZAR LA INTERFAZ EXACTA Y TABLAS ---
+        // ACCIÓN CAMPANA SUPERIOR
+        document.getElementById("btnCampana").addEventListener("click", () => {
+            document.getElementById("navBadgeCount").innerText = "0";
+            if(currentActiveView !== "viewAlarmas") {
+                document.getElementById("floatingToast").style.display = "flex";
+            }
+        });
+
+        // FUNCION SILENCIAR ALARMA 5 MINUTOS
+        function silenciarSilo(siloId) {
+            alarmasSilenciadas[siloId] = Date.now();
+            runMasterRender();
+        }
+
+        // MASTER RENDERING DE DATOS
         function runMasterRender() {
-            let acumuladoPeso = 0; let combinadoConsumo = 0; let totalAlertasFallas = 0;
+            let acumuladoPeso = 0; let combinadoConsumo = 0; let totalAlertasFallas = 0; let mostrarAlertaFlotante = false;
             
             const grid = document.getElementById("silosGrid");
             const tHistorial = document.getElementById("tablaHistorial");
             const tConsumo = document.getElementById("tablaConsumo");
             const tAlarmas = document.getElementById("tablaAlarmasDetalle");
             const tReportes = document.getElementById("tablaReportes");
-            const panelAlertasRapidas = document.getElementById("panelAlarmasRapidas");
+            const contenedorRojo = document.getElementById("contenedorTarjetasRojas");
 
-            grid.innerHTML = ""; tHistorial.innerHTML = ""; tConsumo.innerHTML = ""; tAlarmas.innerHTML = ""; tReportes.innerHTML = ""; panelAlertasRapidas.innerHTML = "";
+            grid.innerHTML = ""; tHistorial.innerHTML = ""; tConsumo.innerHTML = ""; tAlarmas.innerHTML = ""; tReportes.innerHTML = ""; contenedorRojo.innerHTML = "";
+
+            let ahora = Date.now();
 
             SILOS.forEach(s => {
                 let pct = s.capacidad > 0 ? Math.round((s.peso / s.capacidad) * 100) : 0;
@@ -485,10 +429,28 @@
 
                 if(s.estado === "Normal") { stClass = "status-normal"; fillStyle = "linear-gradient(to top, #065f46, var(--color-green))"; }
                 if(s.estado === "Baja") { stClass = "status-baja"; fillStyle = "linear-gradient(to top, #9a3412, var(--color-yellow))"; }
-                if(s.estado === "Critica" || (s.peso <= s.limiteCritico && s.peso > 0)) { s.estado = "Critica"; stClass = "status-critica"; fillStyle = "linear-gradient(to top, #991b1b, var(--color-red))"; totalAlertasFallas++; }
-                if(s.estado === "Sin Flujo" || (s.variacion10min === 0 && s.estado !== "Desconectado" && s.peso > 0)) { s.estado = "Sin Flujo"; stClass = "status-sinflujo"; fillStyle = "linear-gradient(to top, #5b21b6, var(--color-purple))"; totalAlertasFallas++; }
+                if(s.estado === "Critica" || (s.peso <= s.limiteCritico && s.peso > 0)) { s.estado = "Critica"; stClass = "status-critica"; fillStyle = "linear-gradient(to top, #991b1b, var(--color-red))"; }
+                if(s.estado === "Sin Flujo" || (s.variacion10min === 0 && s.estado !== "Desconectado" && s.peso > 0)) { s.estado = "Sin Flujo"; stClass = "status-sinflujo"; fillStyle = "linear-gradient(to top, #5b21b6, var(--color-purple))"; }
 
-                // Inyección Grilla Estructural de Silos Metálicos Reales
+                let estaBloqueada = alarmasSilenciadas[s.id] && (ahora - alarmasSilenciadas[s.id] < 300000); // 5 Minutos
+
+                if((s.estado === "Critica" || s.estado === "Sin Flujo") && !estaBloqueada) {
+                    totalAlertasFallas++;
+                    mostrarAlertaFlotante = true;
+
+                    // Inyectar tarjeta interactiva roja en menú alarmas
+                    contenedorRojo.innerHTML += `
+                        <div class="alarm-danger-box" onclick="silenciarSilo(${s.id})">
+                            <div>
+                                <strong>⚠️ Alerta Crítica Activa - ${s.nombre}</strong>
+                                <p style="font-size:11px; opacity:0.8; margin-top:2px;">Estado: ${s.estado}. Presione este cuadro para descartar 5 minutos.</p>
+                            </div>
+                            <i class="ph ph-x-circle" style="font-size:18px;"></i>
+                        </div>
+                    `;
+                }
+
+                // Inyección Fiel del Dibujo Técnico del Silo Estructural
                 grid.innerHTML += `
                     <div class="silo-card">
                         <div class="silo-top-row"><span class="silo-card-name">${s.nombre}</span><span class="silo-card-status ${stClass}">${s.estado}</span></div>
@@ -496,12 +458,14 @@
                             <div class="silo-axis-y"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
                             <div class="silo-graphic-box">
                                 <div class="silo-metal-frame">
+                                    <div class="silo-pipe-line"></div>
+                                    <div class="silo-ladder"></div>
                                     <div class="silo-roof"></div>
                                     <div class="silo-cylinder">
                                         <div class="silo-internal-fluid" style="height: ${s.estado === 'Desconectado' ? 0 : pct}%; background: ${fillStyle};"></div>
                                     </div>
                                     <div class="silo-cone"></div>
-                                    <div class="silo-legs"></div>
+                                    <div class="silo-legs"><div></div><div></div></div>
                                 </div>
                             </div>
                             <div class="silo-text-readout">
@@ -517,79 +481,80 @@
                     </div>
                 `;
 
-                // Inyección Tablas Relacionales (Funcionalidad SPA pedida)
-                tHistorial.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${(s.peso * 0.92).toFixed(0)} kg</td><td>${(s.peso * 0.5).toFixed(0)} kg</td><td>${(s.capacidad * 2).toFixed(0)} kg</td><td>Estable</td></tr>`;
-                tConsumo.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.consumo} kg/h</td><td>${s.consumo * 24} kg/Día</td><td><span>${s.estado === 'Sin Flujo' ? 'Ausencia de Flujo' : 'Flujo Activo'}</span></td></tr>`;
+                tHistorial.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${(s.peso * 0.9).toFixed(0)} kg</td><td>${(s.peso * 0.4).toFixed(0)} kg</td><td>${(s.capacidad * 2).toFixed(0)} kg</td><td>Estable</td></tr>`;
+                tConsumo.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.consumo} kg/h</td><td>${s.consumo * 24} kg/Día</td><td><span>${s.estado === 'Sin Flujo' ? 'Atascado' : 'Flujo Normal'}</span></td></tr>`;
                 
-                let diagStr = "Operando Correctamente";
-                if(s.peso <= s.limiteCritico && s.peso > 0) diagStr = "Nivel Crítico de Alimento";
-                if(s.variacion10min === 0 && s.peso > 0 && s.estado !== "Desconectado") diagStr = "Bloqueo por falta de variación";
-                tAlarmas.innerHTML += `<tr style="color: ${diagStr !== 'Operando Correctamente' ? 'var(--color-red)' : 'white'}"><td><b>${s.nombre}</b></td><td>${s.peso} kg</td><td>${s.limiteCritico} kg</td><td>${s.variacion10min} kg</td><td><b>${diagStr}</b></td></tr>`;
-                
-                tReportes.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.capacidad.toLocaleString()} kg</td><td><span style="color:var(--color-green); font-weight:700;">${s.cargasSemana} Cargas</span></td><td>${s.ultCarga}</td></tr>`;
-
-                // Inyección de Alertas en Panel Derecho
-                if(diagStr !== "Operando Correctamente" && s.estado !== "Desconectado") {
-                    let cAlert = s.estado === 'Sin Flujo' ? 'var(--color-purple)' : 'var(--color-red)';
-                    panelAlertasRapidas.innerHTML += `
-                        <div class="alert-item-box">
-                            <div class="alert-icon-wrapper" style="background:rgba(255,255,255,0.02); color:${cAlert}"><i class="ph-fill ph-warning"></i></div>
-                            <div class="alert-text-info">
-                                <h5>${s.nombre} - ${s.estado === 'Sin Flujo' ? 'Sin Flujo Detectado' : 'Nivel Crítico'}</h5>
-                                <p>${s.estado === 'Sin Flujo' ? 'No hay variación de peso en el silo' : 'Masa total inferior al peso crítico fijo'}</p>
-                            </div>
-                            <span class="alert-time-stamp">${s.fecha.substring(0,5)}</span>
-                        </div>
-                    `;
-                }
+                let diagStr = s.estado === "Critica" ? "Masa inferior a peso crítico fijo" : (s.estado === "Sin Flujo" ? "Alarma: Falta de variación de alimento" : "Operación Normal");
+                tAlarmas.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.peso} kg</td><td>${s.limiteCritico} kg</td><td>${s.variacion10min} kg</td><td>${diagStr}</td></tr>`;
+                tReportes.innerHTML += `<tr><td><b>${s.nombre}</b></td><td>${s.capacidad.toLocaleString()} kg</td><td>${s.cargasSemana} Cargas</td><td>${s.ultCarga}</td></tr>`;
             });
 
-            // Setear Marcas e Indicadores Globales
             document.getElementById("pesoTotal").innerHTML = `${acumuladoPeso.toLocaleString()} <span>kg</span>`;
             document.getElementById("consumoHora").innerHTML = `${combinadoConsumo.toLocaleString()} <span>kg/h</span>`;
             document.getElementById("alarmasContador").innerText = totalAlertasFallas;
             document.getElementById("badgeAlarmas").innerText = totalAlertasFallas;
             document.getElementById("navBadgeCount").innerText = totalAlertasFallas;
+
+            // Gestión del mensaje flotante pedido
+            if(mostrarAlertaFlotante && currentActiveView !== "viewAlarmas") {
+                document.getElementById("floatingToast").style.display = "flex";
+            } else {
+                document.getElementById("floatingToast").style.display = "none";
+            }
         }
 
-        // --- CRONÓMETRO REPETITIVO DE CONSUMO REAL (SIMULACIÓN DINÁMICA) ---
+        // SIMULADOR DE FLUJO ACTIVO DE TELEMETRÍA
         setInterval(() => {
             let t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             SILOS.forEach(s => {
-                if (s.estado === "Desconectado") return;
-                if (s.id === 6) { // Conservar estático sin variación para forzar Alerta de Atasco solicitado
-                    s.variacion10min = 0; s.consumo = 0;
-                } else {
-                    let desc = Math.floor(Math.random() * 15) + 5;
-                    s.peso = Math.max(0, s.peso - desc);
-                    s.variacion10min = desc * 4;
-                }
+                if (s.estado === "Desconectado" || s.id === 6) return; // Mantener Silo 6 sin variación para probar lógica
+                let gastado = Math.floor(Math.random() * 20) + 5;
+                s.peso = Math.max(0, s.peso - gastado);
+                s.variacion10min = gastado * 4;
                 s.fecha = t;
             });
             runMasterRender();
-            if(globalChartDona) { globalChartDona.data.datasets[0].data = SILOS.map(s => s.peso); globalChartDona.update(); }
-        }, 3500);
+        }, 4000);
 
-        // Arranque Inicial
         runMasterRender();
 
-        // --- GENERACIÓN DE GRÁFICOS ---
+        // RENDER DE GRÁFICO IDÉNTICO AL ENVIADO (Fondo Oscuro, Gradiente Verde con Área Rellena)
+        const ctx = document.getElementById("chartConsumo").getContext("2array");
+        const gradient = document.getElementById("chartConsumo").getContext("2d").createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
+        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
         globalChartConsumo = new Chart(document.getElementById("chartConsumo"), {
             type: 'line',
             data: {
-                labels: ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"],
-                datasets: [{ data: [11500, 12900, 10400, 14200, 13100, 12000, 12500, 11800], borderColor: "#10b981", borderWidth: 2, fill: false, tension: 0.4, pointRadius: 0 }]
+                labels: ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00", "02:00", "04:00", "06:00"],
+                datasets: [{
+                    data: [8, 11, 13, 7, 9, 8, 14, 12, 14, 8, 11],
+                    borderColor: "#10b981",
+                    borderWidth: 2,
+                    fill: true,
+                    backgroundColor: gradient,
+                    tension: 0.38,
+                    pointBackgroundColor: "#10b981",
+                    pointRadius: 2
+                }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: "#141f2e" } } } }
-        });
-
-        globalChartDona = new Chart(document.getElementById("chartDona"), {
-            type: 'doughnut',
-            data: {
-                labels: SILOS.map(s => s.nombre),
-                datasets: [{ data: SILOS.map(s => s.peso), backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#475569"], borderWidth: 0 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#64748b', font: { size: 10 } } } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: "#475569" } },
+                    y: { 
+                        grid: { color: "rgba(20, 31, 46, 0.6)" }, 
+                        ticks: { 
+                            color: "#475569",
+                            callback: function(value) { return value + "k"; }
+                        },
+                        min: 0, max: 20
+                    }
+                }
+            }
         });
     </script>
 </body>
