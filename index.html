@@ -82,7 +82,7 @@
         .kpi-details h3 { font-size: 18px; font-weight: 700; }
 
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; }
+        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; position: relative; }
         
         /* DISEÑO INDUSTRIAL DEL SILO */
         .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 160px; }
@@ -97,6 +97,17 @@
         .silo-legs div { width: 3px; height: 100%; background: #475569; }
         .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.5s; }
         .silo-text-readout { text-align: right; }
+
+        /* SEMAFORO Y MENU SILO */
+        .traffic-light { display: flex; flex-direction: column; gap: 4px; margin-right: 6px; }
+        .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: #334155; opacity: 0.3; }
+        .tl-green.active { background: var(--color-green); box-shadow: 0 0 6px var(--color-green); opacity: 1; }
+        .tl-yellow.active { background: var(--color-yellow); box-shadow: 0 0 6px var(--color-yellow); opacity: 1; }
+        .tl-red.active { background: var(--color-red); box-shadow: 0 0 6px var(--color-red); opacity: 1; }
+        .silo-dropdown-menu { display: none; position: absolute; top: 35px; left: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; width: 230px; z-index: 50; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
+        .silo-dropdown-menu ul { list-style: none; padding: 0; margin: 0; }
+        .silo-dropdown-menu li { padding: 10px 14px; font-size: 12px; color: var(--text-title); cursor: pointer; border-bottom: 1px solid var(--border-color); }
+        .silo-dropdown-menu li:hover { background: rgba(255,255,255,0.05); }
 
         /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
         .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
@@ -113,7 +124,7 @@
         .drawer-close:hover { color: var(--color-red); }
 
         .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; }
-        .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; }
+        .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; outline:none; }
 
         .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
         .custom-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
@@ -121,6 +132,11 @@
         .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
         #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
+
+        /* MODAL DE DETALLE (SUPERPOSICIÓN DE GRÁFICOS DÍA/NOCHE) */
+        #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.8); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 800px; max-width: 90%; border-radius: 12px; padding: 24px; }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;}
 
         /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
         @media (max-width: 1200px) {
@@ -151,6 +167,23 @@
             <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin)">
             <input type="password" id="passInput" class="login-field" placeholder="Contraseña (aurum2026)">
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
+        </div>
+    </div>
+
+    <!-- GLOBAL MODAL PARA GRÁFICOS SUPERPUESTOS -->
+    <div id="globalModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Consumo Diferencial (Día/Noche)</h3>
+                <i class="ph ph-x drawer-close" onclick="document.getElementById('globalModal').style.display='none'" style="cursor:pointer;"></i>
+            </div>
+            <div id="modalContent">
+                <div style="height: 300px;"><canvas id="chartDiferencial"></canvas></div>
+                <div id="modalExtraInfo" style="margin-top: 16px; font-size: 13px; color: var(--text-sub);">
+                    <p>Cálculo automático de cargas: Se detectaron <strong style="color:var(--text-title)">3</strong> cargas esta semana.</p>
+                    <p>Total kilos ingresados: <strong style="color:var(--color-green)">4,500 kg</strong>.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -200,13 +233,27 @@
 
                 <div class="chart-layout-panel">
                     <div>
-                        <h4 style="font-size:14px; margin-bottom:16px; font-weight:700;" class="lng-charttitle">Consumo Total (Últimas 24 Horas)</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <h4 style="font-size:14px; font-weight:700;" class="lng-charttitle">Consumo Total (Últimas 24 Horas)</h4>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <select id="filtroSiloGrafico" class="config-select" style="margin-top:0; padding:6px 10px; width:auto; font-size:12px;" onchange="updateChartMain()">
+                                    <option value="todos">Todos los Silos</option>
+                                    <option value="1">Silo 1</option>
+                                    <option value="2">Silo 2</option>
+                                    <option value="3">Silo 3</option>
+                                </select>
+                                <label style="font-size:12px; display:flex; align-items:center; gap:4px; cursor:pointer;">
+                                    <input type="checkbox" id="checkCompararAyer" onchange="updateChartMain()"> <span style="color:var(--text-sub);">vs Ayer</span>
+                                </label>
+                            </div>
+                        </div>
                         <div style="height:165px;"><canvas id="chartConsumo"></canvas></div>
                     </div>
                     <div style="display:flex; flex-direction:column; justify-content:center; padding-left:24px; border-left:1px solid var(--border-color);">
                         <h2 style="font-size:32px; font-weight:800;">12.450 <span style="font-size:14px; color:var(--text-sub);">kg/h</span></h2>
                         <p style="font-size:13px;" class="lng-kpi3">Consumo Actual</p>
                         <span style="color:var(--color-green); font-size:12px; font-weight:600; margin-top:10px;">▲ 8.5% vs ayer</span>
+                        <p style="font-size:11px; color:var(--text-sub); margin-top:8px;">El sistema resta automáticamente los kilos para visualizar los consumos por hora en las 24 hrs.</p>
                     </div>
                 </div>
             </div>
@@ -214,7 +261,7 @@
             <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
             <!-- 1. HISTORIAL CON DESCARGA -->
             <div id="drawerHistorial" class="side-drawer">
-                <div class="drawer-header"><h3>🕒 Historial de Consumos</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
                     <label style="font-size:13px; font-weight:600;">Filtrar Período de Datos</label>
                     <select class="config-select" id="filtroHistorial">
@@ -222,23 +269,38 @@
                         <option value="mes">Último Mes</option>
                         <option value="ano">Año Completo</option>
                     </select>
-                    <button class="btn-action" onclick="descargarExcelConsumos()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel (.csv)</button>
+                    <button class="btn-action" onclick="descargarExcelEstructurado()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel Estructurado</button>
+                    <p style="font-size:11px; color:var(--text-sub); margin-top:8px;">Incluye Fecha, Folio, Silo, Kilos Iniciales, Kilos Cargados, Diferencias y Detalles de Lote.</p>
                 </div>
                 <table class="custom-table">
-                    <thead><tr><th>Fecha</th><th>Silo</th><th>Consumo Registrado</th></tr></thead>
+                    <thead><tr><th>Fecha/Hora</th><th>Silo</th><th>Kg Inicial</th><th>Kg Cargados</th><th>Diferencia</th></tr></thead>
                     <tbody>
-                        <tr><td>06-07-2026</td><td>Silo 1</td><td>850 kg/h</td></tr>
-                        <tr><td>06-07-2026</td><td>Silo 2</td><td>620 kg/h</td></tr>
-                        <tr><td>05-07-2026</td><td>Silo 5</td><td>980 kg/h</td></tr>
+                        <tr><td>06-07-2026 14:30</td><td>Silo 1</td><td>500</td><td>1500</td><td><span style="color:var(--color-green)">+1000</span></td></tr>
+                        <tr><td>06-07-2026 09:15</td><td>Silo 2</td><td>820</td><td>2000</td><td><span style="color:var(--color-green)">+1180</span></td></tr>
+                        <tr><td>05-07-2026 18:00</td><td>Silo 5</td><td>150</td><td>1500</td><td><span style="color:var(--color-green)">+1350</span></td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 2. CONSUMO DETALLADO -->
+            <!-- 2. CONSUMO DETALLADO (CONCENTRADO GLOBAL) -->
             <div id="drawerConsumo" class="side-drawer">
-                <div class="drawer-header"><h3>📊 Análisis de Consumo por Silo</h3><i class="ph ph-x drawer-close"></i></div>
-                <div style="height:250px; margin-bottom:20px;"><canvas id="chartAnalisisSilos"></canvas></div>
-                <p style="font-size:13px; color:var(--text-sub);">Monitoreo de flujo continuo por batch de descarga industrial.</p>
+                <div class="drawer-header"><h3>📊 Concentrado Global de Datos</h3><i class="ph ph-x drawer-close"></i></div>
+                
+                <div class="config-card-layout" style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px;">
+                    <span style="font-size:13px; font-weight:600;">Filtro de Datos Globales:</span>
+                    <select class="config-select" style="width:150px; margin-top:0;">
+                        <option>Consumo (kg/h)</option>
+                        <option>Cargas (kg)</option>
+                        <option>Diferencias</option>
+                    </select>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:10px;">Análisis de Consumo por Silo</h4>
+                <div style="height:200px; margin-bottom:30px;"><canvas id="chartAnalisisSilos"></canvas></div>
+                
+                <h4 style="font-size:14px; margin-bottom:10px;">Histórico Anual Automático (Meses)</h4>
+                <div style="height:220px; margin-bottom:20px;"><canvas id="chartTendenciaAnual"></canvas></div>
+                <p style="font-size:13px; color:var(--text-sub);">El sistema ingresa automáticamente los valores de los consumos (kilos) de todos los silos.</p>
             </div>
 
             <!-- 3. ALARMAS ACTIVAS -->
@@ -258,8 +320,16 @@
             <div id="drawerReportes" class="side-drawer">
                 <div class="drawer-header"><h3>📝 Generador de Reportes</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
-                    <p style="font-size:13px;">Generar bitácora consolidada de mantenimiento y lecturas RSSI de antenas.</p>
-                    <button class="btn-action" onclick="alert('Generando PDF...')"><i class="ph ph-file-pdf"></i> Imprimir PDF de Planta</button>
+                    <p style="font-size:13px;">Generar bitácora consolidada en Excel mostrando veces cargadas, hora, fecha (Día/Semana/Mes/Año) y cantidad de kilos por silo y global.</p>
+                    <button class="btn-action" onclick="alert('Generando y descargando Excel Global...')"><i class="ph ph-file-xls"></i> Descargar Excel Global</button>
+                </div>
+                <div class="config-card-layout" style="margin-top:16px;">
+                    <h4 style="font-size:14px; margin-bottom:12px; color:var(--text-title);">Insights y Comparativas</h4>
+                    <ul style="font-size:13px; color:var(--text-sub); list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;">
+                        <li><i class="ph-fill ph-trend-up" style="color:var(--color-yellow)"></i> Esta semana se consumió <b>1,250 kg más</b> que la semana pasada.</li>
+                        <li><i class="ph-fill ph-trend-down" style="color:var(--color-green)"></i> Este mes presenta una baja de consumo del <b>4%</b> respecto al mes anterior.</li>
+                        <li><i class="ph-fill ph-info" style="color:var(--color-purple)"></i> El Silo 1 fue cargado <b>3 veces</b> esta semana (Total: 4,500 kg ingresados).</li>
+                    </ul>
                 </div>
             </div>
 
@@ -291,6 +361,10 @@
     <div id="floatingToast"><i class="ph-fill ph-warning-octagon"></i> ALERTA ACTIVA EN SILO TRABADO / CRÍTICO</div>
 
     <script>
+        let chartConsumoInstance = null;
+        let chartAnalisisInstance = null;
+        let chartTendenciaInstance = null;
+
         let SILOS = [
             { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
             { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
@@ -316,7 +390,10 @@
             const box = document.getElementById("logoutBox");
             box.style.display = box.style.display === "block" ? "none" : "block";
         });
-        document.body.addEventListener("click", () => { document.getElementById("logoutBox").style.display = "none"; });
+        document.body.addEventListener("click", () => { 
+            document.getElementById("logoutBox").style.display = "none";
+            document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
+        });
         document.getElementById("btnExitAction").addEventListener("click", () => {
             localStorage.removeItem("aurum_logged");
             document.getElementById("loginScreen").style.display = "flex";
@@ -329,8 +406,11 @@
                 const targetDrawer = button.getAttribute("data-drawer");
                 document.getElementById(targetDrawer).classList.add("open");
                 
-                // Si abre consumos, refrescar gráfica interna del drawer
-                if(targetDrawer === "drawerConsumo") { setTimeout(initChartAnalisis, 100); }
+                // Si abre consumos, refrescar gráficas internas del drawer
+                if(targetDrawer === "drawerConsumo") { 
+                    setTimeout(initChartAnalisis, 100); 
+                    setTimeout(initChartTendencia, 100); 
+                }
             });
         });
 
@@ -347,16 +427,16 @@
             document.getElementById("drawerAlarmas").classList.add("open");
         });
 
-        // EXPORTACIÓN A EXCEL (CSV INDUSTRIAL)
-        function descargarExcelConsumos() {
-            let periodo = document.getElementById("filtroHistorial").value;
-            let csvContent = "data:text/csv;charset=utf-8,Fecha,Silo,Consumo Registrado(kg/h)\n";
-            csvContent += `06-07-2026,Silo 1,850\n06-07-2026,Silo 2,620\n05-07-2026,Silo 5,980\n`;
+        // EXPORTACIÓN A EXCEL (ESTRUCTURA SOLICITADA)
+        function descargarExcelEstructurado() {
+            let csvContent = "data:text/csv;charset=utf-8,Fecha,Folio,Silo,Casilleros,Kilos,Codigo,Descripcion,Lote,Destino,Medicacion,Despachador,Camion,Conductor,Semana,Peso_balanzas,Diferencia\n";
+            csvContent += `06-07-2026,1394,13,1,1500,80012,13064 PUBERTAD 1,2784,13.4.04,13064,Dario,7,Agustin,2,4430,-70\n`;
+            csvContent += `12-01-2026,1424,13,1,1500,80012,13064 PUBERTAD 1,2842,13.4.04,13064,Dario,7,Agustin,3,4470,+1000\n`;
             
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Consumos_Silos_${periodo}.csv`);
+            link.setAttribute("download", `Historial_Estructurado.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -388,6 +468,41 @@
             document.getElementById("lblAddUser").innerText = d.add;
         }
 
+        // CONTROL MENU SILOS
+        function toggleSiloMenu(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll(".silo-dropdown-menu").forEach(m => m.style.display = 'none');
+            document.getElementById("menu-silo-" + id).style.display = "block";
+        }
+
+        function openSiloDetail(id, action) {
+            let titulo = "";
+            if(action === 'historial') titulo = `Historial kilos - Silo ${id}`;
+            if(action === 'cargas') titulo = `Veces cargado en la semana - Silo ${id}`;
+            if(action === 'grafico') titulo = `Gráfico consumo semanal - Silo ${id}`;
+            if(action === 'diferencial') titulo = `Consumo Diferencial Día/Noche - Silo ${id}`;
+            
+            document.getElementById("modalTitle").innerText = titulo;
+            document.getElementById("globalModal").style.display = "flex";
+            
+            // Render grafico superpuesto dummy
+            setTimeout(() => {
+                const ctx = document.getElementById("chartDiferencial").getContext("2d");
+                if(window.chartDiferencialInstance) window.chartDiferencialInstance.destroy();
+                window.chartDiferencialInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+                        datasets: [
+                            { label: 'Consumo Día (kg)', data: [1200, 1500, 1100, 1800, 1600, 900, 800], borderColor: "#f59e0b", backgroundColor: "rgba(245, 158, 11, 0.2)", fill: true, tension: 0.3 },
+                            { label: 'Consumo Noche (kg)', data: [800, 900, 750, 950, 850, 400, 300], borderColor: "#8b5cf6", backgroundColor: "rgba(139, 92, 246, 0.2)", fill: true, tension: 0.3 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }, 100);
+        }
+
         // RENDER DE CUADROS DE SILOS Y DONA GRANDE
         function runRender() {
             const grid = document.getElementById("silosGrid");
@@ -404,9 +519,29 @@
 
                 grid.innerHTML += `
                     <div class="silo-card">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:700; font-size:14px;">${s.nombre}</span>
-                            <span style="font-size:11px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; position:relative;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div style="background:rgba(255,255,255,0.1); padding:4px; border-radius:4px; cursor:pointer;" onclick="toggleSiloMenu(event, ${s.id})"><i class="ph ph-list"></i></div>
+                                <span style="font-weight:700; font-size:14px;">${s.nombre}</span>
+                            </div>
+                            
+                            <div class="silo-dropdown-menu" id="menu-silo-${s.id}">
+                                <ul>
+                                    <li onclick="openSiloDetail(${s.id}, 'historial')">Historial kilos x silo</li>
+                                    <li onclick="openSiloDetail(${s.id}, 'cargas')">Veces cargado en la semana / Cálculo Kilos</li>
+                                    <li onclick="openSiloDetail(${s.id}, 'grafico')">Gráfico consumo semanal</li>
+                                    <li onclick="openSiloDetail(${s.id}, 'diferencial')">Consumo diferencial (Día/Noche)</li>
+                                </ul>
+                            </div>
+
+                            <div style="display:flex; align-items:center;">
+                                <div class="traffic-light">
+                                    <div class="tl-dot tl-green ${s.estado==='Normal'?'active':''}"></div>
+                                    <div class="tl-dot tl-yellow ${s.estado==='Baja'?'active':''}"></div>
+                                    <div class="tl-dot tl-red ${s.estado==='Critica' || s.estado==='Sin Flujo'?'active':''}"></div>
+                                </div>
+                                <span style="font-size:11px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
+                            </div>
                         </div>
                         <div class="silo-middle-row">
                             <div class="silo-axis-y"><span>100%</span><span>50%</span><span>0%</span></div>
@@ -417,27 +552,29 @@
                                     <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
                                 </div>
                             </div>
+                            <!-- SE INVIERTE TEXTO: KILOS GRANDES, PORCENTAJE ABAJO -->
                             <div class="silo-text-readout">
-                                <div style="font-size:26px; font-weight:800;">${s.estado==='Desconectado'?'--':pct+'%'}</div>
-                                <div style="font-size:12px; color:var(--text-sub);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
+                                <div style="font-size:24px; font-weight:800; color:var(--text-title);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
+                                <div style="font-size:14px; font-weight:600; color:var(--text-sub);">${s.estado==='Desconectado'?'--':pct+'%'}</div>
                             </div>
                         </div>
                     </div>`;
             });
 
-            // CASILLERO 8 - DONA MAXIMIZADA CON TEXTO ROBUSTO
+            // CASILLERO 8 - DONA MAXIMIZADA CON DISTRIBUCIÓN EN KILOGRAMOS Y SUMA DE RESTAS
             grid.innerHTML += `
                 <div class="silo-card">
-                    <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo</h4>
+                    <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo (Kg)</h4>
+                    <p style="font-size:10px; color:var(--text-sub); margin-bottom:4px;">Suma autonóma de restas por silo.</p>
                     <div class="distribution-box">
                         <div class="canvas-container"><canvas id="chartDonaDistribucion"></canvas></div>
                         <div class="dona-legend">
-                            <div><span style="color:#10b981">●</span> S1: 24.5%</div>
-                            <div><span style="color:#3b82f6">●</span> S2: 18.2%</div>
-                            <div><span style="color:#f59e0b">●</span> S3: 12.8%</div>
-                            <div><span style="color:#ef4444">●</span> S4: 4.2%</div>
-                            <div><span style="color:#ec4899">●</span> S5: 26.3%</div>
-                            <div><span style="color:#8b5cf6">●</span> S6: 13.1%</div>
+                            <div><span style="color:#10b981">●</span> S1: 2,450 kg</div>
+                            <div><span style="color:#3b82f6">●</span> S2: 1,820 kg</div>
+                            <div><span style="color:#f59e0b">●</span> S3: 1,280 kg</div>
+                            <div><span style="color:#ef4444">●</span> S4: 420 kg</div>
+                            <div><span style="color:#ec4899">●</span> S5: 2,630 kg</div>
+                            <div><span style="color:#8b5cf6">●</span> S6: 1,310 kg</div>
                         </div>
                     </div>
                 </div>`;
@@ -452,8 +589,8 @@
                 type: 'doughnut',
                 data: {
                     datasets: [{
-                        data: [24.5, 18.2, 12.8, 4.2, 26.3, 13.1, 0.9],
-                        backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#64748b"],
+                        data: [2450, 1820, 1280, 420, 2630, 1310],
+                        backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6"],
                         borderWidth: 0
                     }]
                 },
@@ -462,31 +599,65 @@
         }
 
         function initChartAnalisis() {
+            if(chartAnalisisInstance) chartAnalisisInstance.destroy();
             const ctx = document.getElementById("chartAnalisisSilos").getContext("2d");
-            new Chart(ctx, {
+            chartAnalisisInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ["S1", "S2", "S3", "S4", "S5", "S6"],
-                    datasets: [{ label: 'kg/h', data: [850, 620, 350, 120, 980, 0], backgroundColor: '#10b981' }]
+                    datasets: [{ label: 'Consumo Histórico (kg)', data: [8500, 6200, 3500, 1200, 9800, 0], backgroundColor: '#10b981' }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
+        function initChartTendencia() {
+            if(chartTendenciaInstance) chartTendenciaInstance.destroy();
+            const ctx = document.getElementById("chartTendenciaAnual").getContext("2d");
+            chartTendenciaInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    datasets: [{ label: 'Consumo Global Mensual (kg)', data: [45000, 42000, 48000, 51000, 49000, 46000, 12450, 0, 0, 0, 0, 0], backgroundColor: '#3b82f6' }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
+            });
+        }
+
         runRender();
 
-        // LINEAL INFERIOR GENERAL
-        const gradient = document.getElementById("chartConsumo").getContext("2d").createLinearGradient(0, 0, 0, 160);
-        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
-        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-        new Chart(document.getElementById("chartConsumo"), {
-            type: 'line',
-            data: {
-                labels: ["10:00", "14:00", "18:00", "22:00", "02:00", "06:00"],
-                datasets: [{ data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
+        // LINEAL INFERIOR GENERAL (CON COMPARATIVA HOY VS AYER)
+        function updateChartMain() {
+            const ctx = document.getElementById("chartConsumo").getContext("2d");
+            if(chartConsumoInstance) chartConsumoInstance.destroy();
+
+            const comparar = document.getElementById("checkCompararAyer").checked;
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, 160);
+            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+            let datasets = [
+                { label: 'Hoy', data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35 }
+            ];
+
+            if(comparar) {
+                datasets.push({ label: 'Ayer', data: [7, 10, 11, 12, 10, 9], borderColor: "#64748b", borderWidth: 2, borderDash: [5, 5], fill: false, tension: 0.35 });
+            }
+
+            chartConsumoInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["10:00", "14:00", "18:00", "22:00", "02:00", "06:00"],
+                    datasets: datasets
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+        
+        // Inicializar el grafico principal por primera vez
+        updateChartMain();
+
     </script>
 </body>
 </html>
