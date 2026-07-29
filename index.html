@@ -1,492 +1,492 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURUM.SYS Smart Silo Monitor - MANSEL Edition</title>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg-main: #06090e;
-            --bg-sidebar: #090d14;
-            --bg-card: #0b111a;
-            --border-color: #141f2e;
-            --color-green: #10b981;
-            --color-yellow: #f59e0b;
-            --color-red: #ef4444;
-            --color-purple: #8b5cf6;
-            --color-gray: #475569;
-            --text-title: #ffffff;
-            --text-sub: #64748b;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURUM.SYS Smart Silo Monitor - MANSEL Edition</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-main: #06090e;
+            --bg-sidebar: #090d14;
+            --bg-card: #0b111a;
+            --border-color: #141f2e;
+            --color-green: #10b981;
+            --color-yellow: #f59e0b;
+            --color-red: #ef4444;
+            --color-purple: #8b5cf6;
+            --color-gray: #475569;
+            --text-title: #ffffff;
+            --text-sub: #64748b;
+        }
 
-        body.theme-light {
-            --bg-main: #f1f5f9;
-            --bg-sidebar: #ffffff;
-            --bg-card: #ffffff;
-            --border-color: #cbd5e1;
-            --text-title: #0f172a;
-            --text-sub: #64748b;
-        }
+        body.theme-light {
+            --bg-main: #f1f5f9;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #cbd5e1;
+            --text-title: #0f172a;
+            --text-sub: #64748b;
+        }
 
-        body.theme-mansel {
-            --bg-main: #c6bfb3; 
-            --bg-sidebar: #1b521f; 
-            --bg-card: #ffffff;
-            --border-color: #a39c91;
-            --text-title: #1b521f;
-            --text-sub: #4a544c;
-            --color-green: #1b521f;
-        }
-        body.theme-mansel .menu-item.active { background: rgba(27, 82, 31, 0.15); color: #ffffff !important; }
-        body.theme-mansel .menu-item { color: #e2e8f0; }
-        body.theme-mansel .brand h2, body.theme-mansel .brand span { color: #ffffff; }
+        body.theme-mansel {
+            --bg-main: #c6bfb3; 
+            --bg-sidebar: #1b521f; 
+            --bg-card: #ffffff;
+            --border-color: #a39c91;
+            --text-title: #1b521f;
+            --text-sub: #4a544c;
+            --color-green: #1b521f;
+        }
+        body.theme-mansel .menu-item.active { background: rgba(27, 82, 31, 0.15); color: #ffffff !important; }
+        body.theme-mansel .menu-item { color: #e2e8f0; }
+        body.theme-mansel .brand h2, body.theme-mansel .brand span { color: #ffffff; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-title); display: flex; height: 100vh; overflow: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-title); display: flex; height: 100vh; overflow: hidden; }
 
-        #loginScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background: var(--bg-main); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .login-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; width: 100%; max-width: 380px; text-align: center; }
-        .login-field { width: 100%; padding: 12px; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-title); margin-top: 12px; font-size: 14px; outline: none; }
-        .btn-login { width: 100%; padding: 12px; background: var(--color-green); color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 18px; }
+        #loginScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background: var(--bg-main); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; width: 100%; max-width: 380px; text-align: center; }
+        .login-field { width: 100%; padding: 12px; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-title); margin-top: 12px; font-size: 14px; outline: none; }
+        .btn-login { width: 100%; padding: 12px; background: var(--color-green); color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 18px; }
 
-        .sidebar { width: 240px; height: 100vh; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-color); flex-shrink: 0; transition: all 0.3s ease; }
-        .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
-        .brand i { color: var(--color-green); font-size: 32px; }
-        .brand h2 { font-size: 16px; font-weight: 800; }
-        .brand span { display: block; font-size: 11px; color: var(--text-sub); }
-        
-        .menu-list { display: flex; flex-direction: column; gap: 4px; }
-        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.15s; }
-        .menu-item div { display: flex; align-items: center; gap: 12px; }
-        .menu-item i { font-size: 18px; }
-        .menu-item.active { background: rgba(16, 185, 129, 0.06); color: var(--color-green); font-weight: 600; }
-        .badge { background: var(--color-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 12px; }
+        .sidebar { width: 240px; height: 100vh; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--border-color); flex-shrink: 0; transition: all 0.3s ease; }
+        .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+        .brand i { color: var(--color-green); font-size: 32px; }
+        .brand h2 { font-size: 16px; font-weight: 800; }
+        .brand span { display: block; font-size: 11px; color: var(--text-sub); }
+        
+        .menu-list { display: flex; flex-direction: column; gap: 4px; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.15s; }
+        .menu-item div { display: flex; align-items: center; gap: 12px; }
+        .menu-item i { font-size: 18px; }
+        .menu-item.active { background: rgba(16, 185, 129, 0.06); color: var(--color-green); font-weight: 600; }
+        .badge { background: var(--color-red); color: white; font-size: 10px; padding: 2px 6px; border-radius: 12px; }
 
-        .wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); height: 100vh; overflow: hidden; position: relative; }
-        .top-navbar { height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 24px; background: var(--bg-sidebar); z-index: 10; }
-        .nav-bell { position: relative; font-size: 22px; color: var(--text-sub); cursor: pointer; }
-        .nav-bell span { position: absolute; top: -2px; right: -2px; background: var(--color-red); color: white; width: 14px; height: 14px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        
-        .user-widget { display: flex; align-items: center; gap: 10px; cursor: pointer; position: relative; padding: 4px 8px; border-radius: 6px; }
-        .logout-dropdown { display: none; position: absolute; top: 48px; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; width: 160px; z-index: 1000; }
-        .logout-dropdown button { width: 100%; padding: 10px 14px; background: transparent; border: none; text-align: left; font-size: 12px; cursor: pointer; color: var(--text-title); display: flex; align-items: center; gap: 8px; }
+        .wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); height: 100vh; overflow: hidden; position: relative; }
+        .top-navbar { height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 24px; background: var(--bg-sidebar); z-index: 10; }
+        .nav-bell { position: relative; font-size: 22px; color: var(--text-sub); cursor: pointer; }
+        .nav-bell span { position: absolute; top: -2px; right: -2px; background: var(--color-red); color: white; width: 14px; height: 14px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        
+        .user-widget { display: flex; align-items: center; gap: 10px; cursor: pointer; position: relative; padding: 4px 8px; border-radius: 6px; }
+        .logout-dropdown { display: none; position: absolute; top: 48px; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; width: 160px; z-index: 1000; }
+        .logout-dropdown button { width: 100%; padding: 10px 14px; background: transparent; border: none; text-align: left; font-size: 12px; cursor: pointer; color: var(--text-title); display: flex; align-items: center; gap: 8px; }
 
-        .layout-body { display: flex; flex: 1; overflow: hidden; position: relative; }
-        .main-content { flex: 1; padding: 24px; overflow-y: auto; transition: all 0.3s; }
-        
-        /* MULTIDISPOSITIVO: GRILLAS DINÁMICAS */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
-        .kpi-details h3 { font-size: 18px; font-weight: 700; }
+        .layout-body { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .main-content { flex: 1; padding: 24px; overflow-y: auto; transition: all 0.3s; }
+        
+        /* MULTIDISPOSITIVO: GRILLAS DINÁMICAS */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
+        .kpi-details h3 { font-size: 18px; font-weight: 700; }
 
-        .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; }
-        
-        /* DISEÑO INDUSTRIAL DEL SILO */
-        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 160px; }
-        .silo-axis-y { width: 25px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: var(--text-sub); }
-        .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
-        .silo-metal-frame { width: 75px; height: 150px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
-        .silo-ladder { position: absolute; top: 12px; left: 2px; width: 6px; height: 106px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 6px; z-index: 4; }
-        .silo-roof { width: 68px; height: 16px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 10px; left: 5px; z-index: 3; border: 1px solid #475569; }
-        .silo-cylinder { width: 68px; height: 95px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; position: absolute; top: 25px; left: 5px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
-        .silo-cone { width: 68px; height: 24px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 120px; left: 5px; z-index: 2; }
-        .silo-legs { width: 68px; height: 26px; position: absolute; top: 120px; left: 5px; z-index: 1; display: flex; justify-content: space-between; }
-        .silo-legs div { width: 3px; height: 100%; background: #475569; }
-        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.5s; }
-        .silo-text-readout { text-align: right; }
+        .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; }
+        
+        /* DISEÑO INDUSTRIAL DEL SILO */
+        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 160px; }
+        .silo-axis-y { width: 25px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: var(--text-sub); }
+        .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
+        .silo-metal-frame { width: 75px; height: 150px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
+        .silo-ladder { position: absolute; top: 12px; left: 2px; width: 6px; height: 106px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 6px; z-index: 4; }
+        .silo-roof { width: 68px; height: 16px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 10px; left: 5px; z-index: 3; border: 1px solid #475569; }
+        .silo-cylinder { width: 68px; height: 95px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; position: absolute; top: 25px; left: 5px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
+        .silo-cone { width: 68px; height: 24px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 120px; left: 5px; z-index: 2; }
+        .silo-legs { width: 68px; height: 26px; position: absolute; top: 120px; left: 5px; z-index: 1; display: flex; justify-content: space-between; }
+        .silo-legs div { width: 3px; height: 100%; background: #475569; }
+        .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.5s; }
+        .silo-text-readout { text-align: right; }
 
-        /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
-        .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
-        .canvas-container { width: 140px; height: 140px; }
-        .dona-legend { font-size: 13px; font-weight: 600; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 8px; color: var(--text-title); }
+        /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
+        .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
+        .canvas-container { width: 140px; height: 140px; }
+        .dona-legend { font-size: 13px; font-weight: 600; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 8px; color: var(--text-title); }
 
-        .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
-        
-        /* PANALES FLOTANTES DE MEDIA PANTALLA (SIDE DRAWERS) */
-        .side-drawer { position: absolute; top: 0; right: -50%; width: 50%; height: 100%; background: var(--bg-card); border-left: 2px solid var(--border-color); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99); z-index: 100; padding: 30px; overflow-y: auto; }
-        .side-drawer.open { right: 0; }
-        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; }
-        .drawer-close { font-size: 24px; cursor: pointer; color: var(--text-sub); }
-        .drawer-close:hover { color: var(--color-red); }
+        .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
+        
+        /* PANALES FLOTANTES DE MEDIA PANTALLA (SIDE DRAWERS) */
+        .side-drawer { position: absolute; top: 0; right: -50%; width: 50%; height: 100%; background: var(--bg-card); border-left: 2px solid var(--border-color); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99); z-index: 100; padding: 30px; overflow-y: auto; }
+        .side-drawer.open { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; }
+        .drawer-close { font-size: 24px; cursor: pointer; color: var(--text-sub); }
+        .drawer-close:hover { color: var(--color-red); }
 
-        .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; }
-        .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; }
+        .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+        .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; }
 
-        .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
-        .custom-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
-        .custom-table th, .custom-table td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-color); }
-        .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
+        .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
+        .custom-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+        .custom-table th, .custom-table td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-color); }
+        .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
-        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
+        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
 
-        /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
-        @media (max-width: 1200px) {
-            .silos-grid { grid-template-columns: repeat(2, 1fr); }
-            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-            .chart-layout-panel { grid-template-columns: 1fr; gap: 20px; }
-            .side-drawer { width: 70%; right: -70%; }
-        }
+        /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
+        @media (max-width: 1200px) {
+            .silos-grid { grid-template-columns: repeat(2, 1fr); }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .chart-layout-panel { grid-template-columns: 1fr; gap: 20px; }
+            .side-drawer { width: 70%; right: -70%; }
+        }
 
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); padding: 12px; }
-            .brand { margin-bottom: 12px; }
-            .menu-list { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
-            .silos-grid, .kpi-grid { grid-template-columns: 1fr; }
-            .side-drawer { width: 100%; right: -100%; }
-            .wrapper { height: calc(100vh - 140px); }
-        }
-    </style>
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); padding: 12px; }
+            .brand { margin-bottom: 12px; }
+            .menu-list { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+            .silos-grid, .kpi-grid { grid-template-columns: 1fr; }
+            .side-drawer { width: 100%; right: -100%; }
+            .wrapper { height: calc(100vh - 140px); }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- LOGIN -->
-    <div id="loginScreen">
-        <div class="login-card">
-            <i class="ph-fill ph-lock-keyhole"></i>
-            <h2>AURUM.SYS INTERFACE</h2>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin)">
-            <input type="password" id="passInput" class="login-field" placeholder="Contraseña (aurum2026)">
-            <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
-        </div>
-    </div>
+    <!-- LOGIN -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <i class="ph-fill ph-lock-keyhole"></i>
+            <h2>AURUM.SYS INTERFACE</h2>
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin)">
+            <input type="password" id="passInput" class="login-field" placeholder="Contraseña (aurum2026)">
+            <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
+        </div>
+    </div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div>
-            <div class="brand"><i class="ph-fill ph-nut"></i><div><h2>AURUM.SYS</h2><span>Smart Silo Monitor</span></div></div>
-            <div class="menu-list">
-                <div class="menu-item active" data-target="dashboard"><div><i class="ph-fill ph-squares-four"></i><span class="lng-dash">Dashboard</span></div></div>
-                <div class="menu-item" data-drawer="drawerHistorial"><div><i class="ph ph-clock-counter-clockwise"></i><span class="lng-hist">Historial</span></div></div>
-                <div class="menu-item" data-drawer="drawerConsumo"><div><i class="ph ph-chart-line"></i><span class="lng-cons">Consumo</span></div></div>
-                <div class="menu-item" data-drawer="drawerAlarmas"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
-                <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i><span class="lng-repo">Reportes</span></div></div>
-                <div class="menu-item" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
-            </div>
-        </div>
-    </div>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div>
+            <div class="brand"><i class="ph-fill ph-nut"></i><div><h2>AURUM.SYS</h2><span>Smart Silo Monitor</span></div></div>
+            <div class="menu-list">
+                <div class="menu-item active" data-target="dashboard"><div><i class="ph-fill ph-squares-four"></i><span class="lng-dash">Dashboard</span></div></div>
+                <div class="menu-item" data-drawer="drawerHistorial"><div><i class="ph ph-clock-counter-clockwise"></i><span class="lng-hist">Historial</span></div></div>
+                <div class="menu-item" data-drawer="drawerConsumo"><div><i class="ph ph-chart-line"></i><span class="lng-cons">Consumo</span></div></div>
+                <div class="menu-item" data-drawer="drawerAlarmas"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
+                <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i><span class="lng-repo">Reportes</span></div></div>
+                <div class="menu-item" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
+            </div>
+        </div>
+    </div>
 
-    <!-- MAIN INTERFACE -->
-    <div class="wrapper">
-        <div class="top-navbar">
-            <div class="nav-bell" id="btnCampana"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
-            <div class="user-widget" id="userMenuWidget">
-                <div style="text-align:right; font-size:12px;">
-                    <h4 style="color:var(--text-title);">Erick Gomez</h4>
-                    <span style="color:var(--text-sub); font-size:10px;">Administrador</span>
-                </div>
-                <div style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">EG</div>
-                <div class="logout-dropdown" id="logoutBox">
-                    <button onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
-                    <button id="btnExitAction" style="color:var(--color-red);"><i class="ph ph-sign-out"></i> Exit</button>
-                </div>
-            </div>
-        </div>
+    <!-- MAIN INTERFACE -->
+    <div class="wrapper">
+        <div class="top-navbar">
+            <div class="nav-bell" id="btnCampana"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
+            <div class="user-widget" id="userMenuWidget">
+                <div style="text-align:right; font-size:12px;">
+                    <h4 style="color:var(--text-title);">Erick Gomez</h4>
+                    <span style="color:var(--text-sub); font-size:10px;">Administrador</span>
+                </div>
+                <div style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">EG</div>
+                <div class="logout-dropdown" id="logoutBox">
+                    <button onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
+                    <button id="btnExitAction" style="color:var(--color-red);"><i class="ph ph-sign-out"></i> Exit</button>
+                </div>
+            </div>
+        </div>
 
-        <div class="layout-body">
-            <!-- DASHBOARD SIEMPRE VISIBLE DE FONDO -->
-            <div class="main-content">
-                <div class="kpi-grid">
-                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi1">Silos Activos</p><h3>7</h3></div></div>
-                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi2">Peso Total</p><h3 id="pesoTotal">36.880 kg</h3></div></div>
-                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi3">Consumo Actual</p><h3>2.920 kg/h</h3></div></div>
-                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi4">Alarmas Activas</p><h3 style="color:var(--color-red)">2</h3></div></div>
-                </div>
+        <div class="layout-body">
+            <!-- DASHBOARD SIEMPRE VISIBLE DE FONDO -->
+            <div class="main-content">
+                <div class="kpi-grid">
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi1">Silos Activos</p><h3>7</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi2">Peso Total</p><h3 id="pesoTotal">36.880 kg</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi3">Consumo Actual</p><h3>2.920 kg/h</h3></div></div>
+                    <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi4">Alarmas Activas</p><h3 style="color:var(--color-red)">2</h3></div></div>
+                </div>
 
-                <div class="silos-grid" id="silosGrid"></div>
+                <div class="silos-grid" id="silosGrid"></div>
 
-                <div class="chart-layout-panel">
-                    <div>
-                        <h4 style="font-size:14px; margin-bottom:16px; font-weight:700;" class="lng-charttitle">Consumo Total (Últimas 24 Horas)</h4>
-                        <div style="height:165px;"><canvas id="chartConsumo"></canvas></div>
-                    </div>
-                    <div style="display:flex; flex-direction:column; justify-content:center; padding-left:24px; border-left:1px solid var(--border-color);">
-                        <h2 style="font-size:32px; font-weight:800;">12.450 <span style="font-size:14px; color:var(--text-sub);">kg/h</span></h2>
-                        <p style="font-size:13px;" class="lng-kpi3">Consumo Actual</p>
-                        <span style="color:var(--color-green); font-size:12px; font-weight:600; margin-top:10px;">▲ 8.5% vs ayer</span>
-                    </div>
-                </div>
-            </div>
+                <div class="chart-layout-panel">
+                    <div>
+                        <h4 style="font-size:14px; margin-bottom:16px; font-weight:700;" class="lng-charttitle">Consumo Total (Últimas 24 Horas)</h4>
+                        <div style="height:165px;"><canvas id="chartConsumo"></canvas></div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; justify-content:center; padding-left:24px; border-left:1px solid var(--border-color);">
+                        <h2 style="font-size:32px; font-weight:800;">12.450 <span style="font-size:14px; color:var(--text-sub);">kg/h</span></h2>
+                        <p style="font-size:13px;" class="lng-kpi3">Consumo Actual</p>
+                        <span style="color:var(--color-green); font-size:12px; font-weight:600; margin-top:10px;">▲ 8.5% vs ayer</span>
+                    </div>
+                </div>
+            </div>
 
-            <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
-            <!-- 1. HISTORIAL CON DESCARGA -->
-            <div id="drawerHistorial" class="side-drawer">
-                <div class="drawer-header"><h3>🕒 Historial de Consumos</h3><i class="ph ph-x drawer-close"></i></div>
-                <div class="config-card-layout">
-                    <label style="font-size:13px; font-weight:600;">Filtrar Período de Datos</label>
-                    <select class="config-select" id="filtroHistorial">
-                        <option value="semana">Última Semana</option>
-                        <option value="mes">Último Mes</option>
-                        <option value="ano">Año Completo</option>
-                    </select>
-                    <button class="btn-action" onclick="descargarExcelConsumos()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel (.csv)</button>
-                </div>
-                <table class="custom-table">
-                    <thead><tr><th>Fecha</th><th>Silo</th><th>Consumo Registrado</th></tr></thead>
-                    <tbody>
-                        <tr><td>06-07-2026</td><td>Silo 1</td><td>850 kg/h</td></tr>
-                        <tr><td>06-07-2026</td><td>Silo 2</td><td>620 kg/h</td></tr>
-                        <tr><td>05-07-2026</td><td>Silo 5</td><td>980 kg/h</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
+            <!-- 1. HISTORIAL CON DESCARGA -->
+            <div id="drawerHistorial" class="side-drawer">
+                <div class="drawer-header"><h3>🕒 Historial de Consumos</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="config-card-layout">
+                    <label style="font-size:13px; font-weight:600;">Filtrar Período de Datos</label>
+                    <select class="config-select" id="filtroHistorial">
+                        <option value="semana">Última Semana</option>
+                        <option value="mes">Último Mes</option>
+                        <option value="ano">Año Completo</option>
+                    </select>
+                    <button class="btn-action" onclick="descargarExcelConsumos()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel (.csv)</button>
+                </div>
+                <table class="custom-table">
+                    <thead><tr><th>Fecha</th><th>Silo</th><th>Consumo Registrado</th></tr></thead>
+                    <tbody>
+                        <tr><td>06-07-2026</td><td>Silo 1</td><td>850 kg/h</td></tr>
+                        <tr><td>06-07-2026</td><td>Silo 2</td><td>620 kg/h</td></tr>
+                        <tr><td>05-07-2026</td><td>Silo 5</td><td>980 kg/h</td></tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <!-- 2. CONSUMO DETALLADO -->
-            <div id="drawerConsumo" class="side-drawer">
-                <div class="drawer-header"><h3>📊 Análisis de Consumo por Silo</h3><i class="ph ph-x drawer-close"></i></div>
-                <div style="height:250px; margin-bottom:20px;"><canvas id="chartAnalisisSilos"></canvas></div>
-                <p style="font-size:13px; color:var(--text-sub);">Monitoreo de flujo continuo por batch de descarga industrial.</p>
-            </div>
+            <!-- 2. CONSUMO DETALLADO -->
+            <div id="drawerConsumo" class="side-drawer">
+                <div class="drawer-header"><h3>📊 Análisis de Consumo por Silo</h3><i class="ph ph-x drawer-close"></i></div>
+                <div style="height:250px; margin-bottom:20px;"><canvas id="chartAnalisisSilos"></canvas></div>
+                <p style="font-size:13px; color:var(--text-sub);">Monitoreo de flujo continuo por batch de descarga industrial.</p>
+            </div>
 
-            <!-- 3. ALARMAS ACTIVAS -->
-            <div id="drawerAlarmas" class="side-drawer">
-                <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close"></i></div>
-                <div style="background:rgba(239,68,68,0.1); border:1px solid var(--color-red); padding:14px; border-radius:8px; margin-bottom:12px;">
-                    <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
-                    <p style="font-size:12px; margin-top:4px;">Nivel de llenado inferior al 5% de la capacidad nominal.</p>
-                </div>
-                <div style="background:rgba(139,92,246,0.1); border:1px solid var(--color-purple); padding:14px; border-radius:8px;">
-                    <h5 style="color:var(--color-purple); font-size:14px;">⚡ ALERTA: Silo 6 Sin Flujo</h5>
-                    <p style="font-size:12px; margin-top:4px;">Se detectó detención abrupta en tubería de salida.</p>
-                </div>
-            </div>
+            <!-- 3. ALARMAS ACTIVAS -->
+            <div id="drawerAlarmas" class="side-drawer">
+                <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close"></i></div>
+                <div style="background:rgba(239,68,68,0.1); border:1px solid var(--color-red); padding:14px; border-radius:8px; margin-bottom:12px;">
+                    <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
+                    <p style="font-size:12px; margin-top:4px;">Nivel de llenado inferior al 5% de la capacidad nominal.</p>
+                </div>
+                <div style="background:rgba(139,92,246,0.1); border:1px solid var(--color-purple); padding:14px; border-radius:8px;">
+                    <h5 style="color:var(--color-purple); font-size:14px;">⚡ ALERTA: Silo 6 Sin Flujo</h5>
+                    <p style="font-size:12px; margin-top:4px;">Se detectó detención abrupta en tubería de salida.</p>
+                </div>
+            </div>
 
-            <!-- 4. REPORTES -->
-            <div id="drawerReportes" class="side-drawer">
-                <div class="drawer-header"><h3>📝 Generador de Reportes</h3><i class="ph ph-x drawer-close"></i></div>
-                <div class="config-card-layout">
-                    <p style="font-size:13px;">Generar bitácora consolidada de mantenimiento y lecturas RSSI de antenas.</p>
-                    <button class="btn-action" onclick="alert('Generando PDF...')"><i class="ph ph-file-pdf"></i> Imprimir PDF de Planta</button>
-                </div>
-            </div>
+            <!-- 4. REPORTES -->
+            <div id="drawerReportes" class="side-drawer">
+                <div class="drawer-header"><h3>📝 Generador de Reportes</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="config-card-layout">
+                    <p style="font-size:13px;">Generar bitácora consolidada de mantenimiento y lecturas RSSI de antenas.</p>
+                    <button class="btn-action" onclick="alert('Generando PDF...')"><i class="ph ph-file-pdf"></i> Imprimir PDF de Planta</button>
+                </div>
+            </div>
 
-            <!-- 5. CONFIGURACIÓN -->
-            <div id="drawerConfig" class="side-drawer">
-                <div class="drawer-header"><h3>⚙️ Ajustes del Sistema</h3><i class="ph ph-x drawer-close"></i></div>
-                <div class="config-card-layout">
-                    <label style="font-weight:600; font-size:13px;">Idioma de Interfaz</label>
-                    <select class="config-select" id="comboIdioma" onchange="cambiarIdioma()">
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                        <option value="zh">中文 (Chino)</option>
-                        <option value="de">Deutsch (Alemán)</option>
-                    </select>
-                </div>
-                <div class="config-card-layout">
-                    <label style="font-weight:600; font-size:13px;">Tema Visual</label>
-                    <select class="config-select" id="comboTema" onchange="cambiarTema()">
-                        <option value="dark">Modo Oscuro Default</option>
-                        <option value="light">Modo Claro Limpio</option>
-                        <option value="mansel">Modo Corporativo MANSEL</option>
-                    </select>
-                </div>
-            </div>
+            <!-- 5. CONFIGURACIÓN -->
+            <div id="drawerConfig" class="side-drawer">
+                <div class="drawer-header"><h3>⚙️ Ajustes del Sistema</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="config-card-layout">
+                    <label style="font-weight:600; font-size:13px;">Idioma de Interfaz</label>
+                    <select class="config-select" id="comboIdioma" onchange="cambiarIdioma()">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="zh">中文 (Chino)</option>
+                        <option value="de">Deutsch (Alemán)</option>
+                    </select>
+                </div>
+                <div class="config-card-layout">
+                    <label style="font-weight:600; font-size:13px;">Tema Visual</label>
+                    <select class="config-select" id="comboTema" onchange="cambiarTema()">
+                        <option value="dark">Modo Oscuro Default</option>
+                        <option value="light">Modo Claro Limpio</option>
+                        <option value="mansel">Modo Corporativo MANSEL</option>
+                    </select>
+                </div>
+            </div>
 
-        </div>
-    </div>
+        </div>
+    </div>
 
-    <div id="floatingToast"><i class="ph-fill ph-warning-octagon"></i> ALERTA ACTIVA EN SILO TRABADO / CRÍTICO</div>
+    <div id="floatingToast"><i class="ph-fill ph-warning-octagon"></i> ALERTA ACTIVA EN SILO TRABADO / CRÍTICO</div>
 
-    <script>
-        let SILOS = [
-            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
-            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
-            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 2279, consumo: 350, rssi: -72, estado: "Baja" },
-            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 0, consumo: 120, rssi: -75, estado: "Critica" },
-            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 10871, consumo: 980, rssi: -60, estado: "Normal" },
-            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo" },
-            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado" }
-        ];
+    <script>
+        let SILOS = [
+            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
+            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
+            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 2279, consumo: 350, rssi: -72, estado: "Baja" },
+            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 0, consumo: 120, rssi: -75, estado: "Critica" },
+            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 10871, consumo: 980, rssi: -60, estado: "Normal" },
+            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo" },
+            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado" }
+        ];
 
-        // GESTIÓN LOGIN
-        if(localStorage.getItem("aurum_logged") === "true") { document.getElementById("loginScreen").style.display = "none"; }
-        document.getElementById("btnLoginAction").addEventListener("click", () => {
-            if(document.getElementById("userInput").value === "admin" && document.getElementById("passInput").value === "aurum2026") {
-                localStorage.setItem("aurum_logged", "true");
-                document.getElementById("loginScreen").style.display = "none";
-            }
-        });
+        // GESTIÓN LOGIN
+        if(localStorage.getItem("aurum_logged") === "true") { document.getElementById("loginScreen").style.display = "none"; }
+        document.getElementById("btnLoginAction").addEventListener("click", () => {
+            if(document.getElementById("userInput").value === "admin" && document.getElementById("passInput").value === "aurum2026") {
+                localStorage.setItem("aurum_logged", "true");
+                document.getElementById("loginScreen").style.display = "none";
+            }
+        });
 
-        // DESPLEGABLE USER
-        document.getElementById("userMenuWidget").addEventListener("click", (e) => {
-            e.stopPropagation();
-            const box = document.getElementById("logoutBox");
-            box.style.display = box.style.display === "block" ? "none" : "block";
-        });
-        document.body.addEventListener("click", () => { document.getElementById("logoutBox").style.display = "none"; });
-        document.getElementById("btnExitAction").addEventListener("click", () => {
-            localStorage.removeItem("aurum_logged");
-            document.getElementById("loginScreen").style.display = "flex";
-        });
+        // DESPLEGABLE USER
+        document.getElementById("userMenuWidget").addEventListener("click", (e) => {
+            e.stopPropagation();
+            const box = document.getElementById("logoutBox");
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        });
+        document.body.addEventListener("click", () => { document.getElementById("logoutBox").style.display = "none"; });
+        document.getElementById("btnExitAction").addEventListener("click", () => {
+            localStorage.removeItem("aurum_logged");
+            document.getElementById("loginScreen").style.display = "flex";
+        });
 
-        // CONTROLADORES DE PANEL FLOTANTE DE MEDIA PANTALLA
-        document.querySelectorAll("[data-drawer]").forEach(button => {
-            button.addEventListener("click", () => {
-                document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
-                const targetDrawer = button.getAttribute("data-drawer");
-                document.getElementById(targetDrawer).classList.add("open");
-                
-                // Si abre consumos, refrescar gráfica interna del drawer
-                if(targetDrawer === "drawerConsumo") { setTimeout(initChartAnalisis, 100); }
-            });
-        });
+        // CONTROLADORES DE PANEL FLOTANTE DE MEDIA PANTALLA
+        document.querySelectorAll("[data-drawer]").forEach(button => {
+            button.addEventListener("click", () => {
+                document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
+                const targetDrawer = button.getAttribute("data-drawer");
+                document.getElementById(targetDrawer).classList.add("open");
+                
+                // Si abre consumos, refrescar gráfica interna del drawer
+                if(targetDrawer === "drawerConsumo") { setTimeout(initChartAnalisis, 100); }
+            });
+        });
 
-        document.querySelectorAll(".drawer-close").forEach(closeBtn => {
-            closeBtn.addEventListener("click", () => {
-                closeBtn.closest(".side-drawer").classList.remove("open");
-            });
-        });
+        document.querySelectorAll(".drawer-close").forEach(closeBtn => {
+            closeBtn.addEventListener("click", () => {
+                closeBtn.closest(".side-drawer").classList.remove("open");
+            });
+        });
 
-        // MANEJO NOTIFICACIÓN CAMPANA
-        document.getElementById("btnCampana").addEventListener("click", () => {
-            document.getElementById("navBadgeCount").style.display = "none"; 
-            document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
-            document.getElementById("drawerAlarmas").classList.add("open");
-        });
+        // MANEJO NOTIFICACIÓN CAMPANA
+        document.getElementById("btnCampana").addEventListener("click", () => {
+            document.getElementById("navBadgeCount").style.display = "none"; 
+            document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
+            document.getElementById("drawerAlarmas").classList.add("open");
+        });
 
-        // EXPORTACIÓN A EXCEL (CSV INDUSTRIAL)
-        function descargarExcelConsumos() {
-            let periodo = document.getElementById("filtroHistorial").value;
-            let csvContent = "data:text/csv;charset=utf-8,Fecha,Silo,Consumo Registrado(kg/h)\n";
-            csvContent += `06-07-2026,Silo 1,850\n06-07-2026,Silo 2,620\n05-07-2026,Silo 5,980\n`;
-            
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Consumos_Silos_${periodo}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        // EXPORTACIÓN A EXCEL (CSV INDUSTRIAL)
+        function descargarExcelConsumos() {
+            let periodo = document.getElementById("filtroHistorial").value;
+            let csvContent = "data:text/csv;charset=utf-8,Fecha,Silo,Consumo Registrado(kg/h)\n";
+            csvContent += `06-07-2026,Silo 1,850\n06-07-2026,Silo 2,620\n05-07-2026,Silo 5,980\n`;
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Consumos_Silos_${periodo}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
-        // CONTROL DE TEMAS E IDIOMAS
-        function cambiarTema() {
-            const t = document.getElementById("comboTema").value;
-            document.body.className = "";
-            if(t !== "dark") document.body.classList.add("theme-" + t);
-        }
+        // CONTROL DE TEMAS E IDIOMAS
+        function cambiarTema() {
+            const t = document.getElementById("comboTema").value;
+            document.body.className = "";
+            if(t !== "dark") document.body.classList.add("theme-" + t);
+        }
 
-        const langData = {
-            es: { dash: "Dashboard", hist: "Historial", cons: "Consumo", alrm: "Alarmas", repo: "Reportes", conf: "Configuración", add: "Nuevo Usuario" },
-            en: { dash: "Dashboard", hist: "History", cons: "Consumption", alrm: "Alarms", repo: "Reports", conf: "Settings", add: "Add User" },
-            zh: { dash: "仪表板", hist: "历史记录", cons: "消耗量", alrm: "报警控制", repo: "报表", conf: "系统设置", add: "添加用户" },
-            de: { dash: "Dashboard", hist: "Verlauf", cons: "Verbrauch", alrm: "Alarme", repo: "Berichte", conf: "Setup", add: "Benutzer hinzufügen" }
-        };
+        const langData = {
+            es: { dash: "Dashboard", hist: "Historial", cons: "Consumo", alrm: "Alarmas", repo: "Reportes", conf: "Configuración", add: "Nuevo Usuario" },
+            en: { dash: "Dashboard", hist: "History", cons: "Consumption", alrm: "Alarms", repo: "Reports", conf: "Settings", add: "Add User" },
+            zh: { dash: "仪表板", hist: "历史记录", cons: "消耗量", alrm: "报警控制", repo: "报表", conf: "系统设置", add: "添加用户" },
+            de: { dash: "Dashboard", hist: "Verlauf", cons: "Verbrauch", alrm: "Alarme", repo: "Berichte", conf: "Setup", add: "Benutzer hinzufügen" }
+        };
 
-        function cambiarIdioma() {
-            const l = document.getElementById("comboIdioma").value;
-            const d = langData[l];
-            document.querySelectorAll(".lng-dash").forEach(e => e.innerText = d.dash);
-            document.querySelectorAll(".lng-hist").forEach(e => e.innerText = d.hist);
-            document.querySelectorAll(".lng-cons").forEach(e => e.innerText = d.cons);
-            document.querySelectorAll(".lng-alrm").forEach(e => e.innerText = d.alrm);
-            document.querySelectorAll(".lng-repo").forEach(e => e.innerText = d.repo);
-            document.querySelectorAll(".lng-conf").forEach(e => e.innerText = d.conf);
-            document.getElementById("lblAddUser").innerText = d.add;
-        }
+        function cambiarIdioma() {
+            const l = document.getElementById("comboIdioma").value;
+            const d = langData[l];
+            document.querySelectorAll(".lng-dash").forEach(e => e.innerText = d.dash);
+            document.querySelectorAll(".lng-hist").forEach(e => e.innerText = d.hist);
+            document.querySelectorAll(".lng-cons").forEach(e => e.innerText = d.cons);
+            document.querySelectorAll(".lng-alrm").forEach(e => e.innerText = d.alrm);
+            document.querySelectorAll(".lng-repo").forEach(e => e.innerText = d.repo);
+            document.querySelectorAll(".lng-conf").forEach(e => e.innerText = d.conf);
+            document.getElementById("lblAddUser").innerText = d.add;
+        }
 
-        // RENDER DE CUADROS DE SILOS Y DONA GRANDE
-        function runRender() {
-            const grid = document.getElementById("silosGrid");
-            grid.innerHTML = "";
+        // RENDER DE CUADROS DE SILOS Y DONA GRANDE
+        function runRender() {
+            const grid = document.getElementById("silosGrid");
+            grid.innerHTML = "";
 
-            SILOS.forEach(s => {
-                let pct = Math.round(s.peso / s.capacidad * 100);
-                let stClass = "var(--text-sub)";
-                let fStyle = "transparent";
-                if(s.estado === "Normal") fStyle = "linear-gradient(to top, #065f46, #10b981)";
-                if(s.estado === "Baja") fStyle = "linear-gradient(to top, #9a3412, #f59e0b)";
-                if(s.estado === "Critica") fStyle = "linear-gradient(to top, #991b1b, #ef4444)";
-                if(s.estado === "Sin Flujo") fStyle = "linear-gradient(to top, #5b21b6, #8b5cf6)";
+            SILOS.forEach(s => {
+                let pct = Math.round(s.peso / s.capacidad * 100);
+                let stClass = "var(--text-sub)";
+                let fStyle = "transparent";
+                if(s.estado === "Normal") fStyle = "linear-gradient(to top, #065f46, #10b981)";
+                if(s.estado === "Baja") fStyle = "linear-gradient(to top, #9a3412, #f59e0b)";
+                if(s.estado === "Critica") fStyle = "linear-gradient(to top, #991b1b, #ef4444)";
+                if(s.estado === "Sin Flujo") fStyle = "linear-gradient(to top, #5b21b6, #8b5cf6)";
 
-                grid.innerHTML += `
-                    <div class="silo-card">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:700; font-size:14px;">${s.nombre}</span>
-                            <span style="font-size:11px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
-                        </div>
-                        <div class="silo-middle-row">
-                            <div class="silo-axis-y"><span>100%</span><span>50%</span><span>0%</span></div>
-                            <div class="silo-graphic-box">
-                                <div class="silo-metal-frame">
-                                    <div class="silo-ladder"></div><div class="silo-roof"></div>
-                                    <div class="silo-cylinder"><div class="silo-internal-fluid" style="height:${s.estado==='Desconectado'?0:pct}%; background:${fStyle};"></div></div>
-                                    <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
-                                </div>
-                            </div>
-                            <div class="silo-text-readout">
-                                <div style="font-size:26px; font-weight:800;">${s.estado==='Desconectado'?'--':pct+'%'}</div>
-                                <div style="font-size:12px; color:var(--text-sub);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
-                            </div>
-                        </div>
-                    </div>`;
-            });
+                grid.innerHTML += `
+                    <div class="silo-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:700; font-size:14px;">${s.nombre}</span>
+                            <span style="font-size:11px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
+                        </div>
+                        <div class="silo-middle-row">
+                            <div class="silo-axis-y"><span>100%</span><span>50%</span><span>0%</span></div>
+                            <div class="silo-graphic-box">
+                                <div class="silo-metal-frame">
+                                    <div class="silo-ladder"></div><div class="silo-roof"></div>
+                                    <div class="silo-cylinder"><div class="silo-internal-fluid" style="height:${s.estado==='Desconectado'?0:pct}%; background:${fStyle};"></div></div>
+                                    <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
+                                </div>
+                            </div>
+                            <div class="silo-text-readout">
+                                <div style="font-size:26px; font-weight:800;">${s.estado==='Desconectado'?'--':pct+'%'}</div>
+                                <div style="font-size:12px; color:var(--text-sub);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
 
-            // CASILLERO 8 - DONA MAXIMIZADA CON TEXTO ROBUSTO
-            grid.innerHTML += `
-                <div class="silo-card">
-                    <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo</h4>
-                    <div class="distribution-box">
-                        <div class="canvas-container"><canvas id="chartDonaDistribucion"></canvas></div>
-                        <div class="dona-legend">
-                            <div><span style="color:#10b981">●</span> S1: 24.5%</div>
-                            <div><span style="color:#3b82f6">●</span> S2: 18.2%</div>
-                            <div><span style="color:#f59e0b">●</span> S3: 12.8%</div>
-                            <div><span style="color:#ef4444">●</span> S4: 4.2%</div>
-                            <div><span style="color:#ec4899">●</span> S5: 26.3%</div>
-                            <div><span style="color:#8b5cf6">●</span> S6: 13.1%</div>
-                        </div>
-                    </div>
-                </div>`;
+            // CASILLERO 8 - DONA MAXIMIZADA CON TEXTO ROBUSTO
+            grid.innerHTML += `
+                <div class="silo-card">
+                    <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo</h4>
+                    <div class="distribution-box">
+                        <div class="canvas-container"><canvas id="chartDonaDistribucion"></canvas></div>
+                        <div class="dona-legend">
+                            <div><span style="color:#10b981">●</span> S1: 24.5%</div>
+                            <div><span style="color:#3b82f6">●</span> S2: 18.2%</div>
+                            <div><span style="color:#f59e0b">●</span> S3: 12.8%</div>
+                            <div><span style="color:#ef4444">●</span> S4: 4.2%</div>
+                            <div><span style="color:#ec4899">●</span> S5: 26.3%</div>
+                            <div><span style="color:#8b5cf6">●</span> S6: 13.1%</div>
+                        </div>
+                    </div>
+                </div>`;
 
-            setTimeout(renderDona, 50);
-        }
+            setTimeout(renderDona, 50);
+        }
 
-        function renderDona() {
-            const c = document.getElementById("chartDonaDistribucion");
-            if(!c) return;
-            new Chart(c, {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [24.5, 18.2, 12.8, 4.2, 26.3, 13.1, 0.9],
-                        backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#64748b"],
-                        borderWidth: 0
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-        }
+        function renderDona() {
+            const c = document.getElementById("chartDonaDistribucion");
+            if(!c) return;
+            new Chart(c, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [24.5, 18.2, 12.8, 4.2, 26.3, 13.1, 0.9],
+                        backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#64748b"],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
 
-        function initChartAnalisis() {
-            const ctx = document.getElementById("chartAnalisisSilos").getContext("2d");
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ["S1", "S2", "S3", "S4", "S5", "S6"],
-                    datasets: [{ label: 'kg/h', data: [850, 620, 350, 120, 980, 0], backgroundColor: '#10b981' }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+        function initChartAnalisis() {
+            const ctx = document.getElementById("chartAnalisisSilos").getContext("2d");
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["S1", "S2", "S3", "S4", "S5", "S6"],
+                    datasets: [{ label: 'kg/h', data: [850, 620, 350, 120, 980, 0], backgroundColor: '#10b981' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
 
-        runRender();
+        runRender();
 
-        // LINEAL INFERIOR GENERAL
-        const gradient = document.getElementById("chartConsumo").getContext("2d").createLinearGradient(0, 0, 0, 160);
-        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
-        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-        new Chart(document.getElementById("chartConsumo"), {
-            type: 'line',
-            data: {
-                labels: ["10:00", "14:00", "18:00", "22:00", "02:00", "06:00"],
-                datasets: [{ data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-    </script>
+        // LINEAL INFERIOR GENERAL
+        const gradient = document.getElementById("chartConsumo").getContext("2d").createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+        new Chart(document.getElementById("chartConsumo"), {
+            type: 'line',
+            data: {
+                labels: ["10:00", "14:00", "18:00", "22:00", "02:00", "06:00"],
+                datasets: [{ data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    </script>
 </body>
 </html>
