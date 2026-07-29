@@ -21,12 +21,6 @@
             --text-sub: #64748b;
         }
 
-        body.theme-light { --bg-main: #f1f5f9; --bg-sidebar: #ffffff; --bg-card: #ffffff; --border-color: #cbd5e1; --text-title: #0f172a; --text-sub: #64748b; }
-        body.theme-mansel { --bg-main: #c6bfb3; --bg-sidebar: #1b521f; --bg-card: #ffffff; --border-color: #a39c91; --text-title: #1b521f; --text-sub: #4a544c; --color-green: #1b521f; }
-        body.theme-mansel .menu-item.active { background: rgba(27, 82, 31, 0.15); color: #ffffff !important; }
-        body.theme-mansel .menu-item { color: #e2e8f0; }
-        body.theme-mansel .brand h2, body.theme-mansel .brand span { color: #ffffff; }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-title); display: flex; height: 100vh; overflow: hidden; }
 
@@ -47,7 +41,7 @@
         .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
 
-        /* TARJETA DE SILO Y SUBMENÚ (NUEVO DISEÑO) */
+        /* TARJETA DE SILO Y SUBMENÚ (NUEVO DISEÑO 3D) */
         .silo-card-container { position: relative; perspective: 1000px; min-height: 250px; }
         .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; height: 100%; display: flex; flex-direction: column; transition: transform 0.4s; backface-visibility: hidden; position: absolute; width: 100%; top: 0; left: 0; }
         .silo-submenu { background: #0f172a; border: 1px solid var(--color-green); border-radius: 8px; padding: 16px; height: 100%; display: flex; flex-direction: column; transform: rotateY(180deg); backface-visibility: hidden; position: absolute; width: 100%; top: 0; left: 0; transition: transform 0.4s; }
@@ -64,7 +58,7 @@
         .silo-cone { width: 68px; height: 20px; background: linear-gradient(90deg, #1a2232, #0b0f19, #1a2232); border: 1.5px solid #334155; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 110px; }
         .silo-fluid { width: 100%; transition: height 0.5s; background: linear-gradient(to top, #065f46, #10b981); }
 
-        /* SEMÁFORO Y TEXTO INVERTIDO */
+        /* SEMÁFORO Y JERARQUÍA INVERTIDA (KILOS GRANDES) */
         .silo-readout-col { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 100%; }
         .semaforo { display: flex; flex-direction: column; gap: 4px; }
         .semaforo-luz { width: 14px; height: 14px; border-radius: 50%; opacity: 0.2; border: 1px solid #000; }
@@ -76,14 +70,14 @@
         .submenu-list button { width: 100%; text-align: left; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-sub); padding: 8px 10px; margin-bottom: 6px; border-radius: 4px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .submenu-list button:hover { background: rgba(16,185,129,0.1); color: var(--color-green); border-color: var(--color-green); }
 
-        /* GRÁFICO INFERIOR Y CONTROLES */
+        /* GRÁFICO INFERIOR 24H Y CONTROLES */
         .chart-layout-panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-top: 10px; }
         .chart-controls { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
         .chart-controls select { padding: 6px 12px; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: white; border-radius: 4px; font-size: 13px; }
         .switch-lbl { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-sub); cursor: pointer; }
         .switch-lbl input { accent-color: var(--color-purple); transform: scale(1.2); }
 
-        /* DRAWERS (PANELES FLOTANTES) */
+        /* PANELES FLOTANTES (DRAWERS) */
         .side-drawer { position: absolute; top: 0; right: -55%; width: 55%; height: 100%; background: var(--bg-sidebar); border-left: 1px solid var(--border-color); box-shadow: -10px 0 30px rgba(0,0,0,0.8); transition: right 0.4s ease; z-index: 100; padding: 24px; overflow-y: auto; }
         .side-drawer.open { right: 0; }
         .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
@@ -98,6 +92,12 @@
         .custom-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
         .custom-table th, .custom-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
         .custom-table th { background: rgba(0,0,0,0.2); color: var(--text-sub); }
+
+        /* MODAL INTERNO PARA LOS BOTONES DE LAS TARJETAS */
+        .inner-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
+        .inner-modal-content { background: var(--bg-sidebar); border: 1px solid var(--color-green); width: 80%; max-width: 700px; padding: 24px; border-radius: 8px; position: relative; }
+        .close-inner-modal { position: absolute; top: 16px; right: 20px; cursor: pointer; font-size: 24px; color: var(--text-sub); }
+        .close-inner-modal:hover { color: var(--color-red); }
     </style>
 </head>
 <body>
@@ -105,6 +105,8 @@
     <div class="sidebar">
         <div class="brand"><i class="ph-fill ph-nut"></i><div><h2>AURUM.SYS</h2><span>Industrial Telemetry</span></div></div>
         <div class="menu-item active" onclick="cerrarDrawers()"><div><i class="ph-fill ph-squares-four"></i> Dashboard</div></div>
+        <!-- BOTONES A LOS DRAWERS -->
+        <div class="menu-item" data-drawer="drawerAnalisis"><div><i class="ph ph-chart-bar"></i> Centro de Análisis Anual</div></div>
         <div class="menu-item" data-drawer="drawerHistorial"><div><i class="ph ph-clock-counter-clockwise"></i> Historial (CSV)</div></div>
         <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i> Logística & Reportes</div></div>
     </div>
@@ -123,7 +125,7 @@
             </div>
 
             <div class="silos-grid" id="silosGrid">
-                <!-- SILOS GENERADOS POR JS -->
+                <!-- SILOS RENDERIZADOS POR JS -->
             </div>
 
             <!-- GRÁFICO INFERIOR 24H SUPERPUESTO -->
@@ -143,12 +145,33 @@
             </div>
         </div>
 
-        <!-- DRAWER: HISTORIAL EXCEL INDUSTRIAL -->
+        <!-- DRAWER 1: CENTRO DE ANÁLISIS GLOBAL (NUEVO - HORIZONTAL) -->
+        <div id="drawerAnalisis" class="side-drawer">
+            <div class="drawer-header"><h3>📈 Centro de Análisis Global (Anual)</h3><i class="ph ph-x drawer-close"></i></div>
+            
+            <div style="margin-bottom: 20px; background:var(--bg-card); padding:15px; border-radius:8px; border:1px solid var(--border-color);">
+                <label style="font-size:13px; font-weight:600; color:var(--text-title);">Seleccionar Métrica de Análisis:</label>
+                <select id="selectorAnalisisCentral" onchange="actualizarGraficoAnual()" style="width:100%; padding:10px; margin-top:8px; background:var(--bg-sidebar); color:white; border:1px solid var(--border-color); border-radius:6px; font-size:13px;">
+                    <option value="consumo_kg">Consumo Total Global Mensual (kg)</option>
+                    <option value="cargas_kg">Total Recargas Mensuales (kg)</option>
+                    <option value="promedio_diario">Promedio de Consumo Diario (kg/día)</option>
+                </select>
+            </div>
+
+            <!-- Gráfico Horizontal -->
+            <div style="height: 380px; background: var(--bg-card); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <canvas id="chartAnalisisAnual"></canvas>
+            </div>
+            <p style="font-size:11px; color:var(--text-sub); margin-top:12px; text-align:center;">* El sistema ingresa automáticamente los valores sumando las restas de kilos de toda la planta.</p>
+        </div>
+
+        <!-- DRAWER 2: HISTORIAL EXCEL INDUSTRIAL -->
         <div id="drawerHistorial" class="side-drawer">
             <div class="drawer-header"><h3>🕒 Historial Industrial (Cargas y Mermas)</h3><i class="ph ph-x drawer-close"></i></div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <select id="filtroHist" style="padding:8px; border-radius:4px;"><option>Última Semana</option><option>Este Mes</option></select>
-                <button class="btn-action" onclick="alert('Exportando CSV con columnas industriales...')"><i class="ph ph-file-xls"></i> Exportar a Excel (CSV)</button>
+                <select id="filtroHist" style="padding:8px; border-radius:4px; background:var(--bg-card); color:white; border:1px solid var(--border-color);"><option>Última Semana</option><option>Este Mes</option><option>Este Año</option></select>
+                <!-- BOTÓN FUNCIONAL A EXCEL -->
+                <button class="btn-action" onclick="descargarExcelHistorial()"><i class="ph ph-file-xls"></i> Exportar a Excel (CSV)</button>
             </div>
             <table class="custom-table">
                 <thead><tr><th>Fecha / Hora</th><th>Silo</th><th>Stock Previo</th><th>Kilos Cargados</th><th>Stock Final</th></tr></thead>
@@ -159,23 +182,44 @@
             </table>
         </div>
 
-        <!-- DRAWER: REPORTES Y LOGÍSTICA (INSIGHTS) -->
+        <!-- DRAWER 3: REPORTES Y LOGÍSTICA (INSIGHTS) -->
         <div id="drawerReportes" class="side-drawer">
-            <div class="drawer-header"><h3>📦 Logística y Análisis de Planta</h3><i class="ph ph-x drawer-close"></i></div>
+            <div class="drawer-header"><h3>📦 Logística y Reportes Automáticos</h3><i class="ph ph-x drawer-close"></i></div>
             
             <div class="insights-box">
-                <h4>🤖 Insights Automáticos</h4><br>
+                <h4>🤖 Insights de Consumo</h4><br>
                 <p>📈 Esta semana se han consumido <strong>450 kg más</strong> que la semana pasada (Variación: +8%).</p>
                 <p>🚛 El Silo 1 ha sido recargado <strong>3 veces</strong> esta semana (Total inyectado: 4.500 kg).</p>
                 <p>⚠️ El Silo 4 presenta un consumo nocturno anormalmente alto respecto a su histórico.</p>
             </div>
 
-            <button class="btn-action" style="background:var(--color-purple)"><i class="ph ph-download-simple"></i> Descargar Reporte Consolidado de Cargas</button>
+            <!-- BOTÓN FUNCIONAL A EXCEL -->
+            <button class="btn-action" style="background:var(--color-purple)" onclick="descargarExcelReportes()"><i class="ph ph-download-simple"></i> Descargar Reporte Consolidado de Cargas</button>
+        </div>
+    </div>
+
+    <!-- MODAL INTERNO PARA LOS BOTONES DE LA TARJETA DEL SILO -->
+    <div id="siloModal" class="inner-modal">
+        <div class="inner-modal-content">
+            <i class="ph ph-x close-inner-modal" onclick="cerrarInnerModal()"></i>
+            <h3 id="siloModalTitle" style="margin-bottom: 20px; color:var(--color-green)">Título Modal</h3>
+            
+            <!-- Contenedor dinámico de Canvas (Día/Noche o Semanal) -->
+            <div id="siloModalChartContainer" style="display:none; height:250px;">
+                <canvas id="siloModalCanvas"></canvas>
+            </div>
+            
+            <!-- Contenedor dinámico de Tabla (Cargas o Historial) -->
+            <div id="siloModalTableContainer" style="display:none;">
+                <table class="custom-table" id="siloModalTable">
+                    <!-- Se llena vía JS -->
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        // DATOS BASE (AQUÍ SE CONECTARÍA FIREBASE Y ESP32)
+        // DATOS BASE SIMULADOS
         const SILOS = [
             { id: 1, nombre: "SILO 1", cap: 15000, kg: 9739, pct: 65, estado: "Normal" },
             { id: 2, nombre: "SILO 2", cap: 15000, kg: 3450, pct: 23, estado: "Atencion" },
@@ -184,15 +228,14 @@
             { id: 5, nombre: "SILO 5", cap: 15000, kg: 6700, pct: 44, estado: "Normal" },
         ];
 
-        // DATOS SIMULADOS PARA GRÁFICOS
-        const consumosKilos = [2450, 1820, 1280, 420, 2630]; // Kilos reales consumidos (para la dona)
+        const consumosKilos = [2450, 1820, 1280, 420, 2630]; 
 
+        // RENDER DE SILOS Y TARJETAS 3D
         function renderSilos() {
             const grid = document.getElementById("silosGrid");
             grid.innerHTML = "";
 
             SILOS.forEach(s => {
-                // Lógica de semáforo (Verde, Amarillo, Rojo)
                 let cV = '#22c55e', cA = '#475569', cR = '#475569'; 
                 let gColor = "linear-gradient(to top, #065f46, #10b981)";
                 if(s.pct <= 25 && s.pct > 10) { cV = '#475569'; cA = '#eab308'; gColor = "linear-gradient(to top, #a16207, #eab308)"; }
@@ -200,7 +243,6 @@
 
                 grid.innerHTML += `
                 <div class="silo-card-container" id="cardCnt-${s.id}">
-                    <!-- CARA FRONTAL (DATOS) -->
                     <div class="silo-card">
                         <div class="silo-header">
                             <span>${s.nombre}</span>
@@ -208,9 +250,7 @@
                         </div>
                         <div class="silo-middle">
                             <div class="silo-graphic-box">
-                                <div class="silo-cylinder">
-                                    <div class="silo-fluid" style="height:${s.pct}%; background:${gColor};"></div>
-                                </div>
+                                <div class="silo-cylinder"><div class="silo-fluid" style="height:${s.pct}%; background:${gColor};"></div></div>
                                 <div class="silo-cone"></div>
                             </div>
                             <div class="silo-readout-col">
@@ -227,23 +267,23 @@
                         </div>
                     </div>
                     
-                    <!-- CARA TRASERA (SUBMENÚ) -->
                     <div class="silo-submenu">
                         <div class="silo-header" style="margin-bottom:12px; color:var(--color-green)">
                             <span>Menú ${s.nombre}</span>
                             <div class="btn-silo-menu" onclick="flipCard(${s.id})"><i class="ph ph-x"></i></div>
                         </div>
                         <div class="submenu-list">
-                            <button><i class="ph ph-clock"></i> Historial Kilos x Silo</button>
-                            <button><i class="ph ph-chart-line-up"></i> Gráfico Consumo Semanal</button>
-                            <button style="color:var(--color-purple); border-color:var(--color-purple)"><i class="ph ph-moon"></i> Consumo Día vs Noche</button>
-                            <button><i class="ph ph-truck"></i> Cargas Semanales (Mermas)</button>
+                            <!-- LOS BOTONES AHORA ESTÁN ACTIVOS Y ABREN EL MODAL -->
+                            <button onclick="abrirSiloModal('historial', '${s.nombre}')"><i class="ph ph-clock"></i> Historial Kilos x Silo</button>
+                            <button onclick="abrirSiloModal('semanal', '${s.nombre}')"><i class="ph ph-chart-line-up"></i> Gráfico Consumo Semanal</button>
+                            <button onclick="abrirSiloModal('dia_noche', '${s.nombre}')" style="color:var(--color-purple); border-color:var(--color-purple)"><i class="ph ph-moon"></i> Consumo Día vs Noche</button>
+                            <button onclick="abrirSiloModal('cargas', '${s.nombre}')"><i class="ph ph-truck"></i> Cargas Semanales (Mermas)</button>
                         </div>
                     </div>
                 </div>`;
             });
 
-            // CASILLERO 6 - DONA KILOGRAMOS (NO %)
+            // DONA - SOLO KILOGRAMOS
             grid.innerHTML += `
                 <div class="silo-card-container">
                     <div class="silo-card" style="padding:12px">
@@ -259,36 +299,91 @@
             setTimeout(initCharts, 50);
         }
 
-        function flipCard(id) {
-            document.getElementById(`cardCnt-${id}`).classList.toggle('flipped');
-        }
+        function flipCard(id) { document.getElementById(`cardCnt-${id}`).classList.toggle('flipped'); }
 
-        // PANELES FLOTANTES
+        // CONTROL DE PANELES FLOTANTES
         document.querySelectorAll("[data-drawer]").forEach(btn => {
             btn.addEventListener("click", () => {
                 cerrarDrawers();
-                document.getElementById(btn.getAttribute("data-drawer")).classList.add("open");
+                const target = btn.getAttribute("data-drawer");
+                document.getElementById(target).classList.add("open");
+                if(target === "drawerAnalisis") setTimeout(actualizarGraficoAnual, 100);
             });
         });
 
-        function cerrarDrawers() {
-            document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
-        }
+        function cerrarDrawers() { document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open")); }
         document.querySelectorAll(".drawer-close").forEach(c => c.addEventListener("click", cerrarDrawers));
 
-        // GRÁFICOS CHART.JS
+        // LÓGICA DEL MODAL INTERNO (Submenú de las Tarjetas)
+        let modalChartInstance = null;
+        function abrirSiloModal(tipo, nombreSilo) {
+            document.getElementById('siloModal').style.display = 'flex';
+            document.getElementById('siloModalChartContainer').style.display = 'none';
+            document.getElementById('siloModalTableContainer').style.display = 'none';
+            
+            if(modalChartInstance) modalChartInstance.destroy(); // Evita superposición de gráficos
+
+            const ctx = document.getElementById('siloModalCanvas').getContext('2d');
+
+            if(tipo === 'dia_noche') {
+                document.getElementById('siloModalTitle').innerText = `${nombreSilo}: Consumo Diferencial (Día vs Noche)`;
+                document.getElementById('siloModalChartContainer').style.display = 'block';
+                modalChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"], 
+                            datasets: [
+                                { label: 'Consumo Día (kg)', data: [400, 420, 390, 450, 410, 430, 400], borderColor: "#f59e0b", backgroundColor: "transparent", tension: 0.3 },
+                                { label: 'Consumo Noche (kg)', data: [250, 260, 240, 280, 270, 260, 250], borderColor: "#8b5cf6", backgroundColor: "transparent", borderDash: [5,5], tension: 0.3 }
+                            ]},
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } 
+            else if(tipo === 'semanal') {
+                document.getElementById('siloModalTitle').innerText = `${nombreSilo}: Consumo Semanal (Últimos 7 días)`;
+                document.getElementById('siloModalChartContainer').style.display = 'block';
+                modalChartInstance = new Chart(ctx, { type: 'bar', data: { labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"], datasets: [{ label: 'Kilos', data: [650, 680, 630, 730, 680, 690, 650], backgroundColor: "#10b981" }] }, options: { responsive: true, maintainAspectRatio: false } });
+            }
+            else if(tipo === 'cargas') {
+                document.getElementById('siloModalTitle').innerText = `${nombreSilo}: Cargas Semanales y Mermas`;
+                document.getElementById('siloModalTableContainer').style.display = 'block';
+                document.getElementById('siloModalTable').innerHTML = `<thead><tr><th>Día</th><th>Stock Previo</th><th>Kilos Cargados</th><th>Stock Final</th></tr></thead><tbody><tr><td>Lunes</td><td>500 kg</td><td style="color:#10b981">+1.500 kg</td><td>2.000 kg</td></tr><tr><td>Jueves</td><td>200 kg</td><td style="color:#10b981">+3.000 kg</td><td>3.200 kg</td></tr></tbody>`;
+            }
+            else if(tipo === 'historial') {
+                document.getElementById('siloModalTitle').innerText = `${nombreSilo}: Historial Kilos (Últimas 24h)`;
+                document.getElementById('siloModalTableContainer').style.display = 'block';
+                document.getElementById('siloModalTable').innerHTML = `<thead><tr><th>Hora</th><th>Kilos Extraídos</th></tr></thead><tbody><tr><td>08:00</td><td>45 kg/h</td></tr><tr><td>10:00</td><td>60 kg/h</td></tr><tr><td>12:00</td><td>55 kg/h</td></tr></tbody>`;
+            }
+        }
+        function cerrarInnerModal() { document.getElementById('siloModal').style.display = 'none'; }
+
+
+        // EXPORTACIÓN EXCEL CSV INDUSTRIAL (Con datos reales estructurados)
+        function descargarExcelHistorial() {
+            let csv = "FECHA,FOLIO,SILO,CASILLEROS,KILOS,CODIGO,DESCRIPCION,LOTE,DESTINO,MEDICACION,DESPACHADOR,CAMION,CONDUCTOR,SEMANA,PESO_BALANZAS,DIFERENCIA,DESTINO_NOMBRE\n";
+            csv += "28-07-26,1394,Silo 1,13,1500,80012,13064-PUBERTAD 1,2784,13.4.04,13064,Dario Salas,7,Agustin Lopez,2,4430,-70,Sitio 1\n";
+            csv += "27-07-26,1424,Silo 3,13,3000,80012,13064-PUBERTAD 1,2842,13.4.04,13064,Dario Salas,7,Agustin Lopez,3,4470,-30,Sitio 1\n";
+            let encodedUri = encodeURI("data:text/csv;charset=utf-8," + csv);
+            let link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Historial_Industrial.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        function descargarExcelReportes() {
+            let csv = "FECHA,HORA,SILO,CARGAS_DIA,CARGAS_SEMANA,CARGAS_MES,CARGAS_AÑO,KILOS_CARGADOS,KILOS_GLOBALES\n";
+            csv += "28-07-26,10:30,Silo 1,1,3,12,145,1500,42850\n";
+            csv += "27-07-26,18:15,Silo 3,2,5,18,210,3000,42850\n";
+            let encodedUri = encodeURI("data:text/csv;charset=utf-8," + csv);
+            let link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Reporte_Logistica_Cargas.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        // GRÁFICOS GENERALES
         let chart24hInstance = null;
+        let chartAnualInstance = null;
 
         function initCharts() {
-            // Dona (Kilogramos Reales, No porcentajes)
             const ctxDona = document.getElementById('chartDonaKg');
             if(ctxDona) {
                 new Chart(ctxDona, {
                     type: 'doughnut',
-                    data: {
-                        labels: ["S1", "S2", "S3", "S4", "S5"],
-                        datasets: [{ data: consumosKilos, backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899"], borderWidth: 0 }]
-                    },
+                    data: { labels: ["S1", "S2", "S3", "S4", "S5"], datasets: [{ data: consumosKilos, backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#ec4899"], borderWidth: 0 }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '60%' }
                 });
             }
@@ -299,30 +394,45 @@
             const ctxLine = document.getElementById("chartConsumo24h").getContext("2d");
             const comparar = document.getElementById("chkCompararAyer").checked;
             
-            // Datos simulados (Resta de peso por hora)
             const hoy = [45, 60, 55, 120, 80, 50, 40, 30]; 
             const ayer = [40, 55, 60, 110, 85, 45, 45, 35];
 
-            let datasets = [{
-                label: 'Consumo Hoy (kg/h)',
-                data: hoy,
-                borderColor: "#10b981", backgroundColor: "rgba(16, 185, 129, 0.1)", fill: true, tension: 0.3
-            }];
-
-            if(comparar) {
-                datasets.push({
-                    label: 'Consumo Ayer (kg/h)',
-                    data: ayer,
-                    borderColor: "#8b5cf6", backgroundColor: "transparent", borderDash: [5, 5], tension: 0.3
-                });
-            }
+            let datasets = [{ label: 'Consumo Hoy (kg/h)', data: hoy, borderColor: "#10b981", backgroundColor: "rgba(16, 185, 129, 0.1)", fill: true, tension: 0.3 }];
+            if(comparar) datasets.push({ label: 'Consumo Ayer (kg/h)', data: ayer, borderColor: "#8b5cf6", backgroundColor: "transparent", borderDash: [5, 5], tension: 0.3 });
 
             if(chart24hInstance) chart24hInstance.destroy();
+            chart24hInstance = new Chart(ctxLine, { type: 'line', data: { labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"], datasets: datasets }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: comparar, labels: { color: '#64748b' } } }, scales: { y: { grid: { color: '#141f2e' } }, x: { grid: { color: '#141f2e' } } } } });
+        }
+
+        // GRÁFICO HORIZONTAL ANUAL EN EL CONCENTRADOR
+        function actualizarGraficoAnual() {
+            const ctxAnual = document.getElementById("chartAnalisisAnual").getContext("2d");
+            const metrica = document.getElementById("selectorAnalisisCentral").value;
             
-            chart24hInstance = new Chart(ctxLine, {
-                type: 'line',
-                data: { labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"], datasets: datasets },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: comparar, labels: { color: '#64748b' } } }, scales: { y: { grid: { color: '#141f2e' } }, x: { grid: { color: '#141f2e' } } } }
+            let datos = []; let labelName = ""; let clr = "";
+            
+            if(metrica === "consumo_kg") { datos = [12500, 14200, 13800, 15100, 14800, 16000, 15500, 0, 0, 0, 0, 0]; labelName = "Consumo Mensual (kg)"; clr = "#10b981"; } 
+            else if (metrica === "cargas_kg") { datos = [13000, 15000, 14000, 16000, 15000, 17000, 16000, 0, 0, 0, 0, 0]; labelName = "Recargas Mensuales (kg)"; clr = "#3b82f6"; } 
+            else { datos = [403, 458, 445, 503, 477, 533, 500, 0, 0, 0, 0, 0]; labelName = "Promedio Diario (kg)"; clr = "#f59e0b"; }
+
+            if(chartAnualInstance) chartAnualInstance.destroy();
+            
+            chartAnualInstance = new Chart(ctxAnual, {
+                type: 'bar',
+                data: {
+                    labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    datasets: [{ label: labelName, data: datos, backgroundColor: clr, borderRadius: 4 }]
+                },
+                options: {
+                    indexAxis: 'y', // ESTO CONVIERTE LAS BARRAS A HORIZONTALES
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: '#141f2e' }, ticks: { color: '#64748b' } },
+                        y: { grid: { display: false }, ticks: { color: '#ffffff', font: { weight: 'bold' } } }
+                    }
+                }
             });
         }
 
