@@ -57,6 +57,11 @@
         .brand h2 { font-size: 16px; font-weight: 800; }
         .brand span { display: block; font-size: 11px; color: var(--text-sub); }
         
+        /* LOGO CLIENTE CON FILTRO DINÁMICO */
+        .client-logo { width: 120px; opacity: 0.9; margin: 0 auto; display: block; transition: all 0.3s; }
+        body.theme-light .client-logo { filter: invert(1); opacity: 0.7; }
+        body.theme-mansel .client-logo, body:not(.theme-light):not(.theme-mansel) .client-logo { filter: invert(0); }
+
         .menu-list { display: flex; flex-direction: column; gap: 4px; }
         .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.15s; }
         .menu-item div { display: flex; align-items: center; gap: 12px; }
@@ -107,7 +112,7 @@
         .silo-dropdown-menu { display: none; position: absolute; top: 35px; left: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; width: 230px; z-index: 50; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
         .silo-dropdown-menu ul { list-style: none; padding: 0; margin: 0; }
         .silo-dropdown-menu li { padding: 10px 14px; font-size: 12px; color: var(--text-title); cursor: pointer; border-bottom: 1px solid var(--border-color); }
-        .silo-dropdown-menu li:hover { background: rgba(255,255,255,0.05); }
+        .silo-dropdown-menu li:hover { background: rgba(128,128,128,0.1); }
 
         /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
         .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
@@ -134,8 +139,8 @@
         #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
 
         /* MODAL DE DETALLE (SUPERPOSICIÓN DE GRÁFICOS DÍA/NOCHE) */
-        #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.8); z-index: 9999; display: none; align-items: center; justify-content: center; }
-        .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 800px; max-width: 90%; border-radius: 12px; padding: 24px; }
+        #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 800px; max-width: 90%; border-radius: 12px; padding: 24px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;}
 
         /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
@@ -157,20 +162,20 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-light"> <!-- TEMA LIMPIO PREDETERMINADO -->
 
     <!-- LOGIN -->
     <div id="loginScreen">
         <div class="login-card">
             <i class="ph-fill ph-lock-keyhole"></i>
             <h2>AURUM.SYS INTERFACE</h2>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin)">
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin o usuario)">
             <input type="password" id="passInput" class="login-field" placeholder="Contraseña (aurum2026)">
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
         </div>
     </div>
 
-    <!-- GLOBAL MODAL PARA GRÁFICOS SUPERPUESTOS -->
+    <!-- GLOBAL MODAL PARA GRÁFICOS DINÁMICOS -->
     <div id="globalModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -180,8 +185,7 @@
             <div id="modalContent">
                 <div style="height: 300px;"><canvas id="chartDiferencial"></canvas></div>
                 <div id="modalExtraInfo" style="margin-top: 16px; font-size: 13px; color: var(--text-sub);">
-                    <p>Cálculo automático de cargas: Se detectaron <strong style="color:var(--text-title)">3</strong> cargas esta semana.</p>
-                    <p>Total kilos ingresados: <strong style="color:var(--color-green)">4,500 kg</strong>.</p>
+                    <!-- La info extra se insertará aquí dinámicamente -->
                 </div>
             </div>
         </div>
@@ -197,8 +201,13 @@
                 <div class="menu-item" data-drawer="drawerConsumo"><div><i class="ph ph-chart-line"></i><span class="lng-cons">Consumo</span></div></div>
                 <div class="menu-item" data-drawer="drawerAlarmas"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
                 <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i><span class="lng-repo">Reportes</span></div></div>
-                <div class="menu-item" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
+                <!-- ID AÑADIDO PARA OCULTAR EN ROL USUARIO -->
+                <div class="menu-item" id="menuConfig" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
             </div>
+        </div>
+        <!-- ZONA DEL LOGO DEL CLIENTE -->
+        <div style="text-align: center; margin-top: 20px;">
+            <img src="agricola-mansel-vertical-blanco.png" alt="Mansel" class="client-logo">
         </div>
     </div>
 
@@ -208,13 +217,13 @@
             <div class="nav-bell" id="btnCampana"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
             <div class="user-widget" id="userMenuWidget">
                 <div style="text-align:right; font-size:12px;">
-                    <h4 style="color:var(--text-title);">Erick Gomez</h4>
-                    <span style="color:var(--text-sub); font-size:10px;">Administrador</span>
+                    <h4 id="topUserName" style="color:var(--text-title);">Administrador 1</h4>
+                    <span id="topUserRole" style="color:var(--text-sub); font-size:10px;">Administrador Global</span>
                 </div>
-                <div style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">EG</div>
+                <div id="topUserInitials" style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">A1</div>
                 <div class="logout-dropdown" id="logoutBox">
-                    <button onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
-                    <button id="btnExitAction" style="color:var(--color-red);"><i class="ph ph-sign-out"></i> Exit</button>
+                    <button id="btnAddNewUser" onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
+                    <button id="btnExitAction" style="color:var(--color-red);"><i class="ph ph-sign-out"></i> Cerrar Sesión</button>
                 </div>
             </div>
         </div>
@@ -259,7 +268,7 @@
             </div>
 
             <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
-            <!-- 1. HISTORIAL CON DESCARGA -->
+            <!-- 1. HISTORIAL CON DESCARGA (TABLA ACTUALIZADA CON CUADRE) -->
             <div id="drawerHistorial" class="side-drawer">
                 <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
@@ -273,11 +282,11 @@
                     <p style="font-size:11px; color:var(--text-sub); margin-top:8px;">Incluye Fecha, Folio, Silo, Kilos Iniciales, Kilos Cargados, Diferencias y Detalles de Lote.</p>
                 </div>
                 <table class="custom-table">
-                    <thead><tr><th>Fecha/Hora</th><th>Silo</th><th>Kg Inicial</th><th>Kg Cargados</th><th>Diferencia</th></tr></thead>
+                    <thead><tr><th>Fecha/Hora</th><th>Silo</th><th>Peso Antes Carga</th><th>Kg Cargados</th><th>Nuevo Peso</th></tr></thead>
                     <tbody>
-                        <tr><td>06-07-2026 14:30</td><td>Silo 1</td><td>500</td><td>1500</td><td><span style="color:var(--color-green)">+1000</span></td></tr>
-                        <tr><td>06-07-2026 09:15</td><td>Silo 2</td><td>820</td><td>2000</td><td><span style="color:var(--color-green)">+1180</span></td></tr>
-                        <tr><td>05-07-2026 18:00</td><td>Silo 5</td><td>150</td><td>1500</td><td><span style="color:var(--color-green)">+1350</span></td></tr>
+                        <tr><td>06-07-2026 14:30</td><td>Silo 1</td><td>500 kg</td><td><span style="color:var(--color-green)">+1,500 kg</span></td><td>2,000 kg</td></tr>
+                        <tr><td>06-07-2026 09:15</td><td>Silo 2</td><td>820 kg</td><td><span style="color:var(--color-green)">+2,000 kg</span></td><td>2,820 kg</td></tr>
+                        <tr><td>05-07-2026 18:00</td><td>Silo 5</td><td>150 kg</td><td><span style="color:var(--color-green)">+4,500 kg</span></td><td>4,650 kg</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -348,8 +357,8 @@
                 <div class="config-card-layout">
                     <label style="font-weight:600; font-size:13px;">Tema Visual</label>
                     <select class="config-select" id="comboTema" onchange="cambiarTema()">
+                        <option value="light" selected>Modo Claro Limpio</option>
                         <option value="dark">Modo Oscuro Default</option>
-                        <option value="light">Modo Claro Limpio</option>
                         <option value="mansel">Modo Corporativo MANSEL</option>
                     </select>
                 </div>
@@ -365,22 +374,53 @@
         let chartAnalisisInstance = null;
         let chartTendenciaInstance = null;
 
+        // AJUSTE CAPACIDAD 14000 KILOS
         let SILOS = [
-            { id: 1, nombre: "SILO 1", capacidad: 15000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
-            { id: 2, nombre: "SILO 2", capacidad: 15000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
-            { id: 3, nombre: "SILO 3", capacidad: 15000, peso: 2279, consumo: 350, rssi: -72, estado: "Baja" },
-            { id: 4, nombre: "SILO 4", capacidad: 15000, peso: 0, consumo: 120, rssi: -75, estado: "Critica" },
-            { id: 5, nombre: "SILO 5", capacidad: 15000, peso: 10871, consumo: 980, rssi: -60, estado: "Normal" },
-            { id: 6, nombre: "SILO 6", capacidad: 15000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo" },
-            { id: 7, nombre: "SILO 7", capacidad: 15000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado" }
+            { id: 1, nombre: "SILO 1", capacidad: 14000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
+            { id: 2, nombre: "SILO 2", capacidad: 14000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
+            { id: 3, nombre: "SILO 3", capacidad: 14000, peso: 2279, consumo: 350, rssi: -72, estado: "Baja" },
+            { id: 4, nombre: "SILO 4", capacidad: 14000, peso: 0, consumo: 120, rssi: -75, estado: "Critica" },
+            { id: 5, nombre: "SILO 5", capacidad: 14000, peso: 10871, consumo: 980, rssi: -60, estado: "Normal" },
+            { id: 6, nombre: "SILO 6", capacidad: 14000, peso: 6750, consumo: 0, rssi: -70, estado: "Sin Flujo" },
+            { id: 7, nombre: "SILO 7", capacidad: 14000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado" }
         ];
 
+        // LÓGICA DE ROLES DE USUARIO
+        function applyRole(role) {
+            if(role === 'usuario') {
+                // Ocultar configuraciones y creacion de usuarios
+                document.getElementById("menuConfig").style.display = "none";
+                document.getElementById("btnAddNewUser").style.display = "none";
+                document.getElementById("topUserName").innerText = "Operador Planta";
+                document.getElementById("topUserRole").innerText = "Solo Lectura";
+                document.getElementById("topUserInitials").innerText = "OP";
+            } else {
+                // Mostrar todo para admin
+                document.getElementById("menuConfig").style.display = "flex";
+                document.getElementById("btnAddNewUser").style.display = "flex";
+                document.getElementById("topUserName").innerText = "Administrador 1";
+                document.getElementById("topUserRole").innerText = "Administrador Global";
+                document.getElementById("topUserInitials").innerText = "A1";
+            }
+        }
+
         // GESTIÓN LOGIN
-        if(localStorage.getItem("aurum_logged") === "true") { document.getElementById("loginScreen").style.display = "none"; }
+        if(localStorage.getItem("aurum_logged") === "true") { 
+            document.getElementById("loginScreen").style.display = "none";
+            applyRole(localStorage.getItem("aurum_role") || "admin");
+        }
+        
         document.getElementById("btnLoginAction").addEventListener("click", () => {
-            if(document.getElementById("userInput").value === "admin" && document.getElementById("passInput").value === "aurum2026") {
+            const user = document.getElementById("userInput").value;
+            const pass = document.getElementById("passInput").value;
+            
+            if((user === "admin" || user === "usuario") && pass === "aurum2026") {
                 localStorage.setItem("aurum_logged", "true");
+                localStorage.setItem("aurum_role", user);
+                applyRole(user);
                 document.getElementById("loginScreen").style.display = "none";
+            } else {
+                alert("Credenciales incorrectas. Pruebe 'admin' o 'usuario'.");
             }
         });
 
@@ -390,12 +430,28 @@
             const box = document.getElementById("logoutBox");
             box.style.display = box.style.display === "block" ? "none" : "block";
         });
-        document.body.addEventListener("click", () => { 
+        
+        // CIERRE AL CLIC FUERA PARA CUALQUIER MENU DESPLEGABLE Y PANELES LATERALES
+        document.body.addEventListener("click", (e) => { 
             document.getElementById("logoutBox").style.display = "none";
             document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
+            
+            // Cerrar paneles laterales (drawers) si se hace clic fuera de ellos y no se está clickeando un botón de menú
+            if (!e.target.closest('.side-drawer') && !e.target.closest('[data-drawer]') && !e.target.closest('#btnCampana')) {
+                document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
+            }
         });
+        
+        // CIERRE AL CLIC FUERA PARA EL MODAL GLOBAL
+        document.getElementById("globalModal").addEventListener("click", function(e) {
+            if (e.target === this) {
+                this.style.display = "none";
+            }
+        });
+
         document.getElementById("btnExitAction").addEventListener("click", () => {
             localStorage.removeItem("aurum_logged");
+            localStorage.removeItem("aurum_role");
             document.getElementById("loginScreen").style.display = "flex";
         });
 
@@ -406,7 +462,6 @@
                 const targetDrawer = button.getAttribute("data-drawer");
                 document.getElementById(targetDrawer).classList.add("open");
                 
-                // Si abre consumos, refrescar gráficas internas del drawer
                 if(targetDrawer === "drawerConsumo") { 
                     setTimeout(initChartAnalisis, 100); 
                     setTimeout(initChartTendencia, 100); 
@@ -427,11 +482,11 @@
             document.getElementById("drawerAlarmas").classList.add("open");
         });
 
-        // EXPORTACIÓN A EXCEL (ESTRUCTURA SOLICITADA)
+        // EXPORTACIÓN A EXCEL MODIFICADA CON LÓGICA DE CUADRE (PESO ANTES + CARGA = PESO FINAL)
         function descargarExcelEstructurado() {
-            let csvContent = "data:text/csv;charset=utf-8,Fecha,Folio,Silo,Casilleros,Kilos,Codigo,Descripcion,Lote,Destino,Medicacion,Despachador,Camion,Conductor,Semana,Peso_balanzas,Diferencia\n";
-            csvContent += `06-07-2026,1394,13,1,1500,80012,13064 PUBERTAD 1,2784,13.4.04,13064,Dario,7,Agustin,2,4430,-70\n`;
-            csvContent += `12-01-2026,1424,13,1,1500,80012,13064 PUBERTAD 1,2842,13.4.04,13064,Dario,7,Agustin,3,4470,+1000\n`;
+            let csvContent = "data:text/csv;charset=utf-8,Fecha,Hora,Folio,Silo,Peso_Antes_Carga(kg),Kilos_Cargados(kg),Peso_Final_Cuadre(kg),Diferencia,Casilleros,Codigo,Descripcion,Lote,Destino,Camion,Conductor,Semana\n";
+            csvContent += `06-07-2026,14:30,1394,SILO 1,500,1500,2000,+1500,13,80012,13064 PUBERTAD 1,2784,13.4.04,7,Agustin,2\n`;
+            csvContent += `12-01-2026,09:15,1424,SILO 2,820,2000,2820,+2000,13,80012,13064 PUBERTAD 1,2842,13.4.04,7,Agustin,3\n`;
             
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -475,28 +530,64 @@
             document.getElementById("menu-silo-" + id).style.display = "block";
         }
 
+        // FUNCIÓN MODIFICADA: APARIENCIA SUAVIZADA Y DATOS A ESCALA DE 14000 KILOS
         function openSiloDetail(id, action) {
             let titulo = "";
-            if(action === 'historial') titulo = `Historial kilos - Silo ${id}`;
-            if(action === 'cargas') titulo = `Veces cargado en la semana - Silo ${id}`;
-            if(action === 'grafico') titulo = `Gráfico consumo semanal - Silo ${id}`;
-            if(action === 'diferencial') titulo = `Consumo Diferencial Día/Noche - Silo ${id}`;
+            let extraInfo = "";
+            
+            if(action === 'historial') {
+                titulo = `Historial kilos - Silo ${id}`;
+                extraInfo = `<p>Mostrando el registro histórico de variaciones de peso (Capacidad Máx: 14.000 kg).</p>`;
+            } else if(action === 'cargas') {
+                titulo = `Veces cargado en la semana - Silo ${id}`;
+                extraInfo = `<p>Cálculo automático de cargas: Se detectaron <strong style="color:var(--text-title)">2</strong> cargas mayores esta semana.</p><p>Total kilos ingresados: <strong style="color:var(--color-green)">12.500 kg</strong>.</p>`;
+            } else if(action === 'grafico') {
+                titulo = `Gráfico consumo semanal - Silo ${id}`;
+                extraInfo = `<p>Resumen del consumo acumulado en los últimos 7 días en kilos.</p>`;
+            } else if(action === 'diferencial') {
+                titulo = `Consumo Diferencial Día/Noche - Silo ${id}`;
+                extraInfo = `<p>Comparativa superpuesta del consumo durante turno de día vs turno de noche.</p>`;
+            }
             
             document.getElementById("modalTitle").innerText = titulo;
+            document.getElementById("modalExtraInfo").innerHTML = extraInfo;
             document.getElementById("globalModal").style.display = "flex";
             
-            // Render grafico superpuesto dummy
             setTimeout(() => {
                 const ctx = document.getElementById("chartDiferencial").getContext("2d");
                 if(window.chartDiferencialInstance) window.chartDiferencialInstance.destroy();
+                
+                // Creación de gradientes estilo suavizado (como la imagen enviada)
+                const gradGreen = ctx.createLinearGradient(0, 0, 0, 300);
+                gradGreen.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+                gradGreen.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+                const gradPurple = ctx.createLinearGradient(0, 0, 0, 300);
+                gradPurple.addColorStop(0, 'rgba(139, 92, 246, 0.25)');
+                gradPurple.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+                
+                let chartType = 'line';
+                let datasets = [];
+                
+                if(action === 'historial') {
+                    datasets = [{ label: 'Kilos Registrados', data: [13500, 11200, 12800, 9500, 14000, 10800, 9739], borderColor: "#10b981", backgroundColor: gradGreen, fill: true, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#10b981', pointBorderWidth: 2, pointRadius: 4 }];
+                } else if(action === 'cargas') {
+                    chartType = 'bar';
+                    datasets = [{ label: 'Kilos Cargados', data: [0, 4500, 0, 0, 8000, 0, 0], backgroundColor: "#10b981" }];
+                } else if(action === 'grafico') {
+                    datasets = [{ label: 'Consumo (kg)', data: [1500, 2300, 1100, 3300, 800, 2500, 1200], borderColor: "#10b981", backgroundColor: gradGreen, fill: true, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#10b981', pointBorderWidth: 2, pointRadius: 4 }];
+                } else if(action === 'diferencial') {
+                    datasets = [
+                        { label: 'Consumo Día (kg)', data: [1100, 1500, 800, 2000, 600, 1800, 900], borderColor: "#10b981", backgroundColor: gradGreen, fill: true, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#10b981', pointBorderWidth: 2, pointRadius: 4 },
+                        { label: 'Consumo Noche (kg)', data: [400, 800, 300, 1300, 200, 700, 300], borderColor: "#8b5cf6", backgroundColor: gradPurple, fill: true, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#8b5cf6', pointBorderWidth: 2, pointRadius: 4 }
+                    ];
+                }
+
                 window.chartDiferencialInstance = new Chart(ctx, {
-                    type: 'line',
+                    type: chartType,
                     data: {
                         labels: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
-                        datasets: [
-                            { label: 'Consumo Día (kg)', data: [1200, 1500, 1100, 1800, 1600, 900, 800], borderColor: "#f59e0b", backgroundColor: "rgba(245, 158, 11, 0.2)", fill: true, tension: 0.3 },
-                            { label: 'Consumo Noche (kg)', data: [800, 900, 750, 950, 850, 400, 300], borderColor: "#8b5cf6", backgroundColor: "rgba(139, 92, 246, 0.2)", fill: true, tension: 0.3 }
-                        ]
+                        datasets: datasets
                     },
                     options: { responsive: true, maintainAspectRatio: false }
                 });
@@ -516,6 +607,18 @@
                 if(s.estado === "Baja") fStyle = "linear-gradient(to top, #9a3412, #f59e0b)";
                 if(s.estado === "Critica") fStyle = "linear-gradient(to top, #991b1b, #ef4444)";
                 if(s.estado === "Sin Flujo") fStyle = "linear-gradient(to top, #5b21b6, #8b5cf6)";
+
+                // NUEVO: CÁLCULO DE AUTONOMÍA
+                let autonomiaHtml = "";
+                if (s.estado !== "Desconectado") {
+                    if (s.consumo > 0) {
+                        let horas = s.peso / s.consumo;
+                        let textAuto = horas >= 24 ? (horas / 24).toFixed(1) + " días" : Math.round(horas) + " hrs";
+                        autonomiaHtml = `<div style="font-size:11px; font-weight:700; color:var(--text-title); margin-top:4px; opacity:0.8;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-green)">${textAuto}</span></div>`;
+                    } else {
+                        autonomiaHtml = `<div style="font-size:11px; font-weight:700; color:var(--text-title); margin-top:4px; opacity:0.8;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-yellow)">N/A</span></div>`;
+                    }
+                }
 
                 grid.innerHTML += `
                     <div class="silo-card">
@@ -552,10 +655,11 @@
                                     <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
                                 </div>
                             </div>
-                            <!-- SE INVIERTE TEXTO: KILOS GRANDES, PORCENTAJE ABAJO -->
+                            <!-- SE INVIERTE TEXTO: KILOS GRANDES, PORCENTAJE ABAJO + AUTONOMÍA -->
                             <div class="silo-text-readout">
                                 <div style="font-size:24px; font-weight:800; color:var(--text-title);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
                                 <div style="font-size:14px; font-weight:600; color:var(--text-sub);">${s.estado==='Desconectado'?'--':pct+'%'}</div>
+                                ${autonomiaHtml}
                             </div>
                         </div>
                     </div>`;
@@ -638,11 +742,11 @@
             gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
 
             let datasets = [
-                { label: 'Hoy', data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35 }
+                { label: 'Hoy', data: [8, 13, 9, 14, 14, 11], borderColor: "#10b981", borderWidth: 2, fill: true, backgroundColor: gradient, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#10b981', pointBorderWidth: 2, pointRadius: 4 }
             ];
 
             if(comparar) {
-                datasets.push({ label: 'Ayer', data: [7, 10, 11, 12, 10, 9], borderColor: "#64748b", borderWidth: 2, borderDash: [5, 5], fill: false, tension: 0.35 });
+                datasets.push({ label: 'Ayer', data: [7, 10, 11, 12, 10, 9], borderColor: "#64748b", borderWidth: 2, borderDash: [5, 5], fill: false, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#64748b', pointBorderWidth: 2, pointRadius: 4 });
             }
 
             chartConsumoInstance = new Chart(ctx, {
