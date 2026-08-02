@@ -164,14 +164,24 @@
 </head>
 <body class="theme-light"> <!-- TEMA LIMPIO PREDETERMINADO -->
 
-    <!-- LOGIN -->
+    <!-- LOGIN / REGISTRO -->
     <div id="loginScreen">
-        <div class="login-card">
-            <i class="ph-fill ph-lock-keyhole"></i>
-            <h2>AURUM.SYS INTERFACE</h2>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario">
+        <div class="login-card" id="cardLogin">
+            <i class="ph-fill ph-lock-keyhole" style="font-size:32px; color:var(--color-green);"></i>
+            <h2 style="margin-top:10px;">AURUM.SYS INTERFACE</h2>
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario o Correo">
             <input type="password" id="passInput" class="login-field" placeholder="Contraseña">
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
+            <p style="font-size:12px; margin-top:16px; color:var(--text-sub); cursor:pointer;" onclick="toggleRegisterView(true)">¿No tienes cuenta? <span style="color:var(--color-green); font-weight:600;">Solicitar Acceso</span></p>
+        </div>
+
+        <div class="login-card" id="cardRegister" style="display:none;">
+            <i class="ph-fill ph-user-plus" style="font-size:32px; color:var(--color-green);"></i>
+            <h2 style="margin-top:10px;">SOLICITAR CUENTA OPERADOR</h2>
+            <input type="email" id="regEmail" class="login-field" placeholder="Correo electrónico">
+            <input type="password" id="regPass" class="login-field" placeholder="Crear contraseña">
+            <button class="btn-login" id="btnRegisterAction">Enviar Solicitud</button>
+            <p style="font-size:12px; margin-top:16px; color:var(--text-sub); cursor:pointer;" onclick="toggleRegisterView(false)"><i class="ph ph-arrow-left"></i> Volver al Login</p>
         </div>
     </div>
 
@@ -315,6 +325,9 @@
             <!-- 3. ALARMAS ACTIVAS -->
             <div id="drawerAlarmas" class="side-drawer">
                 <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close"></i></div>
+                <!-- CONTENEDOR DINÁMICO DE NOTIFICACIONES DE ACCESO -->
+                <div id="notificacionesAccesoContainer"></div>
+
                 <div style="background:rgba(239,68,68,0.1); border:1px solid var(--color-red); padding:14px; border-radius:8px; margin-bottom:12px;">
                     <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
                     <p style="font-size:12px; margin-top:4px;">Nivel de llenado inferior al 5% de la capacidad nominal.</p>
@@ -384,6 +397,17 @@
             { id: 7, nombre: "SILO 7", capacidad: 14000, peso: 0, consumo: 0, rssi: 0, estado: "Desconectado" }
         ];
 
+        // GESTIÓN DE VISTA LOGIN / REGISTRO
+        function toggleRegisterView(isRegister) {
+            if(isRegister) {
+                document.getElementById("cardLogin").style.display = "none";
+                document.getElementById("cardRegister").style.display = "block";
+            } else {
+                document.getElementById("cardRegister").style.display = "none";
+                document.getElementById("cardLogin").style.display = "block";
+            }
+        }
+
         // LÓGICA DE ROLES DE USUARIO
         function applyRole(role) {
             if(role === 'usuario') {
@@ -398,10 +422,80 @@
                 document.getElementById("topUserName").innerText = "Administrador 1";
                 document.getElementById("topUserRole").innerText = "Administrador Global";
                 document.getElementById("topUserInitials").innerText = "A1";
+                renderizarNotificacionesAdmin();
             }
         }
 
-        // GESTIÓN LOGIN - Forzando inicio limpio de sesión
+        // RENDERIZAR SOLICITUDES PENDIENTES EN LA CAMPANA DEL ADMIN
+        function renderizarNotificacionesAdmin() {
+            const container = document.getElementById("notificacionesAccesoContainer");
+            if(!container) return;
+            
+            let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
+            if(solicitudes.length === 0) {
+                container.innerHTML = "";
+                return;
+            }
+
+            let html = "";
+            solicitudes.forEach((sol, idx) => {
+                html += `
+                    <div style="background:rgba(16, 185, 129, 0.1); border:1px solid var(--color-green); padding:12px; border-radius:8px; margin-bottom:12px;">
+                        <h5 style="color:var(--color-green); font-size:13px;">📩 Nueva Solicitud de Acceso</h5>
+                        <p style="font-size:12px; margin-top:2px;">Correo: <b>${sol.email}</b></p>
+                        <div style="margin-top:8px; display:flex; gap:8px;">
+                            <button onclick="aprobarSolicitud(${idx})" style="padding:4px 10px; background:var(--color-green); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Aprobar</button>
+                            <button onclick="rechazarSolicitud(${idx})" style="padding:4px 10px; background:var(--color-red); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Rechazar</button>
+                        </div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+
+            // Actualizar badge de la campana
+            let badge = document.getElementById("navBadgeCount");
+            if(badge) {
+                badge.innerText = 2 + solicitudes.length;
+                badge.style.display = "flex";
+            }
+        }
+
+        window.aprobarSolicitud = function(idx) {
+            let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
+            solicitudes.splice(idx, 1);
+            localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
+            alert("Solicitud aprobada con éxito. El usuario ya puede ingresar.");
+            renderizarNotificacionesAdmin();
+        }
+
+        window.rechazarSolicitud = function(idx) {
+            let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
+            solicitudes.splice(idx, 1);
+            localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
+            alert("Solicitud rechazada.");
+            renderizarNotificacionesAdmin();
+        }
+
+        // ACCIÓN REGISTRO DE NUEVA CUENTA
+        document.getElementById("btnRegisterAction").addEventListener("click", () => {
+            const email = document.getElementById("regEmail").value.trim();
+            const pass = document.getElementById("regPass").value.trim();
+
+            if(!email || !pass) {
+                alert("Por favor complete todos los campos para registrarse.");
+                return;
+            }
+
+            let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
+            solicitudes.push({ email: email, pass: pass, fecha: new Date().toLocaleString() });
+            localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
+
+            alert("¡Solicitud enviada con éxito! Su cuenta está pendiente de aprobación por el Administrador Global.");
+            document.getElementById("regEmail").value = "";
+            document.getElementById("regPass").value = "";
+            toggleRegisterView(false);
+        });
+
+        // GESTIÓN LOGIN
         if(localStorage.getItem("aurum_logged") === "true") { 
             document.getElementById("loginScreen").style.display = "none";
             applyRole(localStorage.getItem("aurum_role") || "admin");
@@ -474,6 +568,7 @@
             document.getElementById("navBadgeCount").style.display = "none"; 
             document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
             document.getElementById("drawerAlarmas").classList.add("open");
+            renderizarNotificacionesAdmin();
         });
 
         function descargarExcelEstructurado() {
