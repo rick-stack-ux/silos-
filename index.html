@@ -121,9 +121,31 @@
 
         .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
         
-        /* PANALES FLOTANTES DE MEDIA PANTALLA (SIDE DRAWERS) */
-        .side-drawer { position: absolute; top: 0; right: -50%; width: 50%; height: 100%; background: var(--bg-card); border-left: 2px solid var(--border-color); box-shadow: -10px 0 30px rgba(0,0,0,0.5); transition: right 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99); z-index: 100; padding: 30px; overflow-y: auto; }
-        .side-drawer.open { right: 0; }
+        /* MODIFICADO: VENTANAS FLOTANTES CENTRADAS (TIPO MODAL CON SOMBRAS) */
+        .side-drawer { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%) scale(0.9); 
+            width: 700px; 
+            max-width: 90%; 
+            max-height: 85vh; 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
+            z-index: 100; 
+            padding: 30px; 
+            overflow-y: auto; 
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .side-drawer.open { 
+            transform: translate(-50%, -50%) scale(1); 
+            opacity: 1;
+            pointer-events: auto;
+        }
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; }
         .drawer-close { font-size: 24px; cursor: pointer; color: var(--text-sub); }
         .drawer-close:hover { color: var(--color-red); }
@@ -148,7 +170,7 @@
             .silos-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .chart-layout-panel { grid-template-columns: 1fr; gap: 20px; }
-            .side-drawer { width: 70%; right: -70%; }
+            .side-drawer { width: 85%; }
         }
 
         @media (max-width: 768px) {
@@ -157,7 +179,7 @@
             .brand { margin-bottom: 12px; }
             .menu-list { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
             .silos-grid, .kpi-grid { grid-template-columns: 1fr; }
-            .side-drawer { width: 100%; right: -100%; }
+            .side-drawer { width: 95%; max-height: 90vh; }
             .wrapper { height: calc(100vh - 140px); }
         }
     </style>
@@ -277,7 +299,7 @@
                 </div>
             </div>
 
-            <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
+            <!-- PANALES FLOTANTES (CENTRADOS TIPO MODAL) -->
             <!-- 1. HISTORIAL CON DESCARGA -->
             <div id="drawerHistorial" class="side-drawer">
                 <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close"></i></div>
@@ -451,7 +473,6 @@
             });
             container.innerHTML = html;
 
-            // Actualizar badge de la campana
             let badge = document.getElementById("navBadgeCount");
             if(badge) {
                 badge.innerText = 2 + solicitudes.length;
