@@ -169,8 +169,8 @@
         <div class="login-card">
             <i class="ph-fill ph-lock-keyhole"></i>
             <h2>AURUM.SYS INTERFACE</h2>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario (admin o usuario)">
-            <input type="password" id="passInput" class="login-field" placeholder="Contraseña (aurum2026)">
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario">
+            <input type="password" id="passInput" class="login-field" placeholder="Contraseña">
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
         </div>
     </div>
@@ -268,7 +268,7 @@
             </div>
 
             <!-- PANALES FLOTANTES (MEDIA PANTALLA EXCLUSIVA) -->
-            <!-- 1. HISTORIAL CON DESCARGA (TABLA ACTUALIZADA CON CUADRE) -->
+            <!-- 1. HISTORIAL CON DESCARGA -->
             <div id="drawerHistorial" class="side-drawer">
                 <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
@@ -282,11 +282,11 @@
                     <p style="font-size:11px; color:var(--text-sub); margin-top:8px;">Incluye Fecha, Folio, Silo, Kilos Iniciales, Kilos Cargados, Diferencias y Detalles de Lote.</p>
                 </div>
                 <table class="custom-table">
-                    <thead><tr><th>Fecha/Hora</th><th>Silo</th><th>Peso Antes Carga</th><th>Kg Cargados</th><th>Nuevo Peso</th></tr></thead>
+                    <thead><tr><th>Fecha/Hora</th><th>Silo</th><th>Kg Inicial</th><th>Kg Cargados</th><th>Diferencia</th></tr></thead>
                     <tbody>
-                        <tr><td>06-07-2026 14:30</td><td>Silo 1</td><td>500 kg</td><td><span style="color:var(--color-green)">+1,500 kg</span></td><td>2,000 kg</td></tr>
-                        <tr><td>06-07-2026 09:15</td><td>Silo 2</td><td>820 kg</td><td><span style="color:var(--color-green)">+2,000 kg</span></td><td>2,820 kg</td></tr>
-                        <tr><td>05-07-2026 18:00</td><td>Silo 5</td><td>150 kg</td><td><span style="color:var(--color-green)">+4,500 kg</span></td><td>4,650 kg</td></tr>
+                        <tr><td>06-07-2026 14:30</td><td>Silo 1</td><td>500</td><td>1500</td><td><span style="color:var(--color-green)">+1000</span></td></tr>
+                        <tr><td>06-07-2026 09:15</td><td>Silo 2</td><td>820</td><td>2000</td><td><span style="color:var(--color-green)">+1180</span></td></tr>
+                        <tr><td>05-07-2026 18:00</td><td>Silo 5</td><td>150</td><td>1500</td><td><span style="color:var(--color-green)">+1350</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -374,7 +374,6 @@
         let chartAnalisisInstance = null;
         let chartTendenciaInstance = null;
 
-        // AJUSTE CAPACIDAD 14000 KILOS
         let SILOS = [
             { id: 1, nombre: "SILO 1", capacidad: 14000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal" },
             { id: 2, nombre: "SILO 2", capacidad: 14000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal" },
@@ -388,14 +387,12 @@
         // LÓGICA DE ROLES DE USUARIO
         function applyRole(role) {
             if(role === 'usuario') {
-                // Ocultar configuraciones y creacion de usuarios
                 document.getElementById("menuConfig").style.display = "none";
                 document.getElementById("btnAddNewUser").style.display = "none";
                 document.getElementById("topUserName").innerText = "Operador Planta";
                 document.getElementById("topUserRole").innerText = "Solo Lectura";
                 document.getElementById("topUserInitials").innerText = "OP";
             } else {
-                // Mostrar todo para admin
                 document.getElementById("menuConfig").style.display = "flex";
                 document.getElementById("btnAddNewUser").style.display = "flex";
                 document.getElementById("topUserName").innerText = "Administrador 1";
@@ -404,23 +401,25 @@
             }
         }
 
-        // GESTIÓN LOGIN
+        // GESTIÓN LOGIN - Forzando inicio limpio de sesión
         if(localStorage.getItem("aurum_logged") === "true") { 
             document.getElementById("loginScreen").style.display = "none";
             applyRole(localStorage.getItem("aurum_role") || "admin");
         }
         
         document.getElementById("btnLoginAction").addEventListener("click", () => {
-            const user = document.getElementById("userInput").value;
-            const pass = document.getElementById("passInput").value;
+            const user = document.getElementById("userInput").value.trim();
+            const pass = document.getElementById("passInput").value.trim();
             
             if((user === "admin" || user === "usuario") && pass === "aurum2026") {
                 localStorage.setItem("aurum_logged", "true");
                 localStorage.setItem("aurum_role", user);
                 applyRole(user);
                 document.getElementById("loginScreen").style.display = "none";
+                document.getElementById("userInput").value = "";
+                document.getElementById("passInput").value = "";
             } else {
-                alert("Credenciales incorrectas. Pruebe 'admin' o 'usuario'.");
+                alert("Credenciales incorrectas.");
             }
         });
 
@@ -431,18 +430,15 @@
             box.style.display = box.style.display === "block" ? "none" : "block";
         });
         
-        // CIERRE AL CLIC FUERA PARA CUALQUIER MENU DESPLEGABLE Y PANELES LATERALES
         document.body.addEventListener("click", (e) => { 
             document.getElementById("logoutBox").style.display = "none";
             document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
             
-            // Cerrar paneles laterales (drawers) si se hace clic fuera de ellos y no se está clickeando un botón de menú
             if (!e.target.closest('.side-drawer') && !e.target.closest('[data-drawer]') && !e.target.closest('#btnCampana')) {
                 document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
             }
         });
         
-        // CIERRE AL CLIC FUERA PARA EL MODAL GLOBAL
         document.getElementById("globalModal").addEventListener("click", function(e) {
             if (e.target === this) {
                 this.style.display = "none";
@@ -455,7 +451,6 @@
             document.getElementById("loginScreen").style.display = "flex";
         });
 
-        // CONTROLADORES DE PANEL FLOTANTE DE MEDIA PANTALLA
         document.querySelectorAll("[data-drawer]").forEach(button => {
             button.addEventListener("click", () => {
                 document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
@@ -475,18 +470,16 @@
             });
         });
 
-        // MANEJO NOTIFICACIÓN CAMPANA
         document.getElementById("btnCampana").addEventListener("click", () => {
             document.getElementById("navBadgeCount").style.display = "none"; 
             document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
             document.getElementById("drawerAlarmas").classList.add("open");
         });
 
-        // EXPORTACIÓN A EXCEL MODIFICADA CON LÓGICA DE CUADRE (PESO ANTES + CARGA = PESO FINAL)
         function descargarExcelEstructurado() {
-            let csvContent = "data:text/csv;charset=utf-8,Fecha,Hora,Folio,Silo,Peso_Antes_Carga(kg),Kilos_Cargados(kg),Peso_Final_Cuadre(kg),Diferencia,Casilleros,Codigo,Descripcion,Lote,Destino,Camion,Conductor,Semana\n";
-            csvContent += `06-07-2026,14:30,1394,SILO 1,500,1500,2000,+1500,13,80012,13064 PUBERTAD 1,2784,13.4.04,7,Agustin,2\n`;
-            csvContent += `12-01-2026,09:15,1424,SILO 2,820,2000,2820,+2000,13,80012,13064 PUBERTAD 1,2842,13.4.04,7,Agustin,3\n`;
+            let csvContent = "data:text/csv;charset=utf-8,Fecha,Folio,Silo,Casilleros,Kilos,Codigo,Descripcion,Lote,Destino,Medicacion,Despachador,Camion,Conductor,Semana,Peso_balanzas,Diferencia\n";
+            csvContent += `06-07-2026,1394,13,1,1500,80012,13064 PUBERTAD 1,2784,13.4.04,13064,Dario,7,Agustin,2,4430,-70\n`;
+            csvContent += `12-01-2026,1424,13,1,1500,80012,13064 PUBERTAD 1,2842,13.4.04,13064,Dario,7,Agustin,3,4470,+1000\n`;
             
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -497,7 +490,6 @@
             document.body.removeChild(link);
         }
 
-        // CONTROL DE TEMAS E IDIOMAS
         function cambiarTema() {
             const t = document.getElementById("comboTema").value;
             document.body.className = "";
@@ -523,14 +515,12 @@
             document.getElementById("lblAddUser").innerText = d.add;
         }
 
-        // CONTROL MENU SILOS
         function toggleSiloMenu(event, id) {
             event.stopPropagation();
             document.querySelectorAll(".silo-dropdown-menu").forEach(m => m.style.display = 'none');
             document.getElementById("menu-silo-" + id).style.display = "block";
         }
 
-        // FUNCIÓN MODIFICADA: APARIENCIA SUAVIZADA Y DATOS A ESCALA DE 14000 KILOS
         function openSiloDetail(id, action) {
             let titulo = "";
             let extraInfo = "";
@@ -557,7 +547,6 @@
                 const ctx = document.getElementById("chartDiferencial").getContext("2d");
                 if(window.chartDiferencialInstance) window.chartDiferencialInstance.destroy();
                 
-                // Creación de gradientes estilo suavizado (como la imagen enviada)
                 const gradGreen = ctx.createLinearGradient(0, 0, 0, 300);
                 gradGreen.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
                 gradGreen.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
@@ -608,7 +597,6 @@
                 if(s.estado === "Critica") fStyle = "linear-gradient(to top, #991b1b, #ef4444)";
                 if(s.estado === "Sin Flujo") fStyle = "linear-gradient(to top, #5b21b6, #8b5cf6)";
 
-                // NUEVO: CÁLCULO DE AUTONOMÍA
                 let autonomiaHtml = "";
                 if (s.estado !== "Desconectado") {
                     if (s.consumo > 0) {
@@ -655,7 +643,6 @@
                                     <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
                                 </div>
                             </div>
-                            <!-- SE INVIERTE TEXTO: KILOS GRANDES, PORCENTAJE ABAJO + AUTONOMÍA -->
                             <div class="silo-text-readout">
                                 <div style="font-size:24px; font-weight:800; color:var(--text-title);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
                                 <div style="font-size:14px; font-weight:600; color:var(--text-sub);">${s.estado==='Desconectado'?'--':pct+'%'}</div>
@@ -665,7 +652,6 @@
                     </div>`;
             });
 
-            // CASILLERO 8 - DONA MAXIMIZADA CON DISTRIBUCIÓN EN KILOGRAMOS Y SUMA DE RESTAS
             grid.innerHTML += `
                 <div class="silo-card">
                     <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo (Kg)</h4>
@@ -730,7 +716,6 @@
 
         runRender();
 
-        // LINEAL INFERIOR GENERAL (CON COMPARATIVA HOY VS AYER)
         function updateChartMain() {
             const ctx = document.getElementById("chartConsumo").getContext("2d");
             if(chartConsumoInstance) chartConsumoInstance.destroy();
@@ -759,7 +744,6 @@
             });
         }
         
-        // Inicializar el grafico principal por primera vez
         updateChartMain();
 
     </script>
