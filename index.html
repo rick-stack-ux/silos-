@@ -414,24 +414,25 @@
             }
         }
 
-        // LÓGICA DE ROLES DE USUARIO ACTUALIZADA CON NOMBRE REAL
-        function applyRole(role, customName = "") {
-            let nombreMostrar = customName || (role === 'admin' ? 'Administrador 1' : 'Operador Planta');
-            let rolDescripcion = role === 'admin' ? 'Administrador Global' : 'Solo Lectura';
-            let iniciales = nombreMostrar.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        // LÓGICA DE ROLES Y USUARIO REAL INGRESADO
+        function applyRole(role, username = "Administrador 1") {
+            let initials = username.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if(initials.length === 0) initials = "US";
 
             if(role === 'usuario') {
                 document.getElementById("menuConfig").style.display = "none";
                 document.getElementById("btnAddNewUser").style.display = "none";
+                document.getElementById("topUserName").innerText = username;
+                document.getElementById("topUserRole").innerText = "Operador Planta";
+                document.getElementById("topUserInitials").innerText = initials;
             } else {
                 document.getElementById("menuConfig").style.display = "flex";
                 document.getElementById("btnAddNewUser").style.display = "flex";
+                document.getElementById("topUserName").innerText = username;
+                document.getElementById("topUserRole").innerText = "Administrador Global";
+                document.getElementById("topUserInitials").innerText = initials;
                 renderizarNotificacionesAdmin();
             }
-
-            document.getElementById("topUserName").innerText = nombreMostrar;
-            document.getElementById("topUserRole").innerText = rolDescripcion;
-            document.getElementById("topUserInitials").innerText = iniciales;
         }
 
         function renderizarNotificacionesAdmin() {
@@ -510,23 +511,32 @@
             toggleRegisterView(false);
         });
 
-        // GESTIÓN LOGIN Y SESIÓN GUARDADA
+        // GESTIÓN LOGIN Y PERSISTENCIA DEL USUARIO
         if(localStorage.getItem("aurum_logged") === "true") { 
             document.getElementById("loginScreen").style.display = "none";
-            applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_username") || "Administrador 1");
+            applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_active_user") || "Administrador 1");
         }
         
         document.getElementById("btnLoginAction").addEventListener("click", () => {
             const user = document.getElementById("userInput").value.trim();
             const pass = document.getElementById("passInput").value.trim();
             
-            if((user === "admin" || user === "usuario") && pass === "aurum2026") {
-                let realName = user === "admin" ? "Administrador 1" : "Operador Planta";
-                let roleType = user === "admin" ? "admin" : "usuario";
+            if(user === "admin" && pass === "aurum2026") {
                 localStorage.setItem("aurum_logged", "true");
-                localStorage.setItem("aurum_role", roleType);
-                localStorage.setItem("aurum_username", realName);
-                applyRole(roleType, realName);
+                localStorage.setItem("aurum_role", "admin");
+                localStorage.setItem("aurum_active_user", "Administrador 1");
+                applyRole("admin", "Administrador 1");
+                document.getElementById("loginScreen").style.display = "none";
+                document.getElementById("userInput").value = "";
+                document.getElementById("passInput").value = "";
+                return;
+            }
+
+            if(user === "usuario" && pass === "aurum2026") {
+                localStorage.setItem("aurum_logged", "true");
+                localStorage.setItem("aurum_role", "usuario");
+                localStorage.setItem("aurum_active_user", "Operador Planta");
+                applyRole("usuario", "Operador Planta");
                 document.getElementById("loginScreen").style.display = "none";
                 document.getElementById("userInput").value = "";
                 document.getElementById("passInput").value = "";
@@ -539,7 +549,7 @@
             if(encontrado) {
                 localStorage.setItem("aurum_logged", "true");
                 localStorage.setItem("aurum_role", "usuario");
-                localStorage.setItem("aurum_username", encontrado.username);
+                localStorage.setItem("aurum_active_user", encontrado.username);
                 applyRole("usuario", encontrado.username);
                 document.getElementById("loginScreen").style.display = "none";
                 document.getElementById("userInput").value = "";
@@ -573,7 +583,7 @@
         document.getElementById("btnExitAction").addEventListener("click", () => {
             localStorage.removeItem("aurum_logged");
             localStorage.removeItem("aurum_role");
-            localStorage.removeItem("aurum_username");
+            localStorage.removeItem("aurum_active_user");
             document.getElementById("loginScreen").style.display = "flex";
         });
 
