@@ -75,8 +75,8 @@
         .nav-bell span { position: absolute; top: -2px; right: -2px; background: var(--color-red); color: white; width: 14px; height: 14px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         
         .user-widget { display: flex; align-items: center; gap: 10px; cursor: pointer; position: relative; padding: 4px 8px; border-radius: 6px; }
-        .logout-dropdown { display: none; position: absolute; top: 48px; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; width: 160px; z-index: 1000; }
-        .logout-dropdown button { width: 100%; padding: 10px 14px; background: transparent; border: none; text-align: left; font-size: 12px; cursor: pointer; color: var(--text-title); display: flex; align-items: center; gap: 8px; }
+        .logout-dropdown { display: none; position: absolute; top: 48px; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; width: 180px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .logout-dropdown button { width: 100%; padding: 12px 16px; background: transparent; border: none; text-align: left; font-size: 13px; cursor: pointer; color: var(--text-title); display: flex; align-items: center; gap: 8px; }
 
         .layout-body { display: flex; flex: 1; overflow: hidden; position: relative; }
         .main-content { flex: 1; padding: 24px; overflow-y: auto; transition: all 0.3s; }
@@ -89,7 +89,7 @@
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
         .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; min-height: 290px; position: relative; overflow: visible; }
         
-        /* DISEÑO INDUSTRIAL DEL SILO (AMPLIADO Y MÁS GRANDE) */
+        /* DISEÑO INDUSTRIAL DEL SILO */
         .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 210px; margin-top: 8px; }
         .silo-axis-y { width: 32px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: var(--text-sub); }
         .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
@@ -110,26 +110,26 @@
         .tl-yellow.active { background: var(--color-yellow); box-shadow: 0 0 8px var(--color-yellow); opacity: 1; }
         .tl-red.active { background: var(--color-red); box-shadow: 0 0 8px var(--color-red); opacity: 1; }
         
-        /* MENU DESPLEGABLE CORREGIDO Y ACCESIBLE */
+        /* MENU DESPLEGABLE */
         .silo-dropdown-menu { display: none; position: absolute; top: 45px; left: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; width: 240px; z-index: 999; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
         .silo-dropdown-menu ul { list-style: none; padding: 0; margin: 0; }
         .silo-dropdown-menu li { padding: 12px 16px; font-size: 13px; color: var(--text-title); cursor: pointer; border-bottom: 1px solid var(--border-color); }
         .silo-dropdown-menu li:hover { background: rgba(128,128,128,0.15); }
 
-        /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
+        /* GRÁFICO DE DONA */
         .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
         .canvas-container { width: 140px; height: 140px; }
         .dona-legend { font-size: 13px; font-weight: 600; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 8px; color: var(--text-title); }
 
         .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
         
-        /* VENTANAS FLOTANTES CENTRADAS TIPO MODAL (SIN OSCURECER LA PÁGINA, SÓLO SOMBRA EN BORDES) */
+        /* VENTANAS FLOTANTES CENTRADAS Y MÁS GRANDES */
         .side-drawer { 
             position: absolute; 
             top: 50%; 
             left: 50%; 
             transform: translate(-50%, -50%) scale(0.9); 
-            width: 950px; 
+            width: 1100px; 
             max-width: 95%; 
             max-height: 90vh; 
             background: var(--bg-card); 
@@ -137,7 +137,7 @@
             border-radius: 14px; 
             box-shadow: 0 25px 60px rgba(0,0,0,0.4); 
             z-index: 100; 
-            padding: 35px; 
+            padding: 40px; 
             overflow-y: auto; 
             opacity: 0;
             pointer-events: none;
@@ -152,20 +152,20 @@
         .drawer-close { font-size: 26px; cursor: pointer; color: var(--text-sub); }
         .drawer-close:hover { color: var(--color-red); }
 
-        .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+        .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 18px; border-radius: 8px; margin-bottom: 16px; }
         .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; outline:none; }
 
         .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
         .custom-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
-        .custom-table th, .custom-table td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-color); }
+        .custom-table th, .custom-table td { padding: 14px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-color); }
         .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
         #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
 
-        /* MODAL GLOBAL (SIN FONDO OSCURO, SÓLO SOMBRA EN EL CUADRO) */
+        /* MODAL GLOBAL AMPLIADO (SIN OSCURECER FONDO) */
         #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; pointer-events: none; }
         #globalModal > div { pointer-events: auto; }
-        .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 900px; max-width: 95%; border-radius: 14px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+        .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 1050px; max-width: 95%; border-radius: 14px; padding: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;}
 
         /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
@@ -211,7 +211,7 @@
         </div>
     </div>
 
-    <!-- GLOBAL MODAL -->
+    <!-- GLOBAL MODAL AMPLIADO -->
     <div id="globalModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -260,6 +260,7 @@
         </div>
 
         <div class="layout-body">
+            <!-- DASHBOARD SIEMPRE VISIBLE DE FONDO -->
             <div class="main-content">
                 <div class="kpi-grid">
                     <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi1">Silos Activos</p><h3>7</h3></div></div>
@@ -297,7 +298,7 @@
                 </div>
             </div>
 
-            <!-- PANALES FLOTANTES -->
+            <!-- PANALES FLOTANTES AMPLIADOS -->
             <div id="drawerHistorial" class="side-drawer">
                 <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
@@ -331,9 +332,9 @@
                     </select>
                 </div>
                 <h4 style="font-size:14px; margin-bottom:10px;">Análisis de Consumo por Silo</h4>
-                <div style="height:230px; margin-bottom:30px;"><canvas id="chartAnalisisSilos"></canvas></div>
+                <div style="height:250px; margin-bottom:30px;"><canvas id="chartAnalisisSilos"></canvas></div>
                 <h4 style="font-size:14px; margin-bottom:10px;">Histórico Anual Automático (Meses)</h4>
-                <div style="height:250px; margin-bottom:20px;"><canvas id="chartTendenciaAnual"></canvas></div>
+                <div style="height:280px; margin-bottom:20px;"><canvas id="chartTendenciaAnual"></canvas></div>
             </div>
 
             <div id="drawerAlarmas" class="side-drawer">
@@ -413,21 +414,24 @@
             }
         }
 
-        function applyRole(role) {
+        // LÓGICA DE ROLES DE USUARIO ACTUALIZADA CON NOMBRE REAL
+        function applyRole(role, customName = "") {
+            let nombreMostrar = customName || (role === 'admin' ? 'Administrador 1' : 'Operador Planta');
+            let rolDescripcion = role === 'admin' ? 'Administrador Global' : 'Solo Lectura';
+            let iniciales = nombreMostrar.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
             if(role === 'usuario') {
                 document.getElementById("menuConfig").style.display = "none";
                 document.getElementById("btnAddNewUser").style.display = "none";
-                document.getElementById("topUserName").innerText = "Operador Planta";
-                document.getElementById("topUserRole").innerText = "Solo Lectura";
-                document.getElementById("topUserInitials").innerText = "OP";
             } else {
                 document.getElementById("menuConfig").style.display = "flex";
                 document.getElementById("btnAddNewUser").style.display = "flex";
-                document.getElementById("topUserName").innerText = "Administrador 1";
-                document.getElementById("topUserRole").innerText = "Administrador Global";
-                document.getElementById("topUserInitials").innerText = "A1";
                 renderizarNotificacionesAdmin();
             }
+
+            document.getElementById("topUserName").innerText = nombreMostrar;
+            document.getElementById("topUserRole").innerText = rolDescripcion;
+            document.getElementById("topUserInitials").innerText = iniciales;
         }
 
         function renderizarNotificacionesAdmin() {
@@ -506,9 +510,10 @@
             toggleRegisterView(false);
         });
 
+        // GESTIÓN LOGIN Y SESIÓN GUARDADA
         if(localStorage.getItem("aurum_logged") === "true") { 
             document.getElementById("loginScreen").style.display = "none";
-            applyRole(localStorage.getItem("aurum_role") || "admin");
+            applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_username") || "Administrador 1");
         }
         
         document.getElementById("btnLoginAction").addEventListener("click", () => {
@@ -516,9 +521,12 @@
             const pass = document.getElementById("passInput").value.trim();
             
             if((user === "admin" || user === "usuario") && pass === "aurum2026") {
+                let realName = user === "admin" ? "Administrador 1" : "Operador Planta";
+                let roleType = user === "admin" ? "admin" : "usuario";
                 localStorage.setItem("aurum_logged", "true");
-                localStorage.setItem("aurum_role", user === "admin" ? "admin" : "usuario");
-                applyRole(user === "admin" ? "admin" : "usuario");
+                localStorage.setItem("aurum_role", roleType);
+                localStorage.setItem("aurum_username", realName);
+                applyRole(roleType, realName);
                 document.getElementById("loginScreen").style.display = "none";
                 document.getElementById("userInput").value = "";
                 document.getElementById("passInput").value = "";
@@ -531,7 +539,8 @@
             if(encontrado) {
                 localStorage.setItem("aurum_logged", "true");
                 localStorage.setItem("aurum_role", "usuario");
-                applyRole("usuario");
+                localStorage.setItem("aurum_username", encontrado.username);
+                applyRole("usuario", encontrado.username);
                 document.getElementById("loginScreen").style.display = "none";
                 document.getElementById("userInput").value = "";
                 document.getElementById("passInput").value = "";
@@ -564,6 +573,7 @@
         document.getElementById("btnExitAction").addEventListener("click", () => {
             localStorage.removeItem("aurum_logged");
             localStorage.removeItem("aurum_role");
+            localStorage.removeItem("aurum_username");
             document.getElementById("loginScreen").style.display = "flex";
         });
 
@@ -625,20 +635,20 @@
             
             if(action === 'historial') {
                 titulo = `Historial Kilos - Silo ${id}`;
-                contenidoHtml = `<div style="height: 350px;"><canvas id="chartDiferencial"></canvas></div><div style="margin-top: 15px; font-size: 13px; color: var(--text-sub);">Mostrando el registro histórico de variaciones de peso (Capacidad Máx: 14.000 kg).</div>`;
+                contenidoHtml = `<div style="height: 400px;"><canvas id="chartDiferencial"></canvas></div><div style="margin-top: 15px; font-size: 14px; color: var(--text-sub);">Mostrando el registro histórico de variaciones de peso (Capacidad Máx: 14.000 kg).</div>`;
             } else if(action === 'cargas') {
                 titulo = `Frecuencia y Registro de Cargas - Silo ${id}`;
                 contenidoHtml = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <span style="font-size:13px; font-weight:600;">Filtrar Período:</span>
-                        <select class="config-select" style="width:200px; margin-top:0;" onchange="alert('Filtrando datos...')">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <span style="font-size:14px; font-weight:600;">Filtrar Período:</span>
+                        <select class="config-select" style="width:220px; margin-top:0;" onchange="alert('Filtrando datos...')">
                             <option value="semana">Semana Actual</option>
                             <option value="dia">Día de Hoy</option>
                             <option value="mes">Mes Actual</option>
                             <option value="ano">Año Completo</option>
                         </select>
                     </div>
-                    <table class="custom-table" style="margin-top:0;">
+                    <table class="custom-table">
                         <thead>
                             <tr><th>Fecha / Hora</th><th>Kilos Antes de Recarga</th><th>Kilos Cargados (+kg)</th><th>Peso Final (Cuadre)</th></tr>
                         </thead>
@@ -648,13 +658,13 @@
                             <tr><td>28-06-2026 18:00</td><td>150 kg</td><td><span style="color:var(--color-green); font-weight:700;">+4.500 kg</span></td><td>4.650 kg</td></tr>
                         </tbody>
                     </table>
-                    <p style="font-size:12px; color:var(--text-sub); margin-top:15px;">* Registro automático del nivel previo de alimento al momento de la recarga en celda de carga.</p>`;
+                    <p style="font-size:13px; color:var(--text-sub); margin-top:15px;">* Registro automático del nivel previo de alimento al momento de la recarga en celda de carga.</p>`;
             } else if(action === 'grafico') {
                 titulo = `Gráfico Consumo Semanal - Silo ${id}`;
-                contenidoHtml = `<div style="height: 350px;"><canvas id="chartDiferencial"></canvas></div>`;
+                contenidoHtml = `<div style="height: 400px;"><canvas id="chartDiferencial"></canvas></div>`;
             } else if(action === 'diferencial') {
                 titulo = `Consumo Diferencial Día/Noche - Silo ${id}`;
-                contenidoHtml = `<div style="height: 350px;"><canvas id="chartDiferencial"></canvas></div><div style="margin-top: 15px; font-size: 13px; color: var(--text-sub);">Comparativa superpuesta del consumo durante turno de día vs turno de noche.</div>`;
+                contenidoHtml = `<div style="height: 400px;"><canvas id="chartDiferencial"></canvas></div><div style="margin-top: 15px; font-size: 14px; color: var(--text-sub);">Comparativa superpuesta del consumo durante turno de día vs turno de noche.</div>`;
             }
             
             document.getElementById("modalTitle").innerText = titulo;
@@ -666,11 +676,11 @@
                     const ctx = document.getElementById("chartDiferencial").getContext("2d");
                     if(window.chartDiferencialInstance) window.chartDiferencialInstance.destroy();
                     
-                    const gradGreen = ctx.createLinearGradient(0, 0, 0, 350);
+                    const gradGreen = ctx.createLinearGradient(0, 0, 0, 400);
                     gradGreen.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
                     gradGreen.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
 
-                    const gradPurple = ctx.createLinearGradient(0, 0, 0, 350);
+                    const gradPurple = ctx.createLinearGradient(0, 0, 0, 400);
                     gradPurple.addColorStop(0, 'rgba(139, 92, 246, 0.25)');
                     gradPurple.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
                     
