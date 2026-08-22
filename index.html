@@ -57,7 +57,6 @@
         .brand h2 { font-size: 16px; font-weight: 800; }
         .brand span { display: block; font-size: 11px; color: var(--text-sub); }
         
-        /* LOGO CLIENTE CON FILTRO DINÁMICO */
         .client-logo { width: 120px; opacity: 0.9; margin: 0 auto; display: block; transition: all 0.3s; }
         body.theme-light .client-logo { filter: invert(1); opacity: 0.7; }
         body.theme-mansel .client-logo, body:not(.theme-light):not(.theme-mansel) .client-logo { filter: invert(0); }
@@ -81,7 +80,6 @@
         .layout-body { display: flex; flex: 1; overflow: hidden; position: relative; }
         .main-content { flex: 1; padding: 24px; overflow-y: auto; transition: all 0.3s; }
         
-        /* MULTIDISPOSITIVO: GRILLAS DINÁMICAS */
         .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
         .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
         .kpi-details h3 { font-size: 18px; font-weight: 700; }
@@ -89,7 +87,6 @@
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
         .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; min-height: 290px; position: relative; overflow: visible; }
         
-        /* DISEÑO INDUSTRIAL DEL SILO */
         .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 210px; margin-top: 8px; }
         .silo-axis-y { width: 32px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: var(--text-sub); }
         .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
@@ -103,27 +100,23 @@
         .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.5s; }
         .silo-text-readout { text-align: right; }
 
-        /* SEMAFORO AMPLIADO Y PROPORCIONAL */
         .traffic-light { display: flex; flex-direction: column; gap: 6px; margin-right: 8px; }
         .tl-dot { width: 14px; height: 14px; border-radius: 50%; background: #334155; opacity: 0.3; }
         .tl-green.active { background: var(--color-green); box-shadow: 0 0 8px var(--color-green); opacity: 1; }
         .tl-yellow.active { background: var(--color-yellow); box-shadow: 0 0 8px var(--color-yellow); opacity: 1; }
         .tl-red.active { background: var(--color-red); box-shadow: 0 0 8px var(--color-red); opacity: 1; }
         
-        /* MENU DESPLEGABLE */
         .silo-dropdown-menu { display: none; position: absolute; top: 45px; left: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; width: 240px; z-index: 999; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
         .silo-dropdown-menu ul { list-style: none; padding: 0; margin: 0; }
         .silo-dropdown-menu li { padding: 12px 16px; font-size: 13px; color: var(--text-title); cursor: pointer; border-bottom: 1px solid var(--border-color); }
         .silo-dropdown-menu li:hover { background: rgba(128,128,128,0.15); }
 
-        /* GRÁFICO DE DONA */
         .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
         .canvas-container { width: 140px; height: 140px; }
         .dona-legend { font-size: 13px; font-weight: 600; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 8px; color: var(--text-title); }
 
         .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
         
-        /* VENTANAS FLOTANTES (MODALES CENTRADOS CON CAPA DE CIERRE EXTERIOR) */
         .drawer-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -167,15 +160,13 @@
         .custom-table th, .custom-table td { padding: 14px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-color); }
         .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
-        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
+        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: block; z-index: 5000; }
 
-        /* MODAL GLOBAL AMPLIADO */
         #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; pointer-events: none; }
         #globalModal > div { pointer-events: auto; }
         .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 1050px; max-width: 95%; border-radius: 14px; padding: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;}
 
-        /* RESPONSIVE DESIGN */
         @media (max-width: 1200px) {
             .silos-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
@@ -194,7 +185,7 @@
         }
     </style>
 </head>
-<body class="theme-light"> <!-- TEMA LIMPIO PREDETERMINADO -->
+<body class="theme-light">
 
     <!-- LOGIN / REGISTRO -->
     <div id="loginScreen">
@@ -229,7 +220,7 @@
         </div>
     </div>
 
-    <!-- CAPA DE OSCURECIMIENTO SOLO PARA BORDES (TRANSPARENTE PARA CLIC FUERA) -->
+    <!-- CAPA PARA CLIC FUERA Y CERRAR -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="cerrarTodosLosPaneles()"></div>
 
     <!-- SIDEBAR -->
@@ -306,7 +297,7 @@
                 </div>
             </div>
 
-            <!-- PANALES FLOTANTES AMPLIADOS -->
+            <!-- PANALES FLOTANTES -->
             <div id="drawerHistorial" class="side-drawer">
                 <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close" onclick="cerrarTodosLosPaneles()"></i></div>
                 <div class="config-card-layout">
@@ -352,6 +343,10 @@
                     <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
                     <p style="font-size:12px; margin-top:4px;">Nivel de llenado inferior al 5% de la capacidad nominal.</p>
                 </div>
+                <div style="background:rgba(139,92,246,0.1); border:1px solid var(--color-purple); padding:14px; border-radius:8px;">
+                    <h5 style="color:var(--color-purple); font-size:14px;">⚡ ALERTA: Silo 6 Sin Flujo</h5>
+                    <p style="font-size:12px; margin-top:4px;">Se detectó detención abrupta en tubería de salida.</p>
+                </div>
             </div>
 
             <div id="drawerReportes" class="side-drawer">
@@ -380,7 +375,6 @@
                 </div>
             </div>
 
-            <!-- CONFIGURACIÓN AMPLIADA CON WHATSAPP, API KEY Y GESTIÓN DE USUARIOS -->
             <div id="drawerConfig" class="side-drawer">
                 <div class="drawer-header"><h3>⚙️ Ajustes del Sistema y Notificaciones</h3><i class="ph ph-x drawer-close" onclick="cerrarTodosLosPaneles()"></i></div>
                 
@@ -398,9 +392,7 @@
                 <div class="config-card-layout">
                     <h4 style="font-size:14px; font-weight:700; margin-bottom:8px;">👥 Acceso a Notificaciones (Usuarios Vinculados)</h4>
                     <p style="font-size:11px; color:var(--text-sub); margin-bottom:12px;">Lista de operadores y administradores con acceso a la interfaz y recepción de alarmas.</p>
-                    <div id="listaUsuariosNotificacionesContainer">
-                        <!-- Se llena dinámicamente -->
-                    </div>
+                    <div id="listaUsuariosNotificacionesContainer"></div>
                 </div>
 
                 <div class="config-card-layout">
@@ -464,7 +456,6 @@
             }
         }
 
-        // LIMPIAR BADGE DE ALARMAS AL HACER CLIC EN EL APARTADO DE ALARMAS O CAMPANA
         function limpiarBadgeAlarmas() {
             let badge = document.getElementById("navBadgeCount");
             if(badge) badge.style.display = "none";
@@ -472,13 +463,11 @@
             if(badgeMenu) badgeMenu.style.display = "none";
         }
 
-        // GESTIÓN DE USUARIOS Y WHATSAPP EN CONFIGURACIÓN
         function renderizarListaUsuariosConfig() {
             const container = document.getElementById("listaUsuariosNotificacionesContainer");
             if(!container) return;
 
             let aprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
-            // Incluir base por defecto
             let lista = [
                 { username: "Administrador 1", activo: true },
                 { username: "Operador Planta", activo: true },
@@ -589,7 +578,6 @@
             toggleRegisterView(false);
         });
 
-        // GESTIÓN LOGIN Y PERSISTENCIA
         if(localStorage.getItem("aurum_logged") === "true") { 
             document.getElementById("loginScreen").style.display = "none";
             applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_active_user") || "Administrador 1");
@@ -643,7 +631,6 @@
             box.style.display = box.style.display === "block" ? "none" : "block";
         });
 
-        // CONTROL DE CIERRE DE PANELES Y MODALES AL HACER CLIC FUERA
         function cerrarTodosLosPaneles() {
             document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
             document.getElementById("drawerOverlay").classList.remove("open");
@@ -670,7 +657,6 @@
             document.getElementById("loginScreen").style.display = "flex";
         });
 
-        // APERTURA DE PANELES FLOTANTES CON CAPA DE CIERRE EXTERIOR
         document.querySelectorAll("[data-drawer]").forEach(button => {
             button.addEventListener("click", (e) => {
                 e.stopPropagation();
