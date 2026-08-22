@@ -160,8 +160,6 @@
         .custom-table th, .custom-table td { padding: 14px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-color); }
         .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
-        #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: block; z-index: 5000; }
-
         #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; pointer-events: none; }
         #globalModal > div { pointer-events: auto; }
         .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 1050px; max-width: 95%; border-radius: 14px; padding: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
@@ -408,8 +406,6 @@
         </div>
     </div>
 
-    <div id="floatingToast"><i class="ph-fill ph-warning-octagon"></i> ALERTA ACTIVA EN SILO TRABADO / CRÍTICO</div>
-
     <script>
         let chartConsumoInstance = null;
         let chartAnalisisInstance = null;
@@ -639,9 +635,14 @@
             document.querySelectorAll(".silo-dropdown-menu").forEach(m => m.style.display = 'none');
         }
 
+        // CIERRE UNIVERSAL DE MENÚS EMERGENTES Y PANELES AL CLICKEAR FUERA
         document.body.addEventListener("click", (e) => { 
             document.getElementById("logoutBox").style.display = "none";
-            document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
+            
+            // Cerrar menús desplegables de silos si se hace clic fuera de ellos
+            if (!e.target.closest('.silo-dropdown-menu') && !e.target.closest('.silo-card [onclick*="toggleSiloMenu"]')) {
+                document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
+            }
         });
 
         document.getElementById("globalModal").addEventListener("click", function(e) {
@@ -706,8 +707,12 @@
 
         function toggleSiloMenu(event, id) {
             event.stopPropagation();
-            document.querySelectorAll(".silo-dropdown-menu").forEach(m => m.style.display = 'none');
-            document.getElementById("menu-silo-" + id).style.display = "block";
+            // Cerrar otros menús abiertos antes
+            document.querySelectorAll(".silo-dropdown-menu").forEach(m => {
+                if(m.id !== "menu-silo-" + id) m.style.display = 'none';
+            });
+            let menu = document.getElementById("menu-silo-" + id);
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
 
         function openSiloDetail(id, action) {
