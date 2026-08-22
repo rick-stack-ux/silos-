@@ -46,6 +46,11 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-title); display: flex; height: 100vh; overflow: hidden; }
 
+        /* REGLA DE PERMISOS: Oculta elementos admin si el usuario no es admin */
+        body[data-role="usuario"] .admin-only {
+            display: none !important;
+        }
+
         #loginScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background: var(--bg-main); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; border-radius: 12px; width: 100%; max-width: 380px; text-align: center; }
         .login-field { width: 100%; padding: 12px; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-title); margin-top: 12px; font-size: 14px; outline: none; }
@@ -160,7 +165,7 @@
         .custom-table th, .custom-table td { padding: 14px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-color); }
         .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
-        /* AQUI SE QUITÓ pointer-events: none; PARA QUE FUNCIONE EL CLIC AFUERA */
+        /* SIN pointer-events PARA QUE FUNCIONE EL CLIC AFUERA */
         #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; }
         .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 1050px; max-width: 95%; border-radius: 14px; padding: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;}
@@ -183,7 +188,7 @@
         }
     </style>
 </head>
-<body class="theme-light">
+<body class="theme-light" data-role="usuario">
 
     <!-- LOGIN / REGISTRO -->
     <div id="loginScreen">
@@ -229,9 +234,11 @@
                 <div class="menu-item active" data-target="dashboard"><div><i class="ph-fill ph-squares-four"></i><span class="lng-dash">Dashboard</span></div></div>
                 <div class="menu-item" data-drawer="drawerHistorial"><div><i class="ph ph-clock-counter-clockwise"></i><span class="lng-hist">Historial</span></div></div>
                 <div class="menu-item" data-drawer="drawerConsumo"><div><i class="ph ph-chart-line"></i><span class="lng-cons">Consumo</span></div></div>
-                <div class="menu-item" data-drawer="drawerAlarmas" onclick="limpiarBadgeAlarmas()"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
+                <div class="menu-item" data-drawer="drawerAlarmas" onclick="limpiarBadgeAlarmas()"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">0</span></div>
                 <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i><span class="lng-repo">Reportes</span></div></div>
-                <div class="menu-item" id="menuConfig" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
+                
+                <!-- Clase admin-only agregada a Configuración -->
+                <div class="menu-item admin-only" id="menuConfig" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
             </div>
         </div>
         <div style="text-align: center; margin-top: 20px;">
@@ -242,15 +249,16 @@
     <!-- MAIN INTERFACE -->
     <div class="wrapper">
         <div class="top-navbar">
-            <div class="nav-bell" id="btnCampana" onclick="limpiarBadgeAlarmas()"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
+            <div class="nav-bell" id="btnCampana" onclick="limpiarBadgeAlarmas()"><i class="ph ph-bell"></i><span id="navBadgeCount" style="display:none;">0</span></div>
             <div class="user-widget" id="userMenuWidget">
                 <div style="text-align:right; font-size:12px;">
-                    <h4 id="topUserName" style="color:var(--text-title);">Administrador 1</h4>
-                    <span id="topUserRole" style="color:var(--text-sub); font-size:10px;">Administrador Global</span>
+                    <h4 id="topUserName" style="color:var(--text-title);">Usuario</h4>
+                    <span id="topUserRole" style="color:var(--text-sub); font-size:10px;">Cargando...</span>
                 </div>
-                <div id="topUserInitials" style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">A1</div>
+                <div id="topUserInitials" style="width:32px; height:32px; border-radius:50%; background:#2a3b4d; color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">--</div>
                 <div class="logout-dropdown" id="logoutBox">
-                    <button id="btnAddNewUser" onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
+                    <!-- Clase admin-only agregada al botón de agregar usuario -->
+                    <button id="btnAddNewUser" class="admin-only" onclick="alert('Función para añadir operadores del sistema.')"><i class="ph ph-user-plus"></i> <span id="lblAddUser">Nuevo Usuario</span></button>
                     <button id="btnExitAction" style="color:var(--color-red);"><i class="ph ph-sign-out"></i> Cerrar Sesión</button>
                 </div>
             </div>
@@ -305,8 +313,9 @@
                         <option value="mes">Último Mes</option>
                         <option value="ano">Año Completo</option>
                     </select>
-                    <button class="btn-action" onclick="descargarExcelEstructurado()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel Estructurado</button>
-                    <p style="font-size:11px; color:var(--text-sub); margin-top:8px;">Incluye Fecha, Folio, Silo, Kilos Iniciales, Kilos Cargados, Diferencias y Detalles de Lote.</p>
+                    <!-- Clase admin-only agregada al botón de descargar excel -->
+                    <button class="btn-action admin-only" onclick="descargarExcelEstructurado()"><i class="ph ph-file-xls"></i> Descargar Reporte Excel Estructurado</button>
+                    <p class="admin-only" style="font-size:11px; color:var(--text-sub); margin-top:8px;">Incluye Fecha, Folio, Silo, Kilos Iniciales, Kilos Cargados, Diferencias y Detalles de Lote.</p>
                 </div>
                 <table class="custom-table">
                     <thead><tr><th>Fecha/Hora</th><th>Silo</th><th>Kg Inicial</th><th>Kg Cargados</th><th>Diferencia</th></tr></thead>
@@ -367,8 +376,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="config-card-layout">
+                <div class="config-card-layout admin-only">
                     <p style="font-size:13px;">Generar bitácora consolidada en Excel mostrando veces cargadas, hora, fecha (Día/Semana/Mes/Año) y cantidad de kilos por silo y global.</p>
+                    <!-- Clase admin-only bloquea este botón si es operador -->
                     <button class="btn-action" onclick="alert('Generando y descargando Excel Global...')"><i class="ph ph-file-xls"></i> Descargar Excel Global</button>
                 </div>
             </div>
@@ -407,15 +417,18 @@
     </div>
 
     <script>
-        // INICIALIZACIÓN UNIFICADA DE USUARIOS
-        if (!localStorage.getItem("aurum_init")) {
+        // INICIALIZACIÓN ÚNICA DE USUARIOS POR DEFECTO
+        if (!localStorage.getItem("aurum_init_v2")) {
             let existingUsers = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
             let initialUsers = [
                 { username: "admin", pass: "aurum2026", role: "admin", label: "Administrador 1" },
                 { username: "usuario", pass: "aurum2026", role: "usuario", label: "Operador Planta" }
             ];
-            localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify([...initialUsers, ...existingUsers]));
-            localStorage.setItem("aurum_init", "true");
+            // Guarda los usuarios sin sobreescribir los que el administrador ya haya creado
+            if(existingUsers.length === 0) {
+                localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify(initialUsers));
+            }
+            localStorage.setItem("aurum_init_v2", "true");
         }
 
         let chartConsumoInstance = null;
@@ -442,24 +455,36 @@
             }
         }
 
-        function applyRole(role, username = "Administrador 1") {
+        function checkBadgeNotificaciones() {
+            let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
+            let badgeCount = solicitudes.length + 2; // Las 2 alarmas predeterminadas + solicitudes nuevas
+            let navBadge = document.getElementById("navBadgeCount");
+            let menuBadge = document.getElementById("badgeAlarmas");
+            
+            if(badgeCount > 0) {
+                if(navBadge) { navBadge.style.display = "flex"; navBadge.innerText = badgeCount; }
+                if(menuBadge) { menuBadge.style.display = "block"; menuBadge.innerText = badgeCount; }
+            }
+        }
+
+        // CONTROL MAGISTRAL DE PERMISOS
+        function applyRole(role, username = "Usuario") {
             let initials = username.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
             if(initials.length === 0) initials = "US";
 
+            // Setea el rol en el body, el CSS oculta automáticamente todo lo 'admin-only'
+            document.body.setAttribute("data-role", role);
+            
+            document.getElementById("topUserName").innerText = username;
+            document.getElementById("topUserInitials").innerText = initials;
+
             if(role === 'usuario') {
-                document.getElementById("menuConfig").style.display = "none";
-                document.getElementById("btnAddNewUser").style.display = "none";
-                document.getElementById("topUserName").innerText = username;
                 document.getElementById("topUserRole").innerText = "Operador Planta";
-                document.getElementById("topUserInitials").innerText = initials;
             } else {
-                document.getElementById("menuConfig").style.display = "flex";
-                document.getElementById("btnAddNewUser").style.display = "flex";
-                document.getElementById("topUserName").innerText = username;
                 document.getElementById("topUserRole").innerText = "Administrador Global";
-                document.getElementById("topUserInitials").innerText = initials;
                 renderizarNotificacionesAdmin();
                 renderizarListaUsuariosConfig();
+                checkBadgeNotificaciones();
             }
         }
 
@@ -470,7 +495,7 @@
             if(badgeMenu) badgeMenu.style.display = "none";
         }
 
-        // LÓGICA DE USUARIOS CORREGIDA
+        // GESTIÓN DE USUARIOS
         function renderizarListaUsuariosConfig() {
             const container = document.getElementById("listaUsuariosNotificacionesContainer");
             if(!container) return;
@@ -478,29 +503,37 @@
             let aprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
 
             let html = `<table class="custom-table" style="margin-top:0;">
-                <thead><tr><th>Usuario</th><th>Recibir WhatsApp</th><th>Acción</th></tr></thead>
+                <thead><tr><th>Usuario</th><th>Rol</th><th>Recibir WhatsApp</th><th>Acción</th></tr></thead>
                 <tbody>`;
             
             aprobados.forEach((user) => {
                 let displayName = user.label || user.username;
+                let displayRole = user.role === "admin" ? "Administrador" : "Operador";
                 html += `<tr>
                     <td><b>${displayName}</b></td>
-                    <td><input type="checkbox" checked onchange="alert('Preferencia de notificación actualizada para ${displayName}')"></td>
-                    <td><button onclick="eliminarUsuarioSistema('${displayName}')" style="padding:4px 8px; background:var(--color-red); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Eliminar</button></td>
+                    <td>${displayRole}</td>
+                    <td><input type="checkbox" checked onchange="alert('Preferencia actualizada para ${displayName}')"></td>
+                    <td><button onclick="eliminarUsuarioSistema('${user.username}')" style="padding:4px 8px; background:var(--color-red); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Eliminar</button></td>
                 </tr>`;
             });
             html += `</tbody></table>`;
             container.innerHTML = html;
         }
 
-        window.eliminarUsuarioSistema = function(displayName) {
-            if(confirm(`¿Desea eliminar al usuario ${displayName} del sistema permanentemente?`)) {
+        window.eliminarUsuarioSistema = function(usernameToRemove) {
+            // Evitar que el admin principal se borre a sí mismo por error
+            if(usernameToRemove === "admin") {
+                alert("No puedes eliminar al administrador raíz del sistema.");
+                return;
+            }
+
+            if(confirm(`¿Desea eliminar permanentemente el acceso del usuario "${usernameToRemove}"?`)) {
                 let aprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
-                aprobados = aprobados.filter(u => (u.label || u.username) !== displayName);
+                aprobados = aprobados.filter(u => u.username !== usernameToRemove);
                 localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify(aprobados));
                 
                 renderizarListaUsuariosConfig();
-                alert("Usuario eliminado correctamente. Ya no tendrá acceso.");
+                alert("Usuario eliminado correctamente de la memoria.");
             }
         }
 
@@ -512,6 +545,7 @@
             alert("Configuración de WhatsApp y API Key guardada con éxito.");
         }
 
+        // RENDERIZADO DE NOTIFICACIÓN DE SOLICITUD AL ADMIN
         function renderizarNotificacionesAdmin() {
             const container = document.getElementById("notificacionesAccesoContainer");
             if(!container) return;
@@ -530,7 +564,7 @@
                         <p style="font-size:12px; margin-top:2px;">Usuario: <b>${sol.username}</b></p>
                         <p style="font-size:12px;">Correo: <b>${sol.email}</b></p>
                         <div style="margin-top:8px; display:flex; gap:8px;">
-                            <button onclick="aprobarSolicitud(${idx})" style="padding:4px 10px; background:var(--color-green); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Aprobar</button>
+                            <button onclick="aprobarSolicitud(${idx})" style="padding:4px 10px; background:var(--color-green); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Aceptar y Guardar</button>
                             <button onclick="rechazarSolicitud(${idx})" style="padding:4px 10px; background:var(--color-red); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Rechazar</button>
                         </div>
                     </div>`;
@@ -543,23 +577,35 @@
             let aprobada = solicitudes[idx];
             
             let usuariosAprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
+            
+            // Verifica que el nombre de usuario no exista ya
+            let yaExiste = usuariosAprobados.find(u => u.username === aprobada.username);
+            if(yaExiste) {
+                alert("Ya existe un usuario con ese nombre de acceso.");
+                return;
+            }
+
+            // GUARDA PARA SIEMPRE EN LA MEMORIA LOCAL COMO 'usuario'
             usuariosAprobados.push({ username: aprobada.username, pass: aprobada.pass, role: "usuario", label: aprobada.username });
             localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify(usuariosAprobados));
 
+            // Quitar de solicitudes pendientes
             solicitudes.splice(idx, 1);
             localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
             
-            alert(`¡Usuario "${aprobada.username}" aprobado con éxito! Ya puede iniciar sesión.`);
+            alert(`¡Usuario "${aprobada.username}" aceptado! Ahora puede iniciar sesión libremente.`);
             renderizarNotificacionesAdmin();
             renderizarListaUsuariosConfig();
+            checkBadgeNotificaciones();
         }
 
         window.rechazarSolicitud = function(idx) {
             let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
             solicitudes.splice(idx, 1);
             localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
-            alert("Solicitud rechazada.");
+            alert("Solicitud rechazada y eliminada.");
             renderizarNotificacionesAdmin();
+            checkBadgeNotificaciones();
         }
 
         document.getElementById("btnRegisterAction").addEventListener("click", () => {
@@ -576,19 +622,23 @@
             solicitudes.push({ username: username, email: email, pass: pass, fecha: new Date().toLocaleString() });
             localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
 
-            alert("¡Solicitud enviada con éxito! Su cuenta está pendiente de aprobación por el Administrador Global.");
+            alert("¡Solicitud enviada con éxito! Queda a la espera de que el Administrador Global la acepte en sus notificaciones.");
             document.getElementById("regUsername").value = "";
             document.getElementById("regEmail").value = "";
             document.getElementById("regPass").value = "";
             toggleRegisterView(false);
+            
+            // Si hay un admin logueado en otra ventana, su badge debería subir (simulado)
+            checkBadgeNotificaciones();
         });
 
+        // REVISAR SI YA ESTÁ LOGUEADO
         if(localStorage.getItem("aurum_logged") === "true") { 
             document.getElementById("loginScreen").style.display = "none";
-            applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_active_user") || "Administrador 1");
+            applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_active_user") || "Administrador");
         }
         
-        // LOGIN UNIFICADO
+        // LOGIN DEFINITIVO
         document.getElementById("btnLoginAction").addEventListener("click", () => {
             const user = document.getElementById("userInput").value.trim();
             const pass = document.getElementById("passInput").value.trim();
@@ -600,12 +650,14 @@
                 localStorage.setItem("aurum_logged", "true");
                 localStorage.setItem("aurum_role", encontrado.role || "usuario");
                 localStorage.setItem("aurum_active_user", encontrado.label || encontrado.username);
+                
                 applyRole(encontrado.role || "usuario", encontrado.label || encontrado.username);
+                
                 document.getElementById("loginScreen").style.display = "none";
                 document.getElementById("userInput").value = "";
                 document.getElementById("passInput").value = "";
             } else {
-                alert("Credenciales incorrectas o la cuenta ha sido eliminada.");
+                alert("Credenciales incorrectas, cuenta no aceptada por el administrador, o cuenta eliminada.");
             }
         });
 
@@ -623,17 +675,15 @@
             document.querySelectorAll(".silo-dropdown-menu").forEach(m => m.style.display = 'none');
         }
 
-        // CIERRE UNIVERSAL DE MENÚS EMERGENTES Y PANELES AL CLICKEAR FUERA
+        // CIERRE AL CLICKEAR FUERA DEL MODAL Y LOS MENÚS
         document.body.addEventListener("click", (e) => { 
             document.getElementById("logoutBox").style.display = "none";
             
-            // Cerrar menús desplegables de silos si se hace clic fuera de ellos
             if (!e.target.closest('.silo-dropdown-menu') && !e.target.closest('.silo-card [onclick*="toggleSiloMenu"]')) {
                 document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
             }
         });
 
-        // NUEVO LISTENER QUE AHORA SÍ DETECTARÁ EL CLIC (gracias a quitar pointer-events: none)
         document.getElementById("globalModal").addEventListener("click", function(e) {
             if (e.target === this) {
                 this.style.display = "none";
@@ -645,6 +695,8 @@
             localStorage.removeItem("aurum_role");
             localStorage.removeItem("aurum_active_user");
             document.getElementById("loginScreen").style.display = "flex";
+            // Restablecer panel y badges
+            cerrarTodosLosPaneles();
         });
 
         document.querySelectorAll("[data-drawer]").forEach(button => {
@@ -691,12 +743,15 @@
         function cambiarTema() {
             const t = document.getElementById("comboTema").value;
             document.body.className = "";
+            // Volvemos a setear el atributo de data-role para que el CSS no pierda su efecto
+            let activeRole = localStorage.getItem("aurum_role") || "usuario";
+            document.body.setAttribute("data-role", activeRole);
+
             if(t !== "dark") document.body.classList.add("theme-" + t);
         }
 
         function toggleSiloMenu(event, id) {
             event.stopPropagation();
-            // Cerrar otros menús abiertos antes
             document.querySelectorAll(".silo-dropdown-menu").forEach(m => {
                 if(m.id !== "menu-silo-" + id) m.style.display = 'none';
             });
@@ -788,7 +843,6 @@
 
             SILOS.forEach(s => {
                 let pct = Math.round(s.peso / s.capacidad * 100);
-                let stClass = "var(--text-sub)";
                 let fStyle = "transparent";
                 if(s.estado === "Normal") fStyle = "linear-gradient(to top, #065f46, #10b981)";
                 if(s.estado === "Baja") fStyle = "linear-gradient(to top, #9a3412, #f59e0b)";
@@ -943,7 +997,6 @@
         }
         
         updateChartMain();
-
     </script>
 </body>
 </html>
