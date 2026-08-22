@@ -160,8 +160,8 @@
         .custom-table th, .custom-table td { padding: 14px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-color); }
         .custom-table th { color: var(--text-sub); background: rgba(0,0,0,0.1); }
 
-        #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; pointer-events: none; }
-        #globalModal > div { pointer-events: auto; }
+        /* AQUI SE QUITÓ pointer-events: none; PARA QUE FUNCIONE EL CLIC AFUERA */
+        #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; }
         .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 1050px; max-width: 95%; border-radius: 14px; padding: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;}
 
@@ -407,6 +407,17 @@
     </div>
 
     <script>
+        // INICIALIZACIÓN UNIFICADA DE USUARIOS
+        if (!localStorage.getItem("aurum_init")) {
+            let existingUsers = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
+            let initialUsers = [
+                { username: "admin", pass: "aurum2026", role: "admin", label: "Administrador 1" },
+                { username: "usuario", pass: "aurum2026", role: "usuario", label: "Operador Planta" }
+            ];
+            localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify([...initialUsers, ...existingUsers]));
+            localStorage.setItem("aurum_init", "true");
+        }
+
         let chartConsumoInstance = null;
         let chartAnalisisInstance = null;
         let chartTendenciaInstance = null;
@@ -459,39 +470,37 @@
             if(badgeMenu) badgeMenu.style.display = "none";
         }
 
+        // LÓGICA DE USUARIOS CORREGIDA
         function renderizarListaUsuariosConfig() {
             const container = document.getElementById("listaUsuariosNotificacionesContainer");
             if(!container) return;
 
             let aprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
-            let lista = [
-                { username: "Administrador 1", activo: true },
-                { username: "Operador Planta", activo: true },
-                ...aprobados.map(u => ({ username: u.username, activo: true }))
-            ];
 
             let html = `<table class="custom-table" style="margin-top:0;">
                 <thead><tr><th>Usuario</th><th>Recibir WhatsApp</th><th>Acción</th></tr></thead>
                 <tbody>`;
             
-            lista.forEach((user, idx) => {
+            aprobados.forEach((user) => {
+                let displayName = user.label || user.username;
                 html += `<tr>
-                    <td><b>${user.username}</b></td>
-                    <td><input type="checkbox" checked onchange="alert('Preferencia de notificación actualizada para ${user.username}')"></td>
-                    <td><button onclick="eliminarUsuarioSistema('${user.username}')" style="padding:4px 8px; background:var(--color-red); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Eliminar</button></td>
+                    <td><b>${displayName}</b></td>
+                    <td><input type="checkbox" checked onchange="alert('Preferencia de notificación actualizada para ${displayName}')"></td>
+                    <td><button onclick="eliminarUsuarioSistema('${displayName}')" style="padding:4px 8px; background:var(--color-red); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Eliminar</button></td>
                 </tr>`;
             });
             html += `</tbody></table>`;
             container.innerHTML = html;
         }
 
-        window.eliminarUsuarioSistema = function(username) {
-            if(confirm(`¿Desea eliminar al usuario ${username} del sistema?`)) {
+        window.eliminarUsuarioSistema = function(displayName) {
+            if(confirm(`¿Desea eliminar al usuario ${displayName} del sistema permanentemente?`)) {
                 let aprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
-                aprobados = aprobados.filter(u => u.username !== username);
+                aprobados = aprobados.filter(u => (u.label || u.username) !== displayName);
                 localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify(aprobados));
+                
                 renderizarListaUsuariosConfig();
-                alert("Usuario eliminado correctamente.");
+                alert("Usuario eliminado correctamente. Ya no tendrá acceso.");
             }
         }
 
@@ -534,7 +543,7 @@
             let aprobada = solicitudes[idx];
             
             let usuariosAprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
-            usuariosAprobados.push({ username: aprobada.username, pass: aprobada.pass });
+            usuariosAprobados.push({ username: aprobada.username, pass: aprobada.pass, role: "usuario", label: aprobada.username });
             localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify(usuariosAprobados));
 
             solicitudes.splice(idx, 1);
@@ -579,45 +588,24 @@
             applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_active_user") || "Administrador 1");
         }
         
+        // LOGIN UNIFICADO
         document.getElementById("btnLoginAction").addEventListener("click", () => {
             const user = document.getElementById("userInput").value.trim();
             const pass = document.getElementById("passInput").value.trim();
             
-            if(user === "admin" && pass === "aurum2026") {
-                localStorage.setItem("aurum_logged", "true");
-                localStorage.setItem("aurum_role", "admin");
-                localStorage.setItem("aurum_active_user", "Administrador 1");
-                applyRole("admin", "Administrador 1");
-                document.getElementById("loginScreen").style.display = "none";
-                document.getElementById("userInput").value = "";
-                document.getElementById("passInput").value = "";
-                return;
-            }
-
-            if(user === "usuario" && pass === "aurum2026") {
-                localStorage.setItem("aurum_logged", "true");
-                localStorage.setItem("aurum_role", "usuario");
-                localStorage.setItem("aurum_active_user", "Operador Planta");
-                applyRole("usuario", "Operador Planta");
-                document.getElementById("loginScreen").style.display = "none";
-                document.getElementById("userInput").value = "";
-                document.getElementById("passInput").value = "";
-                return;
-            }
-
             let usuariosAprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
             let encontrado = usuariosAprobados.find(u => u.username === user && u.pass === pass);
 
             if(encontrado) {
                 localStorage.setItem("aurum_logged", "true");
-                localStorage.setItem("aurum_role", "usuario");
-                localStorage.setItem("aurum_active_user", encontrado.username);
-                applyRole("usuario", encontrado.username);
+                localStorage.setItem("aurum_role", encontrado.role || "usuario");
+                localStorage.setItem("aurum_active_user", encontrado.label || encontrado.username);
+                applyRole(encontrado.role || "usuario", encontrado.label || encontrado.username);
                 document.getElementById("loginScreen").style.display = "none";
                 document.getElementById("userInput").value = "";
                 document.getElementById("passInput").value = "";
             } else {
-                alert("Credenciales incorrectas o cuenta pendiente de aprobación por el Administrador.");
+                alert("Credenciales incorrectas o la cuenta ha sido eliminada.");
             }
         });
 
@@ -645,6 +633,7 @@
             }
         });
 
+        // NUEVO LISTENER QUE AHORA SÍ DETECTARÁ EL CLIC (gracias a quitar pointer-events: none)
         document.getElementById("globalModal").addEventListener("click", function(e) {
             if (e.target === this) {
                 this.style.display = "none";
