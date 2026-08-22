@@ -123,12 +123,21 @@
 
         .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
         
-        /* VENTANAS FLOTANTES CENTRADAS Y MÁS GRANDES */
+        /* VENTANAS FLOTANTES (MODALES CENTRADOS CON CAPA DE CIERRE EXTERIOR) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: transparent;
+            z-index: 99;
+            display: none;
+        }
+        .drawer-overlay.open { display: block; }
+
         .side-drawer { 
-            position: absolute; 
+            position: fixed; 
             top: 50%; 
             left: 50%; 
-            transform: translate(-50%, -50%) scale(0.9); 
+            transform: translate(-50%, -50%) scale(0.95); 
             width: 1100px; 
             max-width: 95%; 
             max-height: 90vh; 
@@ -139,14 +148,11 @@
             z-index: 100; 
             padding: 40px; 
             overflow-y: auto; 
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: none;
         }
         .side-drawer.open { 
             transform: translate(-50%, -50%) scale(1); 
-            opacity: 1;
-            pointer-events: auto;
+            display: block;
         }
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; }
         .drawer-close { font-size: 26px; cursor: pointer; color: var(--text-sub); }
@@ -154,6 +160,7 @@
 
         .config-card-layout { background: var(--bg-main); border: 1px solid var(--border-color); padding: 18px; border-radius: 8px; margin-bottom: 16px; }
         .config-select { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; outline:none; }
+        .config-input { padding: 10px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-title); border-radius: 6px; width: 100%; margin-top: 8px; outline:none; font-size: 14px; }
 
         .btn-action { padding: 12px 20px; background: var(--color-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
         .custom-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
@@ -162,13 +169,13 @@
 
         #floatingToast { position: fixed; bottom: 20px; right: 20px; background: #7f1d1d; border: 1px solid var(--color-red); color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; }
 
-        /* MODAL GLOBAL AMPLIADO (SIN OSCURECER FONDO) */
+        /* MODAL GLOBAL AMPLIADO */
         #globalModal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: transparent; z-index: 9999; display: none; align-items: center; justify-content: center; pointer-events: none; }
         #globalModal > div { pointer-events: auto; }
         .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); width: 1050px; max-width: 95%; border-radius: 14px; padding: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;}
 
-        /* RESPONSIVE DESIGN INTERMEDIO Y MÓVIL */
+        /* RESPONSIVE DESIGN */
         @media (max-width: 1200px) {
             .silos-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
@@ -211,18 +218,19 @@
         </div>
     </div>
 
-    <!-- GLOBAL MODAL AMPLIADO -->
+    <!-- GLOBAL MODAL -->
     <div id="globalModal">
         <div class="modal-card">
             <div class="modal-header">
                 <h3 id="modalTitle">Detalle de Cargas</h3>
                 <i class="ph ph-x drawer-close" onclick="document.getElementById('globalModal').style.display='none'" style="cursor:pointer;"></i>
             </div>
-            <div id="modalContent">
-                <!-- CONTENIDO DINÁMICO -->
-            </div>
+            <div id="modalContent"></div>
         </div>
     </div>
+
+    <!-- CAPA DE OSCURECIMIENTO SOLO PARA BORDES (TRANSPARENTE PARA CLIC FUERA) -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="cerrarTodosLosPaneles()"></div>
 
     <!-- SIDEBAR -->
     <div class="sidebar">
@@ -232,7 +240,7 @@
                 <div class="menu-item active" data-target="dashboard"><div><i class="ph-fill ph-squares-four"></i><span class="lng-dash">Dashboard</span></div></div>
                 <div class="menu-item" data-drawer="drawerHistorial"><div><i class="ph ph-clock-counter-clockwise"></i><span class="lng-hist">Historial</span></div></div>
                 <div class="menu-item" data-drawer="drawerConsumo"><div><i class="ph ph-chart-line"></i><span class="lng-cons">Consumo</span></div></div>
-                <div class="menu-item" data-drawer="drawerAlarmas"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
+                <div class="menu-item" data-drawer="drawerAlarmas" onclick="limpiarBadgeAlarmas()"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
                 <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i><span class="lng-repo">Reportes</span></div></div>
                 <div class="menu-item" id="menuConfig" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
             </div>
@@ -245,7 +253,7 @@
     <!-- MAIN INTERFACE -->
     <div class="wrapper">
         <div class="top-navbar">
-            <div class="nav-bell" id="btnCampana"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
+            <div class="nav-bell" id="btnCampana" onclick="limpiarBadgeAlarmas()"><i class="ph ph-bell"></i><span id="navBadgeCount">2</span></div>
             <div class="user-widget" id="userMenuWidget">
                 <div style="text-align:right; font-size:12px;">
                     <h4 id="topUserName" style="color:var(--text-title);">Administrador 1</h4>
@@ -260,7 +268,7 @@
         </div>
 
         <div class="layout-body">
-            <!-- DASHBOARD SIEMPRE VISIBLE DE FONDO -->
+            <!-- DASHBOARD -->
             <div class="main-content">
                 <div class="kpi-grid">
                     <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi1">Silos Activos</p><h3>7</h3></div></div>
@@ -300,7 +308,7 @@
 
             <!-- PANALES FLOTANTES AMPLIADOS -->
             <div id="drawerHistorial" class="side-drawer">
-                <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close" onclick="cerrarTodosLosPaneles()"></i></div>
                 <div class="config-card-layout">
                     <label style="font-size:13px; font-weight:600;">Filtrar Período de Datos</label>
                     <select class="config-select" id="filtroHistorial">
@@ -322,7 +330,7 @@
             </div>
 
             <div id="drawerConsumo" class="side-drawer">
-                <div class="drawer-header"><h3>📊 Concentrado Global de Datos</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="drawer-header"><h3>📊 Concentrado Global de Datos</h3><i class="ph ph-x drawer-close" onclick="cerrarTodosLosPaneles()"></i></div>
                 <div class="config-card-layout" style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px;">
                     <span style="font-size:13px; font-weight:600;">Filtro de Datos Globales:</span>
                     <select class="config-select" style="width:180px; margin-top:0;">
@@ -338,7 +346,7 @@
             </div>
 
             <div id="drawerAlarmas" class="side-drawer">
-                <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close" onclick="cerrarTodosLosPaneles()"></i></div>
                 <div id="notificacionesAccesoContainer"></div>
                 <div style="background:rgba(239,68,68,0.1); border:1px solid var(--color-red); padding:14px; border-radius:8px; margin-bottom:12px;">
                     <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
@@ -347,7 +355,7 @@
             </div>
 
             <div id="drawerReportes" class="side-drawer">
-                <div class="drawer-header"><h3>📝 Generador de Reportes y Frecuencias</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="drawer-header"><h3>📝 Generador de Reportes y Frecuencias</h3><i class="ph ph-x drawer-close" onclick="cerrarTodosLosPaneles()"></i></div>
                 <div class="config-card-layout" style="margin-bottom:20px;">
                     <h4 style="font-size:14px; margin-bottom:4px; color:var(--text-title);">Frecuencia de Abastecimientos</h4>
                     <p style="font-size:11px; color:var(--text-sub); margin-bottom:12px;">Conteo semanal de eventos de recarga por unidad estructural</p>
@@ -372,10 +380,31 @@
                 </div>
             </div>
 
+            <!-- CONFIGURACIÓN AMPLIADA CON WHATSAPP, API KEY Y GESTIÓN DE USUARIOS -->
             <div id="drawerConfig" class="side-drawer">
-                <div class="drawer-header"><h3>⚙️ Ajustes del Sistema</h3><i class="ph ph-x drawer-close"></i></div>
+                <div class="drawer-header"><h3>⚙️ Ajustes del Sistema y Notificaciones</h3><i class="ph ph-x drawer-close" onclick="cerrarTodosLosPaneles()"></i></div>
+                
                 <div class="config-card-layout">
-                    <label style="font-weight:600; font-size:13px;">Tema Visual</label>
+                    <label style="font-weight:600; font-size:13px;">🔑 API Key de Integración (WhatsApp Bot)</label>
+                    <input type="text" id="configApiKey" class="config-input" placeholder="Ej: WA-API-KEY-95837265" value="WA-API-KEY-AURUM-2026">
+                </div>
+
+                <div class="config-card-layout">
+                    <label style="font-weight:600; font-size:13px;">📱 Número de WhatsApp Destino (Alertas Globales)</label>
+                    <input type="text" id="configWhatsApp" class="config-input" placeholder="Ej: +56912345678" value="+56987654321">
+                    <button class="btn-action" style="margin-top:10px; padding:8px 14px; font-size:12px;" onclick="guardarConfigNotificaciones()">Guardar Configuración WhatsApp</button>
+                </div>
+
+                <div class="config-card-layout">
+                    <h4 style="font-size:14px; font-weight:700; margin-bottom:8px;">👥 Acceso a Notificaciones (Usuarios Vinculados)</h4>
+                    <p style="font-size:11px; color:var(--text-sub); margin-bottom:12px;">Lista de operadores y administradores con acceso a la interfaz y recepción de alarmas.</p>
+                    <div id="listaUsuariosNotificacionesContainer">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+
+                <div class="config-card-layout">
+                    <label style="font-weight:600; font-size:13px;">Tema Visual de Interfaz</label>
                     <select class="config-select" id="comboTema" onchange="cambiarTema()">
                         <option value="light" selected>Modo Claro Limpio</option>
                         <option value="dark">Modo Oscuro Default</option>
@@ -414,7 +443,6 @@
             }
         }
 
-        // LÓGICA DE ROLES Y USUARIO REAL INGRESADO
         function applyRole(role, username = "Administrador 1") {
             let initials = username.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
             if(initials.length === 0) initials = "US";
@@ -432,7 +460,62 @@
                 document.getElementById("topUserRole").innerText = "Administrador Global";
                 document.getElementById("topUserInitials").innerText = initials;
                 renderizarNotificacionesAdmin();
+                renderizarListaUsuariosConfig();
             }
+        }
+
+        // LIMPIAR BADGE DE ALARMAS AL HACER CLIC EN EL APARTADO DE ALARMAS O CAMPANA
+        function limpiarBadgeAlarmas() {
+            let badge = document.getElementById("navBadgeCount");
+            if(badge) badge.style.display = "none";
+            let badgeMenu = document.getElementById("badgeAlarmas");
+            if(badgeMenu) badgeMenu.style.display = "none";
+        }
+
+        // GESTIÓN DE USUARIOS Y WHATSAPP EN CONFIGURACIÓN
+        function renderizarListaUsuariosConfig() {
+            const container = document.getElementById("listaUsuariosNotificacionesContainer");
+            if(!container) return;
+
+            let aprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
+            // Incluir base por defecto
+            let lista = [
+                { username: "Administrador 1", activo: true },
+                { username: "Operador Planta", activo: true },
+                ...aprobados.map(u => ({ username: u.username, activo: true }))
+            ];
+
+            let html = `<table class="custom-table" style="margin-top:0;">
+                <thead><tr><th>Usuario</th><th>Recibir WhatsApp</th><th>Acción</th></tr></thead>
+                <tbody>`;
+            
+            lista.forEach((user, idx) => {
+                html += `<tr>
+                    <td><b>${user.username}</b></td>
+                    <td><input type="checkbox" checked onchange="alert('Preferencia de notificación actualizada para ${user.username}')"></td>
+                    <td><button onclick="eliminarUsuarioSistema('${user.username}')" style="padding:4px 8px; background:var(--color-red); color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer;">Eliminar</button></td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        window.eliminarUsuarioSistema = function(username) {
+            if(confirm(`¿Desea eliminar al usuario ${username} del sistema?`)) {
+                let aprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
+                aprobados = aprobados.filter(u => u.username !== username);
+                localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify(aprobados));
+                renderizarListaUsuariosConfig();
+                alert("Usuario eliminado correctamente.");
+            }
+        }
+
+        window.guardarConfigNotificaciones = function() {
+            let apiKey = document.getElementById("configApiKey").value;
+            let whatsapp = document.getElementById("configWhatsApp").value;
+            localStorage.setItem("aurum_whatsapp_api", apiKey);
+            localStorage.setItem("aurum_whatsapp_num", whatsapp);
+            alert("Configuración de WhatsApp y API Key guardada con éxito.");
         }
 
         function renderizarNotificacionesAdmin() {
@@ -459,12 +542,6 @@
                     </div>`;
             });
             container.innerHTML = html;
-
-            let badge = document.getElementById("navBadgeCount");
-            if(badge) {
-                badge.innerText = 2 + solicitudes.length;
-                badge.style.display = "flex";
-            }
         }
 
         window.aprobarSolicitud = function(idx) {
@@ -480,6 +557,7 @@
             
             alert(`¡Usuario "${aprobada.username}" aprobado con éxito! Ya puede iniciar sesión.`);
             renderizarNotificacionesAdmin();
+            renderizarListaUsuariosConfig();
         }
 
         window.rechazarSolicitud = function(idx) {
@@ -511,7 +589,7 @@
             toggleRegisterView(false);
         });
 
-        // GESTIÓN LOGIN Y PERSISTENCIA DEL USUARIO
+        // GESTIÓN LOGIN Y PERSISTENCIA
         if(localStorage.getItem("aurum_logged") === "true") { 
             document.getElementById("loginScreen").style.display = "none";
             applyRole(localStorage.getItem("aurum_role") || "admin", localStorage.getItem("aurum_active_user") || "Administrador 1");
@@ -564,16 +642,21 @@
             const box = document.getElementById("logoutBox");
             box.style.display = box.style.display === "block" ? "none" : "block";
         });
-        
+
+        // CONTROL DE CIERRE DE PANELES Y MODALES AL HACER CLIC FUERA
+        function cerrarTodosLosPaneles() {
+            document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
+            document.getElementById("drawerOverlay").classList.remove("open");
+            document.getElementById("globalModal").style.display = "none";
+            document.getElementById("logoutBox").style.display = "none";
+            document.querySelectorAll(".silo-dropdown-menu").forEach(m => m.style.display = 'none');
+        }
+
         document.body.addEventListener("click", (e) => { 
             document.getElementById("logoutBox").style.display = "none";
             document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
-            
-            if (!e.target.closest('.side-drawer') && !e.target.closest('[data-drawer]') && !e.target.closest('#btnCampana')) {
-                document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
-            }
         });
-        
+
         document.getElementById("globalModal").addEventListener("click", function(e) {
             if (e.target === this) {
                 this.style.display = "none";
@@ -587,29 +670,31 @@
             document.getElementById("loginScreen").style.display = "flex";
         });
 
+        // APERTURA DE PANELES FLOTANTES CON CAPA DE CIERRE EXTERIOR
         document.querySelectorAll("[data-drawer]").forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", (e) => {
+                e.stopPropagation();
                 document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
                 const targetDrawer = button.getAttribute("data-drawer");
                 document.getElementById(targetDrawer).classList.add("open");
+                document.getElementById("drawerOverlay").classList.add("open");
                 
                 if(targetDrawer === "drawerConsumo") { 
                     setTimeout(initChartAnalisis, 100); 
                     setTimeout(initChartTendencia, 100); 
                 }
+                if(targetDrawer === "drawerConfig") {
+                    renderizarListaUsuariosConfig();
+                }
             });
         });
 
-        document.querySelectorAll(".drawer-close").forEach(closeBtn => {
-            closeBtn.addEventListener("click", () => {
-                closeBtn.closest(".side-drawer").classList.remove("open");
-            });
-        });
-
-        document.getElementById("btnCampana").addEventListener("click", () => {
-            document.getElementById("navBadgeCount").style.display = "none"; 
+        document.getElementById("btnCampana").addEventListener("click", (e) => {
+            e.stopPropagation();
+            limpiarBadgeAlarmas();
             document.querySelectorAll(".side-drawer").forEach(d => d.classList.remove("open"));
             document.getElementById("drawerAlarmas").classList.add("open");
+            document.getElementById("drawerOverlay").classList.add("open");
             renderizarNotificacionesAdmin();
         });
 
