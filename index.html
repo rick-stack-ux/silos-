@@ -191,7 +191,7 @@
         <div class="login-card" id="cardLogin">
             <i class="ph-fill ph-lock-keyhole" style="font-size:32px; color:var(--color-green);"></i>
             <h2 style="margin-top:10px;">AURUM.SYS INTERFACE</h2>
-            <input type="text" id="userInput" class="login-field" placeholder="Usuario o Correo">
+            <input type="text" id="userInput" class="login-field" placeholder="Usuario">
             <input type="password" id="passInput" class="login-field" placeholder="Contraseña">
             <button class="btn-login" id="btnLoginAction">Validar Ingreso</button>
             <p style="font-size:12px; margin-top:16px; color:var(--text-sub); cursor:pointer;" onclick="toggleRegisterView(true)">¿No tienes cuenta? <span style="color:var(--color-green); font-weight:600;">Solicitar Acceso</span></p>
@@ -484,9 +484,16 @@
 
         window.aprobarSolicitud = function(idx) {
             let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
+            let aprobada = solicitudes[idx];
+            
+            let usuariosAprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
+            usuariosAprobados.push({ username: aprobada.username, pass: aprobada.pass });
+            localStorage.setItem("aurum_usuarios_aprobados", JSON.stringify(usuariosAprobados));
+
             solicitudes.splice(idx, 1);
             localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
-            alert("Solicitud aprobada con éxito. El usuario ya puede ingresar.");
+            
+            alert(`¡Usuario "${aprobada.username}" aprobado con éxito! Ya puede iniciar sesión.`);
             renderizarNotificacionesAdmin();
         }
 
@@ -532,13 +539,26 @@
             
             if((user === "admin" || user === "usuario") && pass === "aurum2026") {
                 localStorage.setItem("aurum_logged", "true");
-                localStorage.setItem("aurum_role", user);
-                applyRole(user);
+                localStorage.setItem("aurum_role", user === "admin" ? "admin" : "usuario");
+                applyRole(user === "admin" ? "admin" : "usuario");
+                document.getElementById("loginScreen").style.display = "none";
+                document.getElementById("userInput").value = "";
+                document.getElementById("passInput").value = "";
+                return;
+            }
+
+            let usuariosAprobados = JSON.parse(localStorage.getItem("aurum_usuarios_aprobados") || "[]");
+            let encontrado = usuariosAprobados.find(u => u.username === user && u.pass === pass);
+
+            if(encontrado) {
+                localStorage.setItem("aurum_logged", "true");
+                localStorage.setItem("aurum_role", "usuario");
+                applyRole("usuario");
                 document.getElementById("loginScreen").style.display = "none";
                 document.getElementById("userInput").value = "";
                 document.getElementById("passInput").value = "";
             } else {
-                alert("Credenciales incorrectas.");
+                alert("Credenciales incorrectas o cuenta pendiente de aprobación por el Administrador.");
             }
         });
 
