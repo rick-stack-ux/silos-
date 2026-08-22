@@ -86,11 +86,11 @@
         .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
         .kpi-details h3 { font-size: 18px; font-weight: 700; }
 
-        .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px; position: relative; }
+        .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; min-height: 290px; position: relative; overflow: visible; }
         
         /* DISEÑO INDUSTRIAL DEL SILO (AMPLIADO Y MÁS GRANDE) */
-        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 210px; }
+        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 210px; margin-top: 8px; }
         .silo-axis-y { width: 32px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: var(--text-sub); }
         .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
         .silo-metal-frame { width: 120px; height: 200px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -109,10 +109,12 @@
         .tl-green.active { background: var(--color-green); box-shadow: 0 0 8px var(--color-green); opacity: 1; }
         .tl-yellow.active { background: var(--color-yellow); box-shadow: 0 0 8px var(--color-yellow); opacity: 1; }
         .tl-red.active { background: var(--color-red); box-shadow: 0 0 8px var(--color-red); opacity: 1; }
-        .silo-dropdown-menu { display: none; position: absolute; top: 35px; left: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; width: 230px; z-index: 50; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
+        
+        /* MENU DESPLEGABLE CORREGIDO Y ACCESIBLE */
+        .silo-dropdown-menu { display: none; position: absolute; top: 45px; left: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; width: 240px; z-index: 999; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
         .silo-dropdown-menu ul { list-style: none; padding: 0; margin: 0; }
-        .silo-dropdown-menu li { padding: 10px 14px; font-size: 12px; color: var(--text-title); cursor: pointer; border-bottom: 1px solid var(--border-color); }
-        .silo-dropdown-menu li:hover { background: rgba(128,128,128,0.1); }
+        .silo-dropdown-menu li { padding: 12px 16px; font-size: 13px; color: var(--text-title); cursor: pointer; border-bottom: 1px solid var(--border-color); }
+        .silo-dropdown-menu li:hover { background: rgba(128,128,128,0.15); }
 
         /* GRÁFICO DE DONA MEJORADO (MÁS GRANDE Y LETRA CLARA) */
         .distribution-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 10px; }
@@ -208,7 +210,7 @@
         </div>
     </div>
 
-    <!-- GLOBAL MODAL (AMPLIADO PARA TABLAS Y GRÁFICOS) -->
+    <!-- GLOBAL MODAL -->
     <div id="globalModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -216,7 +218,7 @@
                 <i class="ph ph-x drawer-close" onclick="document.getElementById('globalModal').style.display='none'" style="cursor:pointer;"></i>
             </div>
             <div id="modalContent">
-                <!-- CONTENIDO DINÁMICO (GRÁFICO O TABLA SEGÚN LA OPCIÓN SELECCIONADA) -->
+                <!-- CONTENIDO DINÁMICO -->
             </div>
         </div>
     </div>
@@ -231,11 +233,9 @@
                 <div class="menu-item" data-drawer="drawerConsumo"><div><i class="ph ph-chart-line"></i><span class="lng-cons">Consumo</span></div></div>
                 <div class="menu-item" data-drawer="drawerAlarmas"><div><i class="ph ph-bell"></i><span class="lng-alrm">Alarmas</span></div><span class="badge" id="badgeAlarmas">2</span></div>
                 <div class="menu-item" data-drawer="drawerReportes"><div><i class="ph ph-file-text"></i><span class="lng-repo">Reportes</span></div></div>
-                <!-- ID AÑADIDO PARA OCULTAR EN ROL USUARIO -->
                 <div class="menu-item" id="menuConfig" data-drawer="drawerConfig"><div><i class="ph ph-gear"></i><span class="lng-conf">Configuración</span></div></div>
             </div>
         </div>
-        <!-- ZONA DEL LOGO DEL CLIENTE -->
         <div style="text-align: center; margin-top: 20px;">
             <img src="agricola-mansel-vertical-blanco.png" alt="Mansel" class="client-logo">
         </div>
@@ -259,7 +259,6 @@
         </div>
 
         <div class="layout-body">
-            <!-- DASHBOARD SIEMPRE VISIBLE DE FONDO -->
             <div class="main-content">
                 <div class="kpi-grid">
                     <div class="kpi-card"><div class="kpi-details"><p class="lng-kpi1">Silos Activos</p><h3>7</h3></div></div>
@@ -297,8 +296,7 @@
                 </div>
             </div>
 
-            <!-- PANALES FLOTANTES (CENTRADOS Y AMPLIADOS TIPO MODAL) -->
-            <!-- 1. HISTORIAL CON DESCARGA -->
+            <!-- PANALES FLOTANTES -->
             <div id="drawerHistorial" class="side-drawer">
                 <div class="drawer-header"><h3>🕒 Historial de Consumos y Cargas</h3><i class="ph ph-x drawer-close"></i></div>
                 <div class="config-card-layout">
@@ -321,10 +319,8 @@
                 </table>
             </div>
 
-            <!-- 2. CONSUMO DETALLADO (CONCENTRADO GLOBAL) -->
             <div id="drawerConsumo" class="side-drawer">
                 <div class="drawer-header"><h3>📊 Concentrado Global de Datos</h3><i class="ph ph-x drawer-close"></i></div>
-                
                 <div class="config-card-layout" style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px;">
                     <span style="font-size:13px; font-weight:600;">Filtro de Datos Globales:</span>
                     <select class="config-select" style="width:180px; margin-top:0;">
@@ -333,35 +329,23 @@
                         <option>Diferencias</option>
                     </select>
                 </div>
-
                 <h4 style="font-size:14px; margin-bottom:10px;">Análisis de Consumo por Silo</h4>
                 <div style="height:230px; margin-bottom:30px;"><canvas id="chartAnalisisSilos"></canvas></div>
-                
                 <h4 style="font-size:14px; margin-bottom:10px;">Histórico Anual Automático (Meses)</h4>
                 <div style="height:250px; margin-bottom:20px;"><canvas id="chartTendenciaAnual"></canvas></div>
-                <p style="font-size:13px; color:var(--text-sub);">El sistema ingresa automáticamente los valores de los consumos (kilos) de todos los silos.</p>
             </div>
 
-            <!-- 3. ALARMAS ACTIVAS -->
             <div id="drawerAlarmas" class="side-drawer">
                 <div class="drawer-header"><h3>🔔 Alertas y Alarmas de Planta</h3><i class="ph ph-x drawer-close"></i></div>
-                <!-- CONTENEDOR DINÁMICO DE NOTIFICACIONES DE ACCESO -->
                 <div id="notificacionesAccesoContainer"></div>
-
                 <div style="background:rgba(239,68,68,0.1); border:1px solid var(--color-red); padding:14px; border-radius:8px; margin-bottom:12px;">
                     <h5 style="color:var(--color-red); font-size:14px;">⚠️ ALERTA: Silo 4 Crítico</h5>
                     <p style="font-size:12px; margin-top:4px;">Nivel de llenado inferior al 5% de la capacidad nominal.</p>
                 </div>
-                <div style="background:rgba(139,92,246,0.1); border:1px solid var(--color-purple); padding:14px; border-radius:8px;">
-                    <h5 style="color:var(--color-purple); font-size:14px;">⚡ ALERTA: Silo 6 Sin Flujo</h5>
-                    <p style="font-size:12px; margin-top:4px;">Se detectó detención abrupta en tubería de salida.</p>
-                </div>
             </div>
 
-            <!-- 4. REPORTES -->
             <div id="drawerReportes" class="side-drawer">
                 <div class="drawer-header"><h3>📝 Generador de Reportes y Frecuencias</h3><i class="ph ph-x drawer-close"></i></div>
-                
                 <div class="config-card-layout" style="margin-bottom:20px;">
                     <h4 style="font-size:14px; margin-bottom:4px; color:var(--text-title);">Frecuencia de Abastecimientos</h4>
                     <p style="font-size:11px; color:var(--text-sub); margin-bottom:12px;">Conteo semanal de eventos de recarga por unidad estructural</p>
@@ -380,25 +364,14 @@
                         </tbody>
                     </table>
                 </div>
-
                 <div class="config-card-layout">
                     <p style="font-size:13px;">Generar bitácora consolidada en Excel mostrando veces cargadas, hora, fecha (Día/Semana/Mes/Año) y cantidad de kilos por silo y global.</p>
                     <button class="btn-action" onclick="alert('Generando y descargando Excel Global...')"><i class="ph ph-file-xls"></i> Descargar Excel Global</button>
                 </div>
             </div>
 
-            <!-- 5. CONFIGURACIÓN -->
             <div id="drawerConfig" class="side-drawer">
                 <div class="drawer-header"><h3>⚙️ Ajustes del Sistema</h3><i class="ph ph-x drawer-close"></i></div>
-                <div class="config-card-layout">
-                    <label style="font-weight:600; font-size:13px;">Idioma de Interfaz</label>
-                    <select class="config-select" id="comboIdioma" onchange="cambiarIdioma()">
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                        <option value="zh">中文 (Chino)</option>
-                        <option value="de">Deutsch (Alemán)</option>
-                    </select>
-                </div>
                 <div class="config-card-layout">
                     <label style="font-weight:600; font-size:13px;">Tema Visual</label>
                     <select class="config-select" id="comboTema" onchange="cambiarTema()">
@@ -619,7 +592,32 @@
             renderizarNotificacionesAdmin();
         });
 
-        // NUEVA FUNCIÓN MEJORADA: ABRE VENTANA CON FILTRO DE TIEMPO Y TABLA DE CARGAS CON KILOS PREVIOS
+        function descargarExcelEstructurado() {
+            let csvContent = "data:text/csv;charset=utf-8,Fecha,Folio,Silo,Casilleros,Kilos,Codigo,Descripcion,Lote,Destino,Medicacion,Despachador,Camion,Conductor,Semana,Peso_balanzas,Diferencia\n";
+            csvContent += `06-07-2026,1394,13,1,1500,80012,13064 PUBERTAD 1,2784,13.4.04,13064,Dario,7,Agustin,2,4430,-70\n`;
+            csvContent += `12-01-2026,1424,13,1,1500,80012,13064 PUBERTAD 1,2842,13.4.04,13064,Dario,7,Agustin,3,4470,+1000\n`;
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Historial_Estructurado.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function cambiarTema() {
+            const t = document.getElementById("comboTema").value;
+            document.body.className = "";
+            if(t !== "dark") document.body.classList.add("theme-" + t);
+        }
+
+        function toggleSiloMenu(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll(".silo-dropdown-menu").forEach(m => m.style.display = 'none');
+            document.getElementById("menu-silo-" + id).style.display = "block";
+        }
+
         function openSiloDetail(id, action) {
             let titulo = "";
             let contenidoHtml = "";
@@ -662,7 +660,6 @@
             document.getElementById("modalContent").innerHTML = contenidoHtml;
             document.getElementById("globalModal").style.display = "flex";
             
-            // Si la acción requiere gráfico, lo inicializamos
             if(action === 'historial' || action === 'grafico' || action === 'diferencial') {
                 setTimeout(() => {
                     const ctx = document.getElementById("chartDiferencial").getContext("2d");
@@ -698,7 +695,7 @@
             }
         }
 
-        // RENDER DE CUADROS DE SILOS Y DONA GRANDE (CON DISEÑO AMPLIADO)
+        // RENDER DE CUADROS DE SILOS Y DONA GRANDE
         function runRender() {
             const grid = document.getElementById("silosGrid");
             grid.innerHTML = "";
@@ -727,8 +724,8 @@
                     <div class="silo-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; position:relative;">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <div style="background:rgba(255,255,255,0.1); padding:4px; border-radius:4px; cursor:pointer;" onclick="toggleSiloMenu(event, ${s.id})"><i class="ph ph-list" style="font-size:16px;"></i></div>
-                                <span style="font-weight:700; font-size:15px;">${s.nombre}</span>
+                                <div style="background:rgba(255,255,255,0.1); padding:6px; border-radius:6px; cursor:pointer;" onclick="toggleSiloMenu(event, ${s.id})"><i class="ph ph-list" style="font-size:18px;"></i></div>
+                                <span style="font-weight:800; font-size:15px; letter-spacing:0.5px;">${s.nombre}</span>
                             </div>
                             
                             <div class="silo-dropdown-menu" id="menu-silo-${s.id}">
@@ -758,7 +755,6 @@
                                     <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
                                 </div>
                             </div>
-                            <!-- DATOS DE KILOS, PORCENTAJE Y AUTONOMÍA ESCALADOS Y MÁS GRANDES -->
                             <div class="silo-text-readout">
                                 <div style="font-size:28px; font-weight:800; color:var(--text-title);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
                                 <div style="font-size:16px; font-weight:600; color:var(--text-sub);">${s.estado==='Desconectado'?'--':pct+'%'}</div>
