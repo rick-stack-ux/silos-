@@ -87,28 +87,28 @@
         .kpi-details h3 { font-size: 18px; font-weight: 700; }
 
         .silos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 250px; position: relative; }
+        .silo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px; position: relative; }
         
-        /* DISEÑO INDUSTRIAL DEL SILO (AMPLIADO Y MÁS GRANDE) */
-        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 180px; }
-        .silo-axis-y { width: 28px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: var(--text-sub); }
+        /* DISEÑO INDUSTRIAL DEL SILO (AHORA MUCHO MÁS GRANDE Y PROPORCIONAL) */
+        .silo-middle-row { display: flex; align-items: center; justify-content: space-between; height: 210px; }
+        .silo-axis-y { width: 32px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: var(--text-sub); }
         .silo-graphic-box { flex: 1; display: flex; justify-content: center; height: 100%; position: relative; }
-        .silo-metal-frame { width: 95px; height: 170px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
-        .silo-ladder { position: absolute; top: 12px; left: 2px; width: 6px; height: 122px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 6px; z-index: 4; }
-        .silo-roof { width: 88px; height: 20px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 10px; left: 3.5px; z-index: 3; border: 1px solid #475569; }
-        .silo-cylinder { width: 88px; height: 110px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 1.5px solid #334155; border-bottom: none; position: absolute; top: 28px; left: 3.5px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
-        .silo-cone { width: 88px; height: 28px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 1.5px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 138px; left: 3.5px; z-index: 2; }
-        .silo-legs { width: 88px; height: 30px; position: absolute; top: 138px; left: 3.5px; z-index: 1; display: flex; justify-content: space-between; }
-        .silo-legs div { width: 3px; height: 100%; background: #475569; }
+        .silo-metal-frame { width: 120px; height: 200px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
+        .silo-ladder { position: absolute; top: 14px; left: 2px; width: 7px; height: 145px; border-left: 1px solid #475569; border-right: 1px solid #475569; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 7px; z-index: 4; }
+        .silo-roof { width: 112px; height: 26px; background: linear-gradient(90deg, #334155, #1e293b, #334155); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); position: absolute; top: 12px; left: 4px; z-index: 3; border: 1px solid #475569; }
+        .silo-cylinder { width: 112px; height: 130px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); border: 2px solid #334155; border-bottom: none; position: absolute; top: 35px; left: 4px; overflow: hidden; display: flex; align-items: flex-end; z-index: 2; }
+        .silo-cone { width: 112px; height: 35px; background: linear-gradient(90deg, #1a2232 0%, #0b0f19 50%, #1a2232 100%); border: 2px solid #334155; border-top: none; clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%); position: absolute; top: 163px; left: 4px; z-index: 2; }
+        .silo-legs { width: 112px; height: 35px; position: absolute; top: 163px; left: 4px; z-index: 1; display: flex; justify-content: space-between; }
+        .silo-legs div { width: 4px; height: 100%; background: #475569; }
         .silo-internal-fluid { width: 100%; height: 0%; transition: height 0.5s; }
         .silo-text-readout { text-align: right; }
 
-        /* SEMAFORO Y MENU SILO */
-        .traffic-light { display: flex; flex-direction: column; gap: 4px; margin-right: 6px; }
-        .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: #334155; opacity: 0.3; }
-        .tl-green.active { background: var(--color-green); box-shadow: 0 0 6px var(--color-green); opacity: 1; }
-        .tl-yellow.active { background: var(--color-yellow); box-shadow: 0 0 6px var(--color-yellow); opacity: 1; }
-        .tl-red.active { background: var(--color-red); box-shadow: 0 0 6px var(--color-red); opacity: 1; }
+        /* SEMAFORO AMPLIADO Y PROPORCIONAL */
+        .traffic-light { display: flex; flex-direction: column; gap: 6px; margin-right: 8px; }
+        .tl-dot { width: 14px; height: 14px; border-radius: 50%; background: #334155; opacity: 0.3; }
+        .tl-green.active { background: var(--color-green); box-shadow: 0 0 8px var(--color-green); opacity: 1; }
+        .tl-yellow.active { background: var(--color-yellow); box-shadow: 0 0 8px var(--color-yellow); opacity: 1; }
+        .tl-red.active { background: var(--color-red); box-shadow: 0 0 8px var(--color-red); opacity: 1; }
         .silo-dropdown-menu { display: none; position: absolute; top: 35px; left: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; width: 230px; z-index: 50; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
         .silo-dropdown-menu ul { list-style: none; padding: 0; margin: 0; }
         .silo-dropdown-menu li { padding: 10px 14px; font-size: 12px; color: var(--text-title); cursor: pointer; border-bottom: 1px solid var(--border-color); }
@@ -121,7 +121,7 @@
 
         .chart-layout-panel { display: grid; grid-template-columns: 2.2fr 0.8fr; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; margin-top: 14px; }
         
-        /* MODIFICADO: VENTANAS FLOTANTES AMPLIADAS Y MÁS GRANDES */
+        /* VENTANAS FLOTANTES CENTRADAS TIPO MODAL AMPLIADAS */
         .side-drawer { 
             position: absolute; 
             top: 50%; 
@@ -745,7 +745,7 @@
             }, 100);
         }
 
-        // RENDER DE CUADROS DE SILOS Y DONA GRANDE
+        // RENDER DE CUADROS DE SILOS Y DONA GRANDE (CON DISEÑO AMPLIADO)
         function runRender() {
             const grid = document.getElementById("silosGrid");
             grid.innerHTML = "";
@@ -764,9 +764,9 @@
                     if (s.consumo > 0) {
                         let horas = s.peso / s.consumo;
                         let textAuto = horas >= 24 ? (horas / 24).toFixed(1) + " días" : Math.round(horas) + " hrs";
-                        autonomiaHtml = `<div style="font-size:11px; font-weight:700; color:var(--text-title); margin-top:4px; opacity:0.8;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-green)">${textAuto}</span></div>`;
+                        autonomiaHtml = `<div style="font-size:13px; font-weight:700; color:var(--text-title); margin-top:6px; opacity:0.9;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-green)">${textAuto}</span></div>`;
                     } else {
-                        autonomiaHtml = `<div style="font-size:11px; font-weight:700; color:var(--text-title); margin-top:4px; opacity:0.8;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-yellow)">N/A</span></div>`;
+                        autonomiaHtml = `<div style="font-size:13px; font-weight:700; color:var(--text-title); margin-top:6px; opacity:0.9;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-yellow)">N/A</span></div>`;
                     }
                 }
 
@@ -774,8 +774,8 @@
                     <div class="silo-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; position:relative;">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <div style="background:rgba(255,255,255,0.1); padding:4px; border-radius:4px; cursor:pointer;" onclick="toggleSiloMenu(event, ${s.id})"><i class="ph ph-list"></i></div>
-                                <span style="font-weight:700; font-size:14px;">${s.nombre}</span>
+                                <div style="background:rgba(255,255,255,0.1); padding:4px; border-radius:4px; cursor:pointer;" onclick="toggleSiloMenu(event, ${s.id})"><i class="ph ph-list" style="font-size:16px;"></i></div>
+                                <span style="font-weight:700; font-size:15px;">${s.nombre}</span>
                             </div>
                             
                             <div class="silo-dropdown-menu" id="menu-silo-${s.id}">
@@ -793,7 +793,7 @@
                                     <div class="tl-dot tl-yellow ${s.estado==='Baja'?'active':''}"></div>
                                     <div class="tl-dot tl-red ${s.estado==='Critica' || s.estado==='Sin Flujo'?'active':''}"></div>
                                 </div>
-                                <span style="font-size:11px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
+                                <span style="font-size:12px; font-weight:700; color:${s.estado==='Critica'?'var(--color-red)':''}">${s.estado}</span>
                             </div>
                         </div>
                         <div class="silo-middle-row">
@@ -805,9 +805,10 @@
                                     <div class="silo-cone"></div><div class="silo-legs"><div></div><div></div></div>
                                 </div>
                             </div>
+                            <!-- DATOS DE KILOS, PORCENTAJE Y AUTONOMÍA ESCALADOS Y MÁS GRANDES -->
                             <div class="silo-text-readout">
-                                <div style="font-size:24px; font-weight:800; color:var(--text-title);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
-                                <div style="font-size:14px; font-weight:600; color:var(--text-sub);">${s.estado==='Desconectado'?'--':pct+'%'}</div>
+                                <div style="font-size:28px; font-weight:800; color:var(--text-title);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
+                                <div style="font-size:16px; font-weight:600; color:var(--text-sub);">${s.estado==='Desconectado'?'--':pct+'%'}</div>
                                 ${autonomiaHtml}
                             </div>
                         </div>
@@ -816,8 +817,8 @@
 
             grid.innerHTML += `
                 <div class="silo-card">
-                    <h4 style="font-size:13px; font-weight:700;">Distribución de Consumo (Kg)</h4>
-                    <p style="font-size:10px; color:var(--text-sub); margin-bottom:4px;">Suma autonóma de restas por silo.</p>
+                    <h4 style="font-size:14px; font-weight:700;">Distribución de Consumo (Kg)</h4>
+                    <p style="font-size:11px; color:var(--text-sub); margin-bottom:4px;">Suma autonóma de restas por silo.</p>
                     <div class="distribution-box">
                         <div class="canvas-container"><canvas id="chartDonaDistribucion"></canvas></div>
                         <div class="dona-legend">
