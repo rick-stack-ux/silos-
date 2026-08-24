@@ -403,7 +403,7 @@
         let chartAnalisisInstance = null;
         let chartTendenciaInstance = null;
 
-        // INYECCIÓN 1: PROPIEDAD "cerdos" AGREGADA A LA BASE DE DATOS DE SILOS
+        // BASE DE DATOS DE SILOS CON CERDOS
         let SILOS = [
             { id: 1, nombre: "SILO 1", capacidad: 14000, peso: 9739, consumo: 850, rssi: -65, estado: "Normal", cerdos: 1200 },
             { id: 2, nombre: "SILO 2", capacidad: 14000, peso: 7241, consumo: 620, rssi: -68, estado: "Normal", cerdos: 1150 },
@@ -424,14 +424,13 @@
             }
         }
 
-        // LÓGICA DE NOTIFICACIONES (Badge Rojo) ARREGLADA
-        window.alarmsCleared = false; // Variable para saber si el admin ocultó las alarmas del sistema
+        // LÓGICA DE NOTIFICACIONES (Badge Rojo)
+        window.alarmsCleared = false; 
         
         function updateBadges() {
             let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
-            let unreadAlarms = window.alarmsCleared ? 0 : 2; // Las 2 alarmas predeterminadas
+            let unreadAlarms = window.alarmsCleared ? 0 : 2; 
             
-            // EL BADGE NUNCA DESAPARECE SI HAY SOLICITUDES DE USUARIOS PENDIENTES
             let total = solicitudes.length + unreadAlarms; 
             
             let navBadge = document.getElementById("navBadgeCount");
@@ -447,8 +446,8 @@
         }
 
         function limpiarBadgeAlarmas() {
-            window.alarmsCleared = true; // Solo limpia visualmente las 2 alarmas predeterminadas
-            updateBadges(); // Recalcula (así si hay solicitudes, el badge rojo se queda con ese número)
+            window.alarmsCleared = true; 
+            updateBadges(); 
         }
 
         function applyRole(role, username = "Usuario") {
@@ -545,7 +544,6 @@
             container.innerHTML = html;
         }
 
-        // FUNCIÓN QUE ACEPTA EL USUARIO Y LO GRABA EN MEMORIA DEFINITIVA
         window.aprobarSolicitud = function(idx) {
             let solicitudes = JSON.parse(localStorage.getItem("aurum_solicitudes") || "[]");
             let aprobada = solicitudes[idx];
@@ -564,7 +562,6 @@
             solicitudes.splice(idx, 1);
             localStorage.setItem("aurum_solicitudes", JSON.stringify(solicitudes));
             
-            // Refresca todo visualmente al instante
             renderizarNotificacionesAdmin();
             renderizarListaUsuariosConfig();
             updateBadges();
@@ -646,7 +643,6 @@
         document.body.addEventListener("click", (e) => { 
             document.getElementById("logoutBox").style.display = "none";
             
-            // INYECCIÓN 2: EXCEPCIÓN PARA QUE AL CLICKEAR EL BOTÓN DE CERDOS NO SE CIERRE EL MENÚ POR ERROR
             if (!e.target.closest('.silo-dropdown-menu') && !e.target.closest('.silo-card [onclick*="toggleSiloMenu"]') && !e.target.closest('.edit-cerdos-badge')) {
                 document.querySelectorAll(".silo-dropdown-menu").forEach(menu => menu.style.display = 'none');
             }
@@ -724,7 +720,6 @@
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
 
-        // INYECCIÓN 3: FUNCIÓN PARA EDITAR LA CANTIDAD DE CERDOS EN LA TARJETA
         window.editarCerdos = function(event, id) {
             event.stopPropagation();
             let silo = SILOS.find(s => s.id === id);
@@ -733,12 +728,12 @@
                 if (nuevaCantidad !== null && nuevaCantidad.trim() !== "" && !isNaN(nuevaCantidad)) {
                     silo.cerdos = parseInt(nuevaCantidad);
                     document.getElementById(`cerdos-silo-${id}`).innerText = silo.cerdos;
-                    alert(`¡Tanda registrada! El sistema comenzará a recalcular las métricas de consumo en base a ${silo.cerdos} animales.`);
+                    runRender(); // <-- RE-RENDERIZA PARA ACTUALIZAR EL CÁLCULO DE CONSUMO POR CERDO
+                    alert(`¡Tanda registrada! El sistema ha comenzado a recalcular el consumo en base a ${silo.cerdos} animales.`);
                 }
             }
         }
 
-        // INYECCIÓN 4: CÓDIGO EXTRAÍDO Y MODIFICADO DEL GRÁFICO PARA PODER DIBUJAR LA TANDA ANTERIOR
         window.renderChartModal = function(id, action, compararConAnterior) {
             const ctx = document.getElementById("chartDiferencial").getContext("2d");
             if(window.chartDiferencialInstance) window.chartDiferencialInstance.destroy();
@@ -759,7 +754,6 @@
             if(action === 'historial' || action === 'grafico') {
                 datasets.push({ label: 'Tanda Actual (Kilos)', data: [13500, 11200, 12800, 9500, 14000, 10800, 9739], borderColor: "#10b981", backgroundColor: gradGreen, fill: true, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#10b981', pointBorderWidth: 2, pointRadius: 4 });
                 
-                // Si el usuario marcó el Checkbox de Comparar, se agrega la línea punteada gris
                 if(compararConAnterior) {
                     datasets.push({ label: 'Tanda Anterior (Kilos)', data: [14000, 10500, 13200, 8900, 13500, 11200, 9000], borderColor: "#64748b", borderDash: [5, 5], backgroundColor: gradGray, fill: true, tension: 0.35, pointBackgroundColor: '#fff', pointBorderColor: '#64748b', pointBorderWidth: 2, pointRadius: 4 });
                 }
@@ -780,7 +774,6 @@
             });
         }
 
-        // INYECCIÓN 5: FUNCIÓN QUE ESCUCHA SI EL USUARIO ACTIVÓ EL CHECKBOX PARA COMPARAR
         window.toggleTandaAnteriorChart = function(id, action) {
             let isChecked = document.getElementById("checkTandaAnterior").checked;
             window.renderChartModal(id, action, isChecked);
@@ -789,9 +782,8 @@
         function openSiloDetail(id, action) {
             let titulo = "";
             let contenidoHtml = "";
-            let silo = SILOS.find(s => s.id === id); // INYECCIÓN 6: Llama al silo correspondiente para sacar los datos
+            let silo = SILOS.find(s => s.id === id); 
 
-            // INYECCIÓN 7: SECCIÓN DE CABECERA CON DATOS DE CERDOS PARA MODALES CON GRÁFICOS
             let cabeceraCerdosHTML = "";
             if(action === 'historial' || action === 'grafico') {
                 cabeceraCerdosHTML = `
@@ -844,7 +836,6 @@
             document.getElementById("modalContent").innerHTML = contenidoHtml;
             document.getElementById("globalModal").style.display = "flex";
             
-            // INYECCIÓN 8: SE LLAMA A LA NUEVA FUNCIÓN RENDER PARA CARGAR EL GRÁFICO (Sin comparar al abrir)
             if(action === 'historial' || action === 'grafico' || action === 'diferencial') {
                 setTimeout(() => {
                     window.renderChartModal(id, action, false);
@@ -865,17 +856,24 @@
                 if(s.estado === "Sin Flujo") fStyle = "linear-gradient(to top, #5b21b6, #8b5cf6)";
 
                 let autonomiaHtml = "";
+                let consumoCerdoHtml = ""; // NUEVA VARIABLE PARA EL TEXTO DEL CONSUMO POR CERDO
+                
                 if (s.estado !== "Desconectado") {
                     if (s.consumo > 0) {
                         let horas = s.peso / s.consumo;
                         let textAuto = horas >= 24 ? (horas / 24).toFixed(1) + " días" : Math.round(horas) + " hrs";
                         autonomiaHtml = `<div style="font-size:13px; font-weight:700; color:var(--text-title); margin-top:6px; opacity:0.9;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-green)">${textAuto}</span></div>`;
+                        
+                        // MATEMÁTICA OPCIÓN A: Si hay cerdos ingresados, calcula el consumo individual real
+                        if(s.cerdos > 0) {
+                            let consumoIndividual = (s.consumo / s.cerdos).toFixed(2);
+                            consumoCerdoHtml = `<div style="font-size:11px; font-weight:600; color:var(--text-sub); margin-top:4px;"><i class="ph ph-chart-line"></i> Consumo: ${consumoIndividual} kg/cerdo/h</div>`;
+                        }
                     } else {
                         autonomiaHtml = `<div style="font-size:13px; font-weight:700; color:var(--text-title); margin-top:6px; opacity:0.9;"><i class="ph ph-hourglass-high"></i> Auto: <span style="color:var(--color-yellow)">N/A</span></div>`;
                     }
                 }
 
-                // INYECCIÓN 9: EL BOTÓN DE CERDOS EN LA BARRA SUPERIOR DE CADA SILO (div de clase edit-cerdos-badge)
                 grid.innerHTML += `
                     <div class="silo-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; position:relative;">
@@ -919,6 +917,7 @@
                                 <div style="font-size:28px; font-weight:800; color:var(--text-title);">${s.estado==='Desconectado'?'--':s.peso.toLocaleString()+' kg'}</div>
                                 <div style="font-size:16px; font-weight:600; color:var(--text-sub);">${s.estado==='Desconectado'?'--':pct+'%'}</div>
                                 ${autonomiaHtml}
+                                ${consumoCerdoHtml} <!-- INYECCIÓN DEL TEXTO DE CONSUMO INDIVIDUAL -->
                             </div>
                         </div>
                     </div>`;
